@@ -6,34 +6,36 @@
 //
 //
 
-#include "TrkGeometryUtils/ReadoutSegmentation2D.h"
+#include "RecoGeometry/ReadoutSegmentation2D.h"
 
-Trk::ReadoutSegmentation2D::ReadoutSegmentation2D(Trk::BinUtility* binutil) :
-Trk::ReadoutSegmentation(),
+Reco::ReadoutSegmentation2D::ReadoutSegmentation2D(Trk::BinUtility* binutil) :
+Reco::ReadoutSegmentation(),
 m_binutility(binutil)
-{}
+{
+    if (m_binutility->dimension()!=2) throw GaudiException("ReadoutSegmentation2D", "Dimension has to be 2 for this Semgentationtype", StatusCode::FAILURE);
+}
 
-Trk::ReadoutSegmentation2D::ReadoutSegmentation2D(const Trk::ReadoutSegmentation2D& seg) :
-Trk::ReadoutSegmentation(seg),
+Reco::ReadoutSegmentation2D::ReadoutSegmentation2D(const Reco::ReadoutSegmentation2D& seg) :
+Reco::ReadoutSegmentation(seg),
 m_binutility(new Trk::BinUtility(*seg.m_binutility))
 {
 
 }
 
-Trk::ReadoutSegmentation2D::~ReadoutSegmentation2D()
+Reco::ReadoutSegmentation2D::~ReadoutSegmentation2D()
 {
     delete m_binutility;
 }
 
-Trk::ReadoutSegmentation2D* Trk::ReadoutSegmentation2D::clone() const
+Reco::ReadoutSegmentation2D* Reco::ReadoutSegmentation2D::clone() const
 {
-    return(new Trk::ReadoutSegmentation2D(*this));
+    return(new Reco::ReadoutSegmentation2D(*this));
 }
 
-Trk::ReadoutSegmentation2D& Trk::ReadoutSegmentation2D::operator=(const Trk::ReadoutSegmentation2D& seg)
+Reco::ReadoutSegmentation2D& Reco::ReadoutSegmentation2D::operator=(const Reco::ReadoutSegmentation2D& seg)
 {
     if (this!=&seg) {
-        Trk::ReadoutSegmentation::operator=(seg);
+        Reco::ReadoutSegmentation::operator=(seg);
         delete m_binutility;
         m_binutility = new Trk::BinUtility(*seg.m_binutility);
     }
@@ -41,12 +43,12 @@ Trk::ReadoutSegmentation2D& Trk::ReadoutSegmentation2D::operator=(const Trk::Rea
     return (*this);
 }
 
-size_t Trk::ReadoutSegmentation2D::bins() const
+size_t Reco::ReadoutSegmentation2D::bins() const
 {
     return ((m_binutility->bins(0))*(m_binutility->bins(1)));
 }
 
-const unsigned long Trk::ReadoutSegmentation2D::bin(const Alg::Point2D& locpos) const
+const unsigned long Reco::ReadoutSegmentation2D::bin(const Alg::Point2D& locpos) const
 {
     unsigned long i = m_binutility->bin(locpos,0);
     unsigned long j = m_binutility->bin(locpos,1);
@@ -54,7 +56,7 @@ const unsigned long Trk::ReadoutSegmentation2D::bin(const Alg::Point2D& locpos) 
     return(i+j*m);
 }
 
-const std::vector<unsigned long> Trk::ReadoutSegmentation2D::compatibleBins(const Alg::Point2D& locpos) const
+const std::vector<unsigned long> Reco::ReadoutSegmentation2D::compatibleBins(const Alg::Point2D& locpos) const
 {
     std::vector<unsigned long> bins;
     int max1 = m_binutility->bins(0);
@@ -65,7 +67,7 @@ const std::vector<unsigned long> Trk::ReadoutSegmentation2D::compatibleBins(cons
         if (i>=0 && i<max1) {
             for (int j=n-1; j<=n+1; j++) {
                 if (j>=0 && j<max2) {
-                    unsigned long value = j+i+j*(max1-1);
+                    unsigned long value = i+j*max1;
                     bins.push_back(value);
                 }
             }
@@ -74,7 +76,7 @@ const std::vector<unsigned long> Trk::ReadoutSegmentation2D::compatibleBins(cons
     return (bins);
 }
 
-Alg::Point2D Trk::ReadoutSegmentation2D::binToLocpos(unsigned long bin) const
+Alg::Point2D Reco::ReadoutSegmentation2D::binToLocpos(unsigned long bin) const
 {
     
     size_t m = m_binutility->bins(0);
@@ -85,7 +87,7 @@ Alg::Point2D Trk::ReadoutSegmentation2D::binToLocpos(unsigned long bin) const
     return (Alg::Point2D(c1,c2));
 }
 
-float Trk::ReadoutSegmentation2D::binwidth(const Alg::Point2D& locpos, size_t ba) const
+float Reco::ReadoutSegmentation2D::binwidth(const Alg::Point2D& locpos, size_t ba) const
 {
    return (m_binutility->binwidth(m_binutility->bin(locpos,ba), ba));
 }

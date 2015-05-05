@@ -1,32 +1,32 @@
 //
-//  ReadoutSegmentation1D1D.h
+//  ReadoutSegmentation1D.h
 //  
 //
 //  Created by Julia Hrdinka on 24/04/15.
 //
 //
 
-#ifndef RECO_READOUTSEGMENTATION1D1D_H
-#define RECO_READOUTSEGMENTATION1D1D_H
+#ifndef RECO_READOUTSEGMENTATION1D_H
+#define RECO_READOUTSEGMENTATION1D_H
 
 #include "TrkGeometryUtils/BinUtility.h"
-#include "TrkGeometryUtils/ReadoutSegmentation.h"
+#include "RecoGeometry/ReadoutSegmentation.h"
 
-namespace Trk {
+namespace Reco {
     
-    class ReadoutSegmentation1D1D : public ReadoutSegmentation {
-        
+    class ReadoutSegmentation1D : public ReadoutSegmentation {
+    
     public:
         //constructor from BinUtility
-        ReadoutSegmentation1D1D(Trk::BinUtility* binutil, std::vector<Trk::BinUtility*>* m_binvector);
+        ReadoutSegmentation1D(Trk::BinUtility* binutil);
         //copy constructor
-        ReadoutSegmentation1D1D(const ReadoutSegmentation1D1D& seg);
+        ReadoutSegmentation1D(const ReadoutSegmentation1D& seg);
         //destructor
-        virtual ~ReadoutSegmentation1D1D();
+        virtual ~ReadoutSegmentation1D();
         //clone method
-        virtual ReadoutSegmentation1D1D* clone() const override;
+        virtual ReadoutSegmentation1D* clone() const override;
         //assignmentoperator
-        ReadoutSegmentation1D1D& operator=(const ReadoutSegmentation1D1D& seg);
+        ReadoutSegmentation1D& operator=(const ReadoutSegmentation1D& seg);
         //returns the number of bins
         virtual size_t bins() const override;
         //every position on the surface corresponds to a unique bin of this sensitive surface
@@ -42,9 +42,10 @@ namespace Trk {
         virtual float binwidth(const Alg::Point2D& locpos, size_t ba=0) const override;
     private:
         
-        BinUtility* m_binutility;
-        std::vector<Trk::BinUtility*>* m_binvector;
-        
+        Trk::BinUtility* m_binutility;
+    
     };
 }
-#endif //RECO_READOUTSEGMENTATION1D1D_H
+
+
+#endif //RECO_READOUTSEGMENTATION1D_H

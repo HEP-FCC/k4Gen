@@ -11,7 +11,7 @@
 
 #include "Algebra/AlgPrimitives.h"
 
-namespace Trk {
+namespace Reco {
     
     class ReadoutSegmentation {
     

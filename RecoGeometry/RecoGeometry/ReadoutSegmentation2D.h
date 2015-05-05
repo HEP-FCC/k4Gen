@@ -9,10 +9,10 @@
 #ifndef RECO_READOUTSEGMENTATION2D_H
 #define RECO_READOUTSEGMENTATION2D_H
 
-#include "TrkGeometryUtils/ReadoutSegmentation.h"
+#include "RecoGeometry/ReadoutSegmentation.h"
 #include "TrkGeometryUtils/BinUtility.h"
 
-namespace Trk {
+namespace Reco {
     
     class ReadoutSegmentation2D : public ReadoutSegmentation {
     
@@ -43,7 +43,7 @@ namespace Trk {
         
     private:
         
-        BinUtility* m_binutility;
+        Trk::BinUtility* m_binutility;
     };
 }
 
