@@ -6,25 +6,24 @@
 //
 //
 
-#ifndef DET_IEXTENSION_H
-#define DET_IEXTENSION_H
+#ifndef DET_IDETEXTENSION_H
+#define DET_IDETEXTENSION_H
 
 
 namespace Det {
     
-    class IExtension {
+    class IDetExtension {
     
     public:
         
-        virtual ~IExtension()
+        virtual ~IDetExtension()
         {}
         
     protected:
         
-        IExtension()
+        IDetExtension()
         {}
-        
     };
 }
 
-#endif //DET_IEXTENSION_H
+#endif //DET_IDETEXTENSION_H

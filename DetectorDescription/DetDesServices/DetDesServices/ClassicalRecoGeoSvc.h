@@ -1,13 +1,13 @@
 //
-//  StandardRecoGeoSvc.h
+//  ClassicalRecoGeoSvc.h
 //  
 //
 //  Created by Julia Hrdinka on 31/03/15.
 //
 //
 
-#ifndef STANDARDRECOGEOSVC_H
-#define STANDARDRECOGEOSVC_H
+#ifndef CLASSICALRECOGEOSVC_H
+#define CLASSICALRECOGEOSVC_H
 
 //Interfaces
 #include "DetDesInterfaces/IRecoGeoSvc.h"
@@ -42,14 +42,19 @@
 
 #include "RecoGeometry/ReadoutSegmentation1D1D.h"
 #include "RecoGeometry/ReadoutSegmentation2D.h"
+
+#include "RecoGeometry/MaterialMap2D.h"
+#include "RecoGeometry/MaterialMap1D1D.h"
+
 //DetExtensions
-#include "DetExtensions/IExtension.h"
-#include "DetExtensions/Extension.h"
+#include "DetExtensions/IDetExtension.h"
+#include "DetExtensions/DetExtension.h"
 #include "DetExtensions/DetCylinderVolume.h"
 #include "DetExtensions/DetDiscVolume.h"
 #include "DetExtensions/DetCylinderLayer.h"
 #include "DetExtensions/DetDiscLayer.h"
 #include "DetExtensions/DetModule.h"
+#include "DetExtensions/DetSensComponent.h"
 //TrkGeometryUtils
 #include "TrkGeometryUtils/BinUtility.h"
 #include "TrkGeometryUtils/BinnedArray1D.h"
@@ -60,15 +65,15 @@
 #include <fstream>
 #include <stdlib.h>
 
-class StandardRecoGeoSvc: public extends1<Service, IRecoGeoSvc> {
+class ClassicalRecoGeoSvc: public extends1<Service, IRecoGeoSvc> {
 
 public:
     
     typedef std::vector<std::pair<std::shared_ptr<const Reco::Layer>, Alg::Point3D>> LayerVector;
     
-    StandardRecoGeoSvc(const std::string& name, ISvcLocator* svc);
+    ClassicalRecoGeoSvc(const std::string& name, ISvcLocator* svc);
     
-    virtual ~StandardRecoGeoSvc();
+    virtual ~ClassicalRecoGeoSvc();
     virtual StatusCode initialize();
     virtual StatusCode finalize();
     virtual StatusCode buildGeometry() override;
@@ -93,9 +98,11 @@ public:
     //checks if the local position locpos is inside a trapezoid with the dimensions trapX1, trapX2, trapY
     bool isInsideTrapezoid(double locpos[3], double trapX1, double trapXm2, double trapY) const; //outsource?
     //orders rValues of the DiscLayer
-    std::vector<float> orderRValues(std::vector<std::pair<float,float>>& old) const; //outsource?
+    std::vector<float> orderRValues(std::vector<std::pair<float,float>>& old) const;
     //sorts floats
-    static bool sortFloatPairs(std::pair<float,float> ap, std::pair<float,float> bp); //outsource?
+    static bool sortFloatPairs(std::pair<float,float> ap, std::pair<float,float> bp);
+    //compare
+    static bool compareSurfacePhiZ(const std::pair<std::shared_ptr<const Reco::Surface>,Alg::Point3D> a, const std::pair<std::shared_ptr<const Reco::Surface>,Alg::Point3D> b);
     //sorts the CylinderLayers by their radius
     static bool sortCylinderLayers(const std::pair<std::shared_ptr<const Reco::Layer>, Alg::Point3D>& a,const std::pair<std::shared_ptr<const Reco::Layer>, Alg::Point3D>& b);
     //sorts the DiscLayers by their position beginning
@@ -113,4 +120,4 @@ private:
     mutable std::ofstream                        m_file;
 };
 
-#endif //STANDARDRECOGEOSVC_H
+#endif //CLASSICALRECOGEOSVC_H
