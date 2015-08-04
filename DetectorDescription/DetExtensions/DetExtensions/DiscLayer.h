@@ -32,11 +32,6 @@ namespace Det {
         virtual ~DetDiscLayer()
         {}
         
-        virtual ExtensionType type()
-        {
-            return ExtensionType::DiscLayer;
-        }
-        
     };
 }
 

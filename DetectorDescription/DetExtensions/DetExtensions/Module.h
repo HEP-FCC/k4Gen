@@ -32,11 +32,6 @@ namespace Det {
         virtual ~DetModule()
         {}
         
-        virtual ExtensionType type()
-        {
-            return ExtensionType::Module;
-        }
-        
     };
 }
 #endif  //DET_MODULE_H
