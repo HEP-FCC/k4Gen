@@ -1,21 +1,19 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.5)
-#---------------------------------------------------------------
-# Load macros and functions for Gaudi-based projects
-find_package(GaudiProject)
-find_package(Delphes) 
-#---------------------------------------------------------------
+################################################################################
+# Package: Generation
+################################################################################
+gaudi_subdir(Generation v1r0)
 
-# Declare project name and version
-# Syntax:
-#    gaudi_project(this_project this_version
-#                  USE dep_project_1 version_1 [project_2 version_2 ...]
-#                  [DATA pkg1 [VERSION vers1] [pkg2 ...])
-gaudi_project(FCCSW HEAD   
-              USE Gaudi v26r4 )
+# this declaration will not be needed in the future
+gaudi_depends_on_subdirs(GaudiAlg DataObjects FWCore)
 
+find_package(HepMC)
+find_package(Pythia8 COMPONENTS pythia8 pythia8tohepmc)
+find_package(FCCEDM)
+find_package(ALBERS)
 
-include_directories( 
-		     ${DELPHES_INCLUDE_DIRS}  
-                     ${DELPHES_EXTERNALS_INCLUDE_DIRS}  
-                     ${FCCEDM_INCLUDE_DIRS}
-)  		     
+gaudi_install_headers(Generation)
+
+gaudi_add_module(Generation
+                 src/*.cpp
+                 INCLUDE_DIRS HepMC Pythia8 FWCore FCCEDM ALBERS
+                 LINK_LIBRARIES HepMC GaudiAlgLib DataObjects Pythia8 FCCEDM ALBERS)
