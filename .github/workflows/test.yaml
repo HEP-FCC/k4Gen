@@ -25,10 +25,10 @@ jobs:
         source spack/share/spack/setup-env.sh;\
         spack dev-build k4gen@master;' # --test=all needs some work
     - name: Test
+      # todo: need to figure out how to add runtime environment to ctest
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package; 
         source spack/share/spack/setup-env.sh;\
         spack load k4gen@master;\
         k4run  k4Gen/options/pythia.py;\
-        k4run k4Gen/options/particleGun.py;\  
-        '
+        k4run k4Gen/options/particleGun.py;'
