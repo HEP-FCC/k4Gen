@@ -40,7 +40,7 @@ StatusCode GenAlg::execute() {
   if (StatusCode::SUCCESS != sc) {
     return sc;
   }
-  m_vertexSmearingTool->smearVertex(*theEvent);
+  m_vertexSmearingTool->smearVertex(*theEvent).ignore();
   if (!m_pileUpProvider.empty()) {
     for (unsigned int i_pileUp = 0; i_pileUp < numPileUp; ++i_pileUp) {
       auto puEvt = HepMC::GenEvent();
@@ -48,7 +48,7 @@ StatusCode GenAlg::execute() {
       if (StatusCode::SUCCESS != sc) {
         return sc;
       }
-      m_vertexSmearingTool->smearVertex(puEvt);
+      m_vertexSmearingTool->smearVertex(puEvt).ignore();
       eventVector.push_back(std::move(puEvt));
     }
   }

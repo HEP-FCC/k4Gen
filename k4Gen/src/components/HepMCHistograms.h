@@ -1,7 +1,7 @@
 #ifndef GENERATION_HEPMCHISTOGRAMS_H
 #define GENERATION_HEPMCHISTOGRAMS_H
 
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/ITHistSvc.h"
 #include "HepMC/GenEvent.h"

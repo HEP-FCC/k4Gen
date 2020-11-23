@@ -18,7 +18,7 @@ StatusCode EDMToHepMCConverter::initialize() { return GaudiAlgorithm::initialize
 
 StatusCode EDMToHepMCConverter::execute() {
 
-  const edm4hep::MCParticleCollection* particles = m_genphandle.get();
+  auto particles = m_genphandle.get();
   // ownership of event given to data service at the end of execute
   HepMC::GenEvent* event = new HepMC::GenEvent;
   event->use_units(HepMC::Units::GEV, HepMC::Units::MM);

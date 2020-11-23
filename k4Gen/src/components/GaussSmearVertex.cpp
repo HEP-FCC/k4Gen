@@ -40,7 +40,7 @@ StatusCode GaussSmearVertex::initialize() {
 
   if (!sc.isSuccess()) return Error("Could not initialize normal random number generator");
 
-  release(randSvc);
+  release(randSvc).ignore();
   return sc;
 }
 

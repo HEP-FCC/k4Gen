@@ -1,7 +1,7 @@
 #ifndef GENERATION_CONSTPTPARTICLEGUN_H
 #define GENERATION_CONSTPTPARTICLEGUN_H
 
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/RndmGenerators.h"

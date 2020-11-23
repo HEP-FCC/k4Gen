@@ -27,9 +27,8 @@ if(NOT CMAKE_CXX_STANDARD MATCHES "14|17")
   message(FATAL_ERROR "Unsupported C++ standard: ${CMAKE_CXX_STANDARD}")
 endif()
 
-message(${CMAKE_MODULE_PATH})
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
-message(${CMAKE_MODULE_PATH})
+
 
 add_subdirectory(k4Gen)
 

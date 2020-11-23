@@ -1,7 +1,7 @@
 #ifndef GENERATION_GENPARTICLEFILTER_H
 #define GENERATION_GENPARTICLEFILTER_H
 
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // forward declarations:

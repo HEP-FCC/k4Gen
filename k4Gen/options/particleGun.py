@@ -8,8 +8,8 @@ ApplicationMgr(
                OutputLevel=INFO,
               )
 
-from Configurables import FCCDataSvc
-podioevent = FCCDataSvc("EventDataSvc")
+from Configurables import k4DataSvc
+podioevent = k4DataSvc("EventDataSvc")
 ApplicationMgr().ExtSvc += [podioevent]
 
 
@@ -25,14 +25,9 @@ smeartool.yVertexMin = -10*units.mm
 smeartool.yVertexMax = 10*units.mm
 smeartool.zVertexMin = -30*units.mm
 smeartool.zVertexMax = 30*units.mm
-from Configurables import RangePileUp
-pileuptool = RangePileUp()
-pileuptool.numPileUpEvents=[1, 2, 3]
 from Configurables import GenAlg
 gun = GenAlg()
 gun.SignalProvider = guntool1
-gun.PileUpProvider = guntool2
-gun.PileUpTool = pileuptool
 gun.hepmc.Path = "hepmc"
 ApplicationMgr().TopAlg += [gun]
 
@@ -49,8 +44,7 @@ ApplicationMgr().TopAlg += [writer]
 from Configurables import HepMCToEDMConverter
 hepmc_converter = HepMCToEDMConverter()
 hepmc_converter.hepmc.Path="hepmc"
-hepmc_converter.genparticles.Path = "GenParticles"
-hepmc_converter.genvertices.Path = "GenVertices"
+hepmc_converter.GenParticles.Path = "GenParticles"
 ApplicationMgr().TopAlg += [hepmc_converter]
 
 from Configurables import HepMCHistograms

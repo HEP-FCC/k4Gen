@@ -1,7 +1,7 @@
 #ifndef GENERATION_EDMTOHEPMCCONVERTER_H
 #define GENERATION_EDMTOHEPMCCONVERTER_H
 
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "HepMC/GenEvent.h"
 #include "HepMC/Units.h"

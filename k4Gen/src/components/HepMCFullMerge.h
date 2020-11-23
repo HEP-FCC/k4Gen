@@ -2,7 +2,7 @@
 #ifndef GENERATION_HEPMCFULLMERGE_H
 #define GENERATION_HEPMCFULLMERGE_H
 
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 #include "Generation/IHepMCMergeTool.h"
 
 #include "GaudiAlg/GaudiTool.h"

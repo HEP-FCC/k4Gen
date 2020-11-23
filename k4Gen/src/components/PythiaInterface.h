@@ -2,7 +2,7 @@
 #define GENERATION_PYTHIAINTERFACE_H
 
 #include <memory>
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "Generation/IHepMCProviderTool.h"
 #include "Generation/IVertexSmearingTool.h"

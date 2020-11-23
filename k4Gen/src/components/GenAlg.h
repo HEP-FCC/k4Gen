@@ -4,7 +4,7 @@
 
 #include "Generation/IHepMCMergeTool.h"
 #include "Generation/IHepMCProviderTool.h"
-#include "FWCore/IPileUpTool.h"
+#include "Generation/IPileUpTool.h"
 #include "Generation/IVertexSmearingTool.h"
 
 
@@ -12,7 +12,7 @@
 #include "GaudiKernel/ToolHandle.h"
 
 
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 namespace HepMC {
 class GenEvent;
 }

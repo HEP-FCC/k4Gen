@@ -3,7 +3,7 @@
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 
 #include "HepMC/GenEvent.h"
 

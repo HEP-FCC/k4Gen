@@ -92,9 +92,9 @@ StatusCode HepEVTReader::execute()
       particle.setPDG(IDHEP);
       particle.setGeneratorStatus(ISTHEP); 
       particle.setMomentum({
-                            PHEP1,
-                            PHEP2,
-                            PHEP3,
+                            (float) PHEP1,
+                            (float) PHEP2,
+                            (float) PHEP3,
                            });
       particle.setMass(PHEP5);
       particle.setVertex({

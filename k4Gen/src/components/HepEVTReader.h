@@ -6,7 +6,7 @@
 #include "Generation/IVertexSmearingTool.h"
 #include "Generation/IHepMCMergeTool.h"
 
-#include "FWCore/DataHandle.h"
+#include "k4FWCore/DataHandle.h"
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/ToolHandle.h"
