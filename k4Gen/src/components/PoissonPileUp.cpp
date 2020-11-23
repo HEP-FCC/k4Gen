@@ -17,7 +17,7 @@ StatusCode PoissonPileUp::initialize() {
   if (m_meanPileUpEvents < 0) return Error("Number of Pileup events cannot be negative!");
   sc = m_PoissonDist.initialize(randSvc, Rndm::Poisson(m_meanPileUpEvents));
   if (!sc.isSuccess()) return Error("Could not initialize Poisson random number generator");
-  release(randSvc);
+  release(randSvc).ignore();
   m_currentNumPileUpEvents = m_PoissonDist();
   printPileUpCounters();
   return sc;
