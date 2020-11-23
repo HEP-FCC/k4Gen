@@ -1,10 +1,6 @@
 ################################################################################
-# Package: Generation
+# Package: k4Gen
 ################################################################################
-gaudi_subdir(Generation v1r0)
-
-# this declaration will not be needed in the future
-gaudi_depends_on_subdirs(GaudiAlg FCCFWCore)
 
 find_package(HepMC)
 find_package(Pythia8 COMPONENTS pythia8 pythia8tohepmc)
@@ -12,26 +8,34 @@ find_package(PODIO)
 find_package(HepPDT)
 find_package(EvtGen)
 
-gaudi_install_headers(Generation)
-gaudi_install_python_modules()
 
-gaudi_add_module(Generation
-                 src/components/*.cpp
-                 INCLUDE_DIRS Generation HepMC Pythia8 FWCore PODIO HepPDT EvtGen
-                 LINK_LIBRARIES HepMC GaudiAlgLib FWCore Pythia8 PODIO HepPDT ${EVTGEN_LIBRARIES} EDM4HEP::edm4hep EDM4HEP::edm4hepDict)
+gaudi_add_module(k4Gen
+                 SOURCES src/components/*.cpp
+                 LINK HepMC GaudiAlgLib FWCore Pythia8 PODIO HepPDT ${EVTGEN_LIBRARIES} EDM4HEP::edm4hep EDM4HEP::edm4hepDict)
+target_include_directories(k4Gen PUBLIC
+  
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/data DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/Generation)
+install(TARGETS k4Gen
+  EXPORT k4GenTargets
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
+  COMPONENT dev)
+
 
 include(CTest)
 
-gaudi_add_test(particleGun
-               FRAMEWORK options/particleGun.py
-               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+set(K4RUN ${CMAKE_BINARY_DIR}/run ${PROJECT_SOURCE_DIR}/k4FWCore/scripts/k4run)
 
 
-gaudi_add_test(GenPythiaMatching
-               COMMAND  fccrun  Examples/options/pythia.py --Filename Generation/data/powheg_ggHH_events.cmd
-               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+add_test(particleGun
+               COMMAND ${K4RUN} ${CMAKE_CURRENT_LIST_DIR}/options/particleGun.py
+               )
+
+
+add_test(GenPythiaMatching
+               COMMAND  ${K4RUN}  ${CMAKE_CURRENT_LIST_DIR}/options/pythia.py --Filename ${CMAKE_CURRENT_LIST_DIR}/data/powheg_ggHH_events.cmd
               )
 
 
