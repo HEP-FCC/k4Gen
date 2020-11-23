@@ -1,0 +1,11 @@
+name: k4GenCITests
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: cvmfs-contrib/github-action-cvmfs@main
+      - cvmfs_repositories: 'sw.hsf.org,sw-nightlies.hsf.org,sft-nightlies.cern.ch,sft.cern.ch,geant4.cern.ch'
+    - name: Setup CernVM-FS
+      run: cat /etc/cvmfs/default.local && ls /sw.hsf.org && cvmfs_config showconfig sw.hsf.org
