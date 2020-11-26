@@ -1,4 +1,4 @@
-# k4SimGeant4
+# k4Gen
 Gaudi Components for Generators in the Key4HEP software framework. 
 See the [FCC Starterkit](https://hep-fcc.github.io/fcc-tutorials/) for documentation on the usage in FCC.
 
