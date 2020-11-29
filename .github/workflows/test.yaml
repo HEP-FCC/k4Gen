@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: cvmfs-contrib/github-action-cvmfs@main
+    - uses: cvmfs-contrib/github-action-cvmfs@v1
       with:
         cvmfs_repositories: 'sw.hsf.org,sw-nightlies.hsf.org,sft-nightlies.cern.ch,sft.cern.ch,geant4.cern.ch'
     - name: Start container
@@ -30,5 +30,7 @@ jobs:
         docker exec CI_container /bin/bash -c 'cd ./Package; 
         source spack/share/spack/setup-env.sh;\
         spack load k4gen@master;\
-        k4run  k4Gen/options/pythia.py;\
-        k4run k4Gen/options/particleGun.py;'
+        spack load cmake;\
+        rm spack-build-*.txt;\
+        cd spack-build-*;\
+        ctest --output-on-failure;'
