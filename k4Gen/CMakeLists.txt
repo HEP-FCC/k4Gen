@@ -66,17 +66,21 @@ install(TARGETS k4Gen
 
 include(CTest)
 
-set(K4RUN ${CMAKE_BINARY_DIR}/run k4run)
+function(_set_test_environment name)
+  set_property(TEST ${name} PROPERTY ENVIRONMENT
+    LD_LIBRARY_PATH=$<TARGET_FILE_DIR:k4FWCore::k4FWCorePlugins>:$<TARGET_FILE_DIR:EDM4HEP::edm4hepDict>:$<TARGET_FILE_DIR:podio::podioDict>:$ENV{LD_LIBRARY_PATH}
+    PATH=$<INSTALL_PREFIX:k4FWCore::k4FWCore>:$ENV{PATH}
+)
 
 
 add_test(NAME ParticleGun
-               COMMAND ${K4RUN} ${CMAKE_CURRENT_LIST_DIR}/options/particleGun.py
+               COMMAND k4run ${CMAKE_CURRENT_LIST_DIR}/options/particleGun.py
                )
 
 
 add_test(NAME Pythia8Default
                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-               COMMAND  ${K4RUN}  ${CMAKE_CURRENT_LIST_DIR}/options/pythia.py 
+               COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/pythia.py 
               )
 
 
