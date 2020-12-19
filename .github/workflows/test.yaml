@@ -23,7 +23,7 @@ jobs:
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package; 
         source spack/share/spack/setup-env.sh;\
-        spack dev-build --test=all k4gen@master;' # --test=all needs some work
+        spack dev-build k4gen@master;' # --test=all needs some work
     - name: Test
       # todo: need to figure out how to add runtime environment to ctest
       run: |
