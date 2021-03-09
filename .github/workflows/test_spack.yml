@@ -26,14 +26,14 @@ jobs:
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
         source /cvmfs/sw.hsf.org/contrib/spack/share/spack/setup-env.sh;\
-        spack dev-build --test=root k4fwcore@master;\
+        spack dev-build --test=root k4gen@main;\
         '
 
     - name: Downstream Package CMake Test
       run: |
         docker exec CI_container /bin/bash -c 'cd ./Package;\
         source /cvmfs/sw.hsf.org/key4hep/setup.sh;\
-        spack load k4fwcore@master;\
+        spack load k4gen@main;\
         cd test/downstream-project-cmake-test;\
         mkdir build install;\
         cd build;\
