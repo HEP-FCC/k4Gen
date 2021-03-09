@@ -17,45 +17,6 @@ target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-## Get all propreties that cmake supports
-#execute_process(COMMAND cmake --help-property-list OUTPUT_VARIABLE CMAKE_PROPERTY_LIST)
-#
-## Convert command output into a CMake list
-#STRING(REGEX REPLACE ";" "\\\\;" CMAKE_PROPERTY_LIST "${CMAKE_PROPERTY_LIST}")
-#STRING(REGEX REPLACE "\n" ";" CMAKE_PROPERTY_LIST "${CMAKE_PROPERTY_LIST}")
-#
-#function(print_properties)
-#    message ("CMAKE_PROPERTY_LIST = ${CMAKE_PROPERTY_LIST}")
-#endfunction(print_properties)
-#
-#function(print_target_properties tgt)
-#    if(NOT TARGET ${tgt})
-#      message("There is no target named '${tgt}'")
-#      return()
-#    endif()
-#
-#    foreach (prop ${CMAKE_PROPERTY_LIST})
-#        string(REPLACE "<CONFIG>" "${CMAKE_BUILD_TYPE}" prop ${prop})
-#    # Fix https://stackoverflow.com/questions/32197663/how-can-i-remove-the-the-location-property-may-not-be-read-from-target-error-i
-#    if(prop STREQUAL "LOCATION" OR prop MATCHES "^LOCATION_" OR prop MATCHES "_LOCATION$")
-#        continue()
-#    endif()
-#        # message ("Checking ${prop}")
-#        get_property(propval TARGET ${tgt} PROPERTY ${prop} SET)
-#        if (propval)
-#            get_target_property(propval ${tgt} ${prop})
-#            message ("${tgt} ${prop} = ${propval}")
-#        endif()
-#    endforeach(prop)
-#endfunction(print_target_properties)
-#
-##print_target_properties(k4FWCore::k4FWCorePlugins)
-##print_target_properties(Gaudi::GaudiKernel)
-#
-#get_property(bbbb TARGET k4FWCore::k4FWCorePlugins PROPERTY INSTALL_RPATH )
-##message(aaa ${bbbb})
-#set_property(TARGET k4Gen APPEND
-#    PROPERTY runtime_ld_library_path $bbbb)
 
 install(TARGETS k4Gen
   EXPORT k4GenTargets
@@ -66,16 +27,39 @@ install(TARGETS k4Gen
 
 include(CTest)
 
+get_target_property(k4fwcore_lib k4FWCore::k4FWCorePlugins LOCATION)
+get_filename_component(kfwcore_loc ${k4fwcore_lib} DIRECTORY)
+
+get_target_property(edm4hep_lib EDM4HEP::edm4hepDict LOCATION)
+get_filename_component(edm4hep_loc ${edm4hep_lib} DIRECTORY)
+
+get_target_property(root_lib ROOT::Core LOCATION)
+get_filename_component(root_loc ${root_lib} DIRECTORY)
+
+get_target_property(podio_lib podio::podio LOCATION)
+get_filename_component(podio_loc ${podio_lib} DIRECTORY)
+
+
+function(set_test_env _testname)
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "ROOT_INCLUDE_PATH=${podio_loc}/../include/podio:${edm4hep_loc}/../include:$ENV{ROOT_INCLUDE_PATH}")
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}:${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}:${root_loc}:${k4fwcore_loc}:${edm4hep_loc}:${podio_loc}:$ENV{LD_LIBRARY_PATH}")
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}/genConf:${kfwcore_loc}/../python:$ENV{PYTHONPATH}")
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "PATH=${kfwcore_loc}/../bin:$ENV{PATH}")
+endfunction()
+
+
 
 
 add_test(NAME ParticleGun
                COMMAND k4run ${CMAKE_CURRENT_LIST_DIR}/options/particleGun.py
                )
+set_test_env(ParticleGun)
 
 
 add_test(NAME Pythia8Default
                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/pythia.py 
               )
+set_test_env(Pythia8Default)
 
 
