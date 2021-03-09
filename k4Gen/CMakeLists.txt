@@ -51,13 +51,14 @@ endfunction()
 
 
 add_test(NAME ParticleGun
+               WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
                COMMAND k4run ${CMAKE_CURRENT_LIST_DIR}/options/particleGun.py
                )
 set_test_env(ParticleGun)
 
 
 add_test(NAME Pythia8Default
-               WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+               WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
                COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/pythia.py 
               )
 set_test_env(Pythia8Default)
