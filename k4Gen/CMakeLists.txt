@@ -11,7 +11,7 @@ find_package(Gaudi)
 file(GLOB k4gen_plugin_sources src/components/*.cpp)
 gaudi_add_module(k4Gen
                  SOURCES ${k4gen_plugin_sources}
-                 LINK GaudiKernel HepMC GaudiAlgLib k4FWCore::k4FWCore k4FWCore::k4FWCorePlugins HepPDT ${EVTGEN_LIBRARIES} EDM4HEP::edm4hep EDM4HEP::edm4hepDict)
+                 LINK Gaudi::GaudiKernel HepMC Gaudi::GaudiAlgLib k4FWCore::k4FWCore k4FWCore::k4FWCorePlugins HepPDT ${EVTGEN_LIBRARIES} EDM4HEP::edm4hep EDM4HEP::edm4hepDict)
 
 target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
@@ -27,8 +27,8 @@ install(TARGETS k4Gen
 
 include(CTest)
 
-get_target_property(k4fwcore_lib k4FWCore::k4FWCorePlugins LOCATION)
-get_filename_component(kfwcore_loc ${k4fwcore_lib} DIRECTORY)
+get_target_property(k4fwcore_lib k4FWCore::k4FWCore LOCATION)
+get_filename_component(k4fwcore_loc ${k4fwcore_lib} DIRECTORY)
 
 get_target_property(edm4hep_lib EDM4HEP::edm4hepDict LOCATION)
 get_filename_component(edm4hep_loc ${edm4hep_lib} DIRECTORY)
@@ -43,8 +43,8 @@ get_filename_component(podio_loc ${podio_lib} DIRECTORY)
 function(set_test_env _testname)
   set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "ROOT_INCLUDE_PATH=${podio_loc}/../include/podio:${edm4hep_loc}/../include:$ENV{ROOT_INCLUDE_PATH}")
   set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}:${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}:${root_loc}:${k4fwcore_loc}:${edm4hep_loc}:${podio_loc}:$ENV{LD_LIBRARY_PATH}")
-  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}/genConf:${kfwcore_loc}/../python:$ENV{PYTHONPATH}")
-  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "PATH=${kfwcore_loc}/../bin:$ENV{PATH}")
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}/genConf:${k4fwcore_loc}/../python:$ENV{PYTHONPATH}")
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "PATH=${k4fwcore_loc}/../bin:$ENV{PATH}")
 endfunction()
 
 
