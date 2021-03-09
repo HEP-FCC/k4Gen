@@ -45,6 +45,7 @@ function(set_test_env _testname)
   set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}:${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}:${root_loc}:${k4fwcore_loc}:${edm4hep_loc}:${podio_loc}:$ENV{LD_LIBRARY_PATH}")
   set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}/genConf:${k4fwcore_loc}/../python:$ENV{PYTHONPATH}")
   set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "PATH=${k4fwcore_loc}/../bin:$ENV{PATH}")
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "K4GEN=${CMAKE_CURRENT_LIST_DIR}/")
 endfunction()
 
 
