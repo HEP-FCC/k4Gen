@@ -106,6 +106,11 @@ StatusCode HepEVTReader::execute()
     }
 
   m_genphandle.put(particles);
+  if(m_input.eof()) {
+    NHEP = 0 ;
+  } else {
+    m_input >> NHEP;
+  }
   return StatusCode::SUCCESS;
 }
 
