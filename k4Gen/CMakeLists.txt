@@ -26,28 +26,15 @@ install(TARGETS k4Gen
 
 include(CTest)
 
-get_target_property(k4fwcore_lib k4FWCore::k4FWCore LOCATION)
-get_filename_component(k4fwcore_loc ${k4fwcore_lib} DIRECTORY)
-
-get_target_property(edm4hep_lib EDM4HEP::edm4hepDict LOCATION)
-get_filename_component(edm4hep_loc ${edm4hep_lib} DIRECTORY)
-
-get_target_property(root_lib ROOT::Core LOCATION)
-get_filename_component(root_loc ${root_lib} DIRECTORY)
-
-get_target_property(podio_lib podio::podio LOCATION)
-get_filename_component(podio_loc ${podio_lib} DIRECTORY)
-
 
 function(set_test_env _testname)
-  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "ROOT_INCLUDE_PATH=${podio_loc}/../include/podio:${edm4hep_loc}/../include:$ENV{ROOT_INCLUDE_PATH}")
-  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}:${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}:${root_loc}:${k4fwcore_loc}:${edm4hep_loc}:${podio_loc}:$ENV{LD_LIBRARY_PATH}")
-  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "PYTHONPATH=${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}/genConf:${k4fwcore_loc}/../python:$ENV{PYTHONPATH}")
-  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "PATH=${k4fwcore_loc}/../bin:$ENV{PATH}")
-  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT "K4GEN=${CMAKE_CURRENT_LIST_DIR}/")
+  set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT
+    LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}:$<TARGET_FILE_DIR:k4Gen>:$<TARGET_FILE_DIR:ROOT::Core>:$<TARGET_FILE_DIR:k4FWCore::k4FWCore>:$<TARGET_FILE_DIR:EDM4HEP::edm4hep>:$<TARGET_FILE_DIR:podio::podio>:$ENV{LD_LIBRARY_PATH}
+    PYTHONPATH=${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}/genConfDir:$<TARGET_FILE_DIR:k4FWCore::k4FWCore>/../python:$ENV{PYTHONPATH}
+    PATH=$<TARGET_FILE_DIR:k4FWCore::k4FWCore>/../bin:$ENV{PATH}
+    K4GEN=${CMAKE_CURRENT_LIST_DIR}/
+    )
 endfunction()
-
-
 
 
 add_test(NAME ParticleGun
