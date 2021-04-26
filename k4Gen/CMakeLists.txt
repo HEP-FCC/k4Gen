@@ -64,4 +64,8 @@ add_test(NAME Pythia8Default
               )
 set_test_env(Pythia8Default)
 
-
+#--- Install the example options to the directory where the spack installation
+#--- points the $K4GEN environment variable
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/options
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/examples
+  PATTERN "__init__.py" EXCLUDE)
