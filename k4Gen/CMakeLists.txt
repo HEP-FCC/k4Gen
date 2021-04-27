@@ -26,11 +26,17 @@ install(TARGETS k4Gen
 
 include(CTest)
 
+#--- The genConf directory has been renamed to genConfDir in Gaudi 35r1
+#--- See https://gitlab.cern.ch/gaudi/Gaudi/-/merge_requests/1158
+set(GAUDI_GENCONF_DIR "genConfDir")
+if (${Gaudi_VERSION} VERSION_LESS 35.1)
+  set(GAUDI_GENCONF_DIR "genConf")
+endif()
 
 function(set_test_env _testname)
   set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT
     LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}:$<TARGET_FILE_DIR:k4Gen>:$<TARGET_FILE_DIR:ROOT::Core>:$<TARGET_FILE_DIR:k4FWCore::k4FWCore>:$<TARGET_FILE_DIR:EDM4HEP::edm4hep>:$<TARGET_FILE_DIR:podio::podio>:$ENV{LD_LIBRARY_PATH}
-    PYTHONPATH=${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}/genConfDir:$<TARGET_FILE_DIR:k4FWCore::k4FWCore>/../python:$ENV{PYTHONPATH}
+    PYTHONPATH=${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}/${GAUDI_GENCONF_DIR}:$<TARGET_FILE_DIR:k4FWCore::k4FWCore>/../python:$ENV{PYTHONPATH}
     PATH=$<TARGET_FILE_DIR:k4FWCore::k4FWCore>/../bin:$ENV{PATH}
     K4GEN=${CMAKE_CURRENT_LIST_DIR}/
     )
