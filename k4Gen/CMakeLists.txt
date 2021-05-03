@@ -61,3 +61,6 @@ set_test_env(Pythia8Default)
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/options
   DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/examples
   PATTERN "__init__.py" EXCLUDE)
+
+install(FILES ${CMAKE_CURRENT_LIST_DIR}/data/Pythia_standard.cmd
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/data)
