@@ -36,7 +36,7 @@ pythiafilename = "data/Pythia_standard.cmd"
 pythiafile = os.path.join(path_to_pythiafile, pythiafilename)
 # Example of pythia configuration file to read LH event file
 #pythiafile="options/Pythia_LHEinput.cmd"
-pythia8gentool.Filename = pythiafile
+pythia8gentool.pythiacard = pythiafile
 pythia8gentool.doEvtGenDecays = False
 pythia8gentool.printPythiaStatistics = True
 
