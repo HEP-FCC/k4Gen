@@ -51,7 +51,7 @@ private:
   /// Interface for conversion from Pythia8::Event to HepMC event.
   HepMC::Pythia8ToHepMC m_pythiaToHepMC;
   /// Name of Pythia configuration file with Pythia simulation settings & input LHE file (if required)
-  Gaudi::Property<std::string> m_parfile{this, "Filename", "Generation/data/Pythia_minbias_pp_100TeV.cmd"
+  Gaudi::Property<std::string> m_pythiacard{this, "pythiacard", "Pythia_minbias_pp_100TeV.cmd"
                                                            "Name of the Pythia cmd file"};
   /// Pythia8 engine for jet clustering
   std::unique_ptr<Pythia8::SlowJet> m_slowJet{nullptr};

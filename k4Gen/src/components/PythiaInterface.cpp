@@ -35,7 +35,7 @@ StatusCode PythiaInterface::initialize() {
 
   StatusCode sc = GaudiTool::initialize();
   if (!sc.isSuccess()) return sc;
-  if (m_parfile.empty()) {
+  if (m_pythiacard.empty()) {
     return Error("Define Pythia8 configuration file (*.cmd)!");
   }
 
@@ -61,7 +61,7 @@ StatusCode PythiaInterface::initialize() {
 
 
   // Read Pythia configuration files
-  m_pythiaSignal->readFile(m_parfile.value().c_str());
+  m_pythiaSignal->readFile(m_pythiacard.value().c_str());
   // do not bother with pileup configuration if no pileup
 
   // Initialize variables from configuration file
