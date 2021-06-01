@@ -61,3 +61,8 @@ set_test_env(Pythia8Default)
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/options
   DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/examples
   PATTERN "__init__.py" EXCLUDE)
+
+file(GLOB k4gen_config_files data/*)
+install(FILES ${k4gen_config_files}
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}/
+  )
