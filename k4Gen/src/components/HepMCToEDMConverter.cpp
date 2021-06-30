@@ -6,18 +6,27 @@
 DECLARE_COMPONENT(HepMCToEDMConverter)
 
 
-edm4hep::MCParticle convert(HepMC::GenParticle* hepmcParticle) {
-    edm4hep::MCParticle edm_particle;
-    edm_particle.setPDG(hepmcParticle->pdg_id());
-    edm_particle.setGeneratorStatus(hepmcParticle->status());
-    // look up charge from pdg_id
-    HepPDT::ParticleID particleID(hepmcParticle->pdg_id());
-    edm_particle.setCharge(particleID.charge());
-    //  convert momentum
-    auto p = hepmcParticle->momentum();
-    edm_particle.setMomentum( {float(p.px()), float(p.py()), float(p.pz())} );
-    return edm_particle;
- }
+edm4hep::MCParticle HepMCToEDMConverter::convert(HepMC::GenParticle* hepmcParticle) {
+  edm4hep::MCParticle edm_particle;
+  edm_particle.setPDG(hepmcParticle->pdg_id());
+  edm_particle.setGeneratorStatus(hepmcParticle->status());
+  // look up charge from pdg_id
+  HepPDT::ParticleID particleID(hepmcParticle->pdg_id());
+  edm_particle.setCharge(particleID.charge());
+  // convert momentum
+  auto p = hepmcParticle->momentum();
+  edm_particle.setMomentum( {float(p.px()), float(p.py()), float(p.pz())} );
+
+  // convert vertex info
+  auto* prodVtx = hepmcParticle->production_vertex();
+
+  if ( prodVtx!=nullptr ) {
+    auto& pos = prodVtx->position();
+    edm_particle.setVertex( {float(pos.x()), float(pos.y()), float(pos.z())} );
+  }
+
+  return edm_particle;
+}
 
 HepMCToEDMConverter::HepMCToEDMConverter(const std::string& name, ISvcLocator* svcLoc) : GaudiAlgorithm(name, svcLoc) {
   declareProperty("hepmc", m_hepmchandle, "HepMC event handle (input)");

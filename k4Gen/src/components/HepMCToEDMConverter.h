@@ -8,6 +8,7 @@
 
 namespace edm4hep {
 class MCParticleCollection;
+class MCParticle;
 }
 
 class HepMCToEDMConverter : public GaudiAlgorithm {
@@ -30,5 +31,7 @@ private:
   DataHandle<HepMC::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Reader, this};
   /// Handle for the genparticles to be written
   DataHandle<edm4hep::MCParticleCollection> m_genphandle{"GenParticles", Gaudi::DataHandle::Writer, this};
+
+  edm4hep::MCParticle convert(HepMC::GenParticle* hepmcParticle);
 };
 #endif
