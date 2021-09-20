@@ -24,7 +24,7 @@ StatusCode GenParticleFilter::execute() {
       }
     }
     if (accept) {
-      edm4hep::MCParticle outptc = ptc.clone();
+      auto outptc = ptc.clone();
       particles->push_back(outptc);
     }
     cntr++;
