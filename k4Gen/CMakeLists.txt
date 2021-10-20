@@ -10,7 +10,7 @@ find_package(EvtGen)
 file(GLOB k4gen_plugin_sources src/components/*.cpp)
 gaudi_add_module(k4Gen
                  SOURCES ${k4gen_plugin_sources}
-                 LINK Gaudi::GaudiKernel ${HEPMC_LIBRARIES} Gaudi::GaudiAlgLib k4FWCore::k4FWCore k4FWCore::k4FWCorePlugins ${HEPPDT_LIBRARIES} ${EVTGEN_LIBRARIES} EDM4HEP::edm4hep EDM4HEP::edm4hepDict)
+                 LINK Gaudi::GaudiKernel ${HEPMC_LIBRARIES} Gaudi::GaudiAlgLib k4FWCore::k4FWCore ${HEPPDT_LIBRARIES} ${EVTGEN_LIBRARIES} EDM4HEP::edm4hep EDM4HEP::edm4hepDict)
 
 target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
@@ -55,6 +55,15 @@ add_test(NAME Pythia8Default
                COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/pythia.py 
               )
 set_test_env(Pythia8Default)
+
+add_test(NAME Pythia8ExtraSettings
+               WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+               COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/pythia.py  --pythiaExtraSettings "Beams:idA = 13" "Beams:idB = -13"
+              )
+set_tests_properties(Pythia8ExtraSettings PROPERTIES
+  PASS_REGULAR_EXPRESSION "We collide mu- with mu"
+  )
+set_test_env(Pythia8ExtraSettings)
 
 #--- Install the example options to the directory where the spack installation
 #--- points the $K4GEN environment variable
