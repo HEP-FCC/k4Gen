@@ -39,6 +39,7 @@ pythiafile = os.path.join(path_to_pythiafile, pythiafilename)
 pythia8gentool.pythiacard = pythiafile
 pythia8gentool.doEvtGenDecays = False
 pythia8gentool.printPythiaStatistics = True
+pythia8gentool.pythiaExtraSettings = [""]
 
 from Configurables import GenAlg
 pythia8gen = GenAlg("Pythia8")
