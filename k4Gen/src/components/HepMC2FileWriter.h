@@ -5,9 +5,9 @@
 
 #include "k4FWCore/DataHandle.h"
 
-namespace HepMC {
+namespace HepMC3 {
 class GenEvent;
-class IO_GenEvent;
+class WriterAsciiHepMC2;
 }
 
 /**
@@ -20,11 +20,11 @@ class IO_GenEvent;
  * done in the fccsw event data format.
  */
 
-class HepMCFileWriter : public GaudiAlgorithm {
+class HepMC2FileWriter : public GaudiAlgorithm {
 
 public:
   /// Constructor.
-  HepMCFileWriter(const std::string& name, ISvcLocator* svcLoc);
+  HepMC2FileWriter(const std::string& name, ISvcLocator* svcLoc);
   /// Initialize.
   virtual StatusCode initialize();
   /// Execute.
@@ -34,9 +34,9 @@ public:
 
 private:
   /// Handle for the HepMC to be read
-  DataHandle<HepMC::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
+  DataHandle<HepMC3::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
   Gaudi::Property<std::string> m_filename{this, "Filename", "Output_HepMC.dat", "Name of the HepMC file to write"};
-  std::unique_ptr<HepMC::IO_GenEvent> m_file;
+  std::unique_ptr<HepMC3::WriterAsciiHepMC2> m_file;
 };
 
 #endif  // GENERATION_HEPMCFILEWRITER_H
