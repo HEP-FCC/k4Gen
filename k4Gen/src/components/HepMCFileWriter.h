@@ -1,5 +1,5 @@
-#ifndef GENERATION_HEPMC2FILEWRITER_H
-#define GENERATION_HEPMC2FILEWRITER_H
+#ifndef GENERATION_HEPMCFILEWRITER_H
+#define GENERATION_HEPMCFILEWRITER_H
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -7,7 +7,7 @@
 
 namespace HepMC3 {
 class GenEvent;
-class WriterAsciiHepMC2;
+class WriterAscii;
 }
 
 /**
@@ -36,7 +36,7 @@ private:
   /// Handle for the HepMC to be read
   DataHandle<HepMC3::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
   Gaudi::Property<std::string> m_filename{this, "Filename", "Output_HepMC.dat", "Name of the HepMC file to write"};
-  std::unique_ptr<HepMC3::WriterAsciiHepMC2> m_file;
+  std::unique_ptr<HepMC3::WriterAscii> m_file;
 };
 
-#endif  // GENERATION_HEPMC2FILEWRITER_H
+#endif  // GENERATION_HEPMCFILEWRITER_H
