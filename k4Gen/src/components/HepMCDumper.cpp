@@ -1,5 +1,7 @@
 #include "HepMCDumper.h"
 
+#include "HepMC3/Print.h"
+
 DECLARE_COMPONENT(HepMCDumper)
 
 HepMCDumper::HepMCDumper(const std::string& name, ISvcLocator* svcLoc) : GaudiAlgorithm(name, svcLoc) {
@@ -9,8 +11,8 @@ HepMCDumper::HepMCDumper(const std::string& name, ISvcLocator* svcLoc) : GaudiAl
 StatusCode HepMCDumper::initialize() { return GaudiAlgorithm::initialize(); }
 
 StatusCode HepMCDumper::execute() {
-  const HepMC::GenEvent* theEvent = m_hepmchandle.get();
-  theEvent->print();
+  const HepMC3::GenEvent* theEvent = m_hepmchandle.get();
+  HepMC3::Print::content(*theEvent);
   return StatusCode::SUCCESS;
 }
 
