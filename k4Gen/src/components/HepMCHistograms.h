@@ -4,7 +4,7 @@
 #include "k4FWCore/DataHandle.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/ITHistSvc.h"
-#include "HepMC/GenEvent.h"
+#include "HepMC3/GenEvent.h"
 
 #include "TH1F.h"
 
@@ -22,7 +22,7 @@ public:
 
 private:
   /// Handle for the HepMC to be read
-  DataHandle<HepMC::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
+  DataHandle<HepMC3::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
 
   ITHistSvc* m_ths{nullptr};  ///< THistogram service
 

@@ -5,8 +5,8 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Generation/IHepMCProviderTool.h"
 
-#include "HepMC/GenEvent.h"
-#include "HepMC/IO_GenEvent.h"
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/ReaderAscii.h"
 
 class HepMCFileReader : public GaudiTool, virtual public IHepMCProviderTool {
 public:
@@ -18,13 +18,13 @@ public:
   /// Wrapper for HepMC's fill_next_event() --
   ///  as in the hepmc original, the user is responsible
   ///  for the deletion of the event returned from this function
-  virtual StatusCode getNextEvent(HepMC::GenEvent& event);
+  virtual StatusCode getNextEvent(HepMC3::GenEvent& event);
   /// Wrapper for HepMC file io.
 
 private:
   void close();
   Gaudi::Property<std::string> m_filename{this, "Filename", "", "Name of the HepMC file to read"};
-  std::unique_ptr<HepMC::IO_GenEvent> m_file;
+  std::unique_ptr<HepMC3::ReaderAscii> m_file;
 };
 
 #endif  // GENERATION_HEPMCFILEREADER_H

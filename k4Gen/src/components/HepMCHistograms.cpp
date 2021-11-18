@@ -1,5 +1,9 @@
 #include "HepMCHistograms.h"
 
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/GenParticle.h"
+#include "HepMC3/GenVertex.h"
+
 DECLARE_COMPONENT(HepMCHistograms)
 
 HepMCHistograms::HepMCHistograms(const std::string& name, ISvcLocator* svcLoc) : GaudiAlgorithm(name, svcLoc) {
@@ -40,19 +44,16 @@ StatusCode HepMCHistograms::initialize() {
 StatusCode HepMCHistograms::execute() {
   auto evt = m_hepmchandle.get();
 
-  info() << "Processing event with " << evt->particles_size() << " particles" << endmsg;
+  info() << "Processing event with " << evt->particles().size() << " particles" << endmsg;
 
-  for (HepMC::GenEvent::particle_const_iterator it = evt->particles_begin(), end = evt->particles_end(); it != end;
-       ++it) {
-    auto particle = *it;
-    m_eta->Fill(particle->momentum().eta());
-    m_pt->Fill(particle->momentum().perp());
+  for (auto p: evt->particles()) {
+    m_eta->Fill(p->momentum().eta());
+    m_pt->Fill(p->momentum().perp());
   }
 
-  for (HepMC::GenEvent::vertex_const_iterator it = evt->vertices_begin(), end = evt->vertices_end(); it != end; ++it) {
-    auto vertex = *it;
-    m_d0->Fill(vertex->position().perp());
-    m_z0->Fill(vertex->position().z());
+  for (auto v: evt->vertices()) {
+    m_d0->Fill(v->position().perp());
+    m_z0->Fill(v->position().z());
   }
 
   return StatusCode::SUCCESS;

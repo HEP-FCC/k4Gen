@@ -22,7 +22,7 @@ public:
   /// Generation of particles
   virtual void generateParticle(Gaudi::LorentzVector& momentum, Gaudi::LorentzVector& origin, int& pdgId);
   virtual void printCounters() { ; };
-  virtual StatusCode getNextEvent(HepMC::GenEvent&);
+  virtual StatusCode getNextEvent(HepMC3::GenEvent&);
 
 private:
   Gaudi::Property<std::vector<double>> m_ptList{ 

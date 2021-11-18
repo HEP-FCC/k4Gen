@@ -3,8 +3,8 @@
 
 #include "k4FWCore/DataHandle.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "HepMC/GenEvent.h"
-#include "HepMC/Units.h"
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/Units.h"
 
 namespace edm4hep {
 class MCParticleCollection;
@@ -24,7 +24,7 @@ public:
 
 private:
   /// Handle for the HepMC to be read
-  DataHandle<HepMC::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Writer, this};
+  DataHandle<HepMC3::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Writer, this};
   /// Handle for the genparticles to be written
   DataHandle<edm4hep::MCParticleCollection> m_genphandle{"GenParticles", Gaudi::DataHandle::Reader, this};
 };

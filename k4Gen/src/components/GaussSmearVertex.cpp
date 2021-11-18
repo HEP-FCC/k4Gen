@@ -5,6 +5,10 @@
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/Vector4DTypes.h"
 
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/GenVertex.h"
+#include "HepMC3/GenParticle.h"
+
 /// Declaration of the Tool Factory
 DECLARE_COMPONENT(GaussSmearVertex)
 
@@ -45,7 +49,7 @@ StatusCode GaussSmearVertex::initialize() {
 }
 
 /// Smearing function
-StatusCode GaussSmearVertex::smearVertex(HepMC::GenEvent& theEvent) {
+StatusCode GaussSmearVertex::smearVertex(HepMC3::GenEvent& theEvent) {
 
   double dx = m_gaussDist() * m_xsig + m_xmean;
   double dy = m_gaussDist() * m_ysig + m_ymean;
@@ -56,10 +60,10 @@ StatusCode GaussSmearVertex::smearVertex(HepMC::GenEvent& theEvent) {
 
   debug() << "Smearing vertices by " << dpos << endmsg;
 
-  for (auto vit = theEvent.vertices_begin(); vit != theEvent.vertices_end(); ++vit) {
-    Gaudi::LorentzVector pos((*vit)->position());
+  for (auto vit: theEvent.vertices()) {
+    Gaudi::LorentzVector pos(vit->position());
     pos += dpos;
-    (*vit)->set_position(HepMC::FourVector(pos.x(), pos.y(), pos.z(), pos.t()));
+    vit->set_position(HepMC3::FourVector(pos.x(), pos.y(), pos.z(), pos.t()));
   }
 
   return StatusCode::SUCCESS;

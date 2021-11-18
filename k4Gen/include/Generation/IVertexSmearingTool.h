@@ -2,7 +2,7 @@
 #define GENERATION_IVERTEXSMEARINGTOOL_H
 
 #include "GaudiKernel/IAlgTool.h"
-#include "HepMC/GenEvent.h"
+#include "HepMC3/GenEvent.h"
 
 /** @class IVertexSmearingTool IVertexSmearingTool.h "Generation/IVertexSmearingTool.h"
  *
@@ -19,6 +19,6 @@ public:
   DeclareInterfaceID(IVertexSmearingTool, 1, 0);
 
   /// Smear the vertex of the interaction (independantly of the others)
-  virtual StatusCode smearVertex(HepMC::GenEvent& theEvent) = 0;
+  virtual StatusCode smearVertex(HepMC3::GenEvent& theEvent) = 0;
 };
 #endif  // GENERATION_ISMEARINGTOOL_H

@@ -1,6 +1,6 @@
 #include "HepMCFileWriter.h"
 #include "HepMC3/GenEvent.h"
-#include "HepMC3/WriterAsciiHepMC2.h"
+#include "HepMC3/WriterAscii.h"
 
 DECLARE_COMPONENT(HepMCFileWriter)
 
@@ -13,13 +13,13 @@ StatusCode HepMCFileWriter::initialize() {
   return GaudiAlgorithm::initialize();
 }
 
-StatusCode HepMC2FileWriter::execute() {
+StatusCode HepMCFileWriter::execute() {
   const HepMC3::GenEvent* theEvent = m_hepmchandle.get();
   m_file->write_event(*theEvent);
   return StatusCode::SUCCESS;
 }
 
-StatusCode HepMC2FileWriter::finalize() {
+StatusCode HepMCFileWriter::finalize() {
   m_file.reset();
   return GaudiAlgorithm::finalize();
 }

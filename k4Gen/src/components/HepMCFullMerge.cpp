@@ -4,6 +4,10 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Incident.h"
 
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/GenVertex.h"
+#include "HepMC3/GenParticle.h"
+
 DECLARE_COMPONENT(HepMCFullMerge)
 
 HepMCFullMerge::HepMCFullMerge(const std::string& type, const std::string& name, const IInterface* parent)
@@ -19,25 +23,24 @@ StatusCode HepMCFullMerge::initialize() {
   return sc;
 }
 
-StatusCode HepMCFullMerge::merge(HepMC::GenEvent& signalEvent, const std::vector<HepMC::GenEvent>& eventVector) {
+StatusCode HepMCFullMerge::merge(HepMC3::GenEvent& signalEvent, const std::vector<HepMC3::GenEvent>& eventVector) {
   for (auto it = eventVector.cbegin(), end = eventVector.cend(); it != end; ++it) {
     // keep track of which vertex in full event corresponds to which vertex in merged event
-    std::unordered_map<const HepMC::GenVertex*, HepMC::GenVertex*> inputToMergedVertexMap;
-    for (auto v = (*it).vertices_begin(); v != (*it).vertices_end(); ++v) {
-      HepMC::GenVertex* outvertex = new HepMC::GenVertex((*v)->position());
-      inputToMergedVertexMap[*v] = outvertex;
+    std::unordered_map<const HepMC3::GenVertex*, HepMC3::GenVertex*> inputToMergedVertexMap;
+    for (auto v: (*it).vertices()) {
+      HepMC3::GenVertex* outvertex = new HepMC3::GenVertex(v->position());
+      inputToMergedVertexMap[v.get()] = outvertex;
       signalEvent.add_vertex(outvertex);
     }
-    for (auto p = (*it).particles_begin(); p != (*it).particles_end(); ++p) {
-      HepMC::GenParticle* oldparticle = *p;
+    for (auto p: (*it).particles()) {
       // ownership of the particle is given to the vertex
-      HepMC::GenParticle* newparticle = new HepMC::GenParticle(*oldparticle);
+      HepMC3::GenParticle* newparticle = new HepMC3::GenParticle(*p);
       // attach particles to correct vertices in merged event
-      if (nullptr != oldparticle->end_vertex()) {
-        inputToMergedVertexMap[oldparticle->end_vertex()]->add_particle_in(newparticle);
+      if (nullptr != p->end_vertex()) {
+        inputToMergedVertexMap[p->end_vertex().get()]->add_particle_in(newparticle);
       }
-      if (nullptr != oldparticle->production_vertex()) {
-        inputToMergedVertexMap[oldparticle->production_vertex()]->add_particle_out(newparticle);
+      if (nullptr != p->production_vertex()) {
+        inputToMergedVertexMap[p->production_vertex().get()]->add_particle_out(newparticle);
       }
     }
   }

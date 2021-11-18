@@ -3,7 +3,7 @@
 
 #include "GaudiKernel/IAlgTool.h"
 
-namespace HepMC {
+namespace HepMC3 {
 class GenEvent;
 }
 
@@ -17,7 +17,7 @@ class IHepMCProviderTool : virtual public IAlgTool {
 public:
   DeclareInterfaceID(IHepMCProviderTool, 3, 0);
 
-  virtual StatusCode getNextEvent(HepMC::GenEvent&) = 0;
+  virtual StatusCode getNextEvent(HepMC3::GenEvent&) = 0;
 };
 
 #endif  // GENERATION_IHEPMCPROVIDERTOOL_H

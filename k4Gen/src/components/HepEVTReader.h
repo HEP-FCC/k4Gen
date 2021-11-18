@@ -1,6 +1,8 @@
 #ifndef GENERATION_HEPEVTREADER_H
 #define GENERATION_HEPEVTREADER_H
 
+#include <fstream>
+
 
 #include "Generation/IHepMCFileReaderTool.h"
 #include "Generation/IVertexSmearingTool.h"
@@ -13,12 +15,6 @@
 
 #include "GaudiKernel/SystemOfUnits.h"
 
-#include "HepMC/IO_GenEvent.h"
-
-
-namespace HepMC {
-  class GenEvent;
-}
 
 namespace edm4hep {
 class MCParticleCollection;
@@ -26,13 +22,10 @@ class MCParticleCollection;
 
 /**@class HepEVTReader HepEVTReader.h HepEVTReader.h
  *
- *  This algorithm reads in events from a HepMC file and puts them into the
- *  transient event store. Various Tools are used to read additional (pileup)
- *  events from a second HepMC file, smear the vertices and join them to a final
+ *  This algorithm reads in events from a HepEVT file and puts them into the
+ *  transient event store.
  *  event.
  *
- *  @author  nalipour
- *  @version 1.0
  */
 
 class HepEVTReader: public GaudiAlgorithm {
@@ -57,15 +50,6 @@ private:
   /// Handle for the genparticles to be written
   DataHandle<edm4hep::MCParticleCollection> m_genphandle {"GenParticles", Gaudi::DataHandle::Writer, this};
 
-
-  /// Tools to handle input from HepMC-file
-  ToolHandle<IHepMCFileReaderTool> m_signalFileReader;
-  ToolHandle<IHepMCFileReaderTool> m_pileupFileReader;
-  
-  /// Tool to merge HepMC events
-  ToolHandle<IHepMCMergeTool> m_HepMCMergeTool;
-  // Tool to smear vertices
-  ToolHandle<IVertexSmearingTool> m_vertexSmearingTool;
 };
 
 #endif //GENERATION_HEPEVTREADER_H

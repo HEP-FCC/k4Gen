@@ -20,11 +20,11 @@ class WriterAscii;
  * done in the fccsw event data format.
  */
 
-class HepMC2FileWriter : public GaudiAlgorithm {
+class HepMCFileWriter : public GaudiAlgorithm {
 
 public:
   /// Constructor.
-  HepMC2FileWriter(const std::string& name, ISvcLocator* svcLoc);
+  HepMCFileWriter(const std::string& name, ISvcLocator* svcLoc);
   /// Initialize.
   virtual StatusCode initialize();
   /// Execute.

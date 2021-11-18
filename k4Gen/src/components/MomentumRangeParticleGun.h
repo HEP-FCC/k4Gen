@@ -34,7 +34,7 @@ public:
 
   /// Print counters
   virtual void printCounters() { ; };
-  virtual StatusCode getNextEvent(HepMC::GenEvent&);
+  virtual StatusCode getNextEvent(HepMC3::GenEvent&);
 
 private:
   /// Minimum momentum (Set by options)

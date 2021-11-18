@@ -2,7 +2,7 @@
 # Package: k4Gen
 ################################################################################
 
-find_package(HepMC)
+find_package(HepMC3)
 find_package(Pythia8 COMPONENTS pythia8 pythia8tohepmc)
 find_package(HepPDT)
 find_package(EvtGen)
@@ -10,9 +10,9 @@ find_package(EvtGen)
 file(GLOB k4gen_plugin_sources src/components/*.cpp)
 gaudi_add_module(k4Gen
                  SOURCES ${k4gen_plugin_sources}
-                 LINK Gaudi::GaudiKernel ${HEPMC_LIBRARIES} Gaudi::GaudiAlgLib k4FWCore::k4FWCore ${HEPPDT_LIBRARIES} ${EVTGEN_LIBRARIES} EDM4HEP::edm4hep EDM4HEP::edm4hepDict)
+                 LINK Gaudi::GaudiKernel ${HEPMC3_LIBRARIES} Gaudi::GaudiAlgLib k4FWCore::k4FWCore ${HEPPDT_LIBRARIES} ${EVTGEN_LIBRARIES} EDM4HEP::edm4hep EDM4HEP::edm4hepDict)
 
-target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS}
+target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS} ${HEPMC3_INCLUDE_DIRS}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 

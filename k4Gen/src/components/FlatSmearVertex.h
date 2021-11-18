@@ -7,6 +7,8 @@
 
 #include "Generation/IVertexSmearingTool.h"
 
+#include "HepMC3/GenEvent.h"
+
 /** @class FlatSmearVertex FlatSmearVertex.h "FlatSmearVertex.h"
  *
  *  Tool to smear vertex with flat smearing along the x- y- and z-axis.
@@ -28,7 +30,7 @@ public:
 
   /** Implements IVertexSmearingTool::smearVertex.
    */
-  virtual StatusCode smearVertex(HepMC::GenEvent& theEvent);
+  virtual StatusCode smearVertex(HepMC3::GenEvent& theEvent);
 
 private:
   /// Minimum value for the x coordinate of the vertex (set by options)

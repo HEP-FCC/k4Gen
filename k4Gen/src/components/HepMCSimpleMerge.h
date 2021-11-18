@@ -8,8 +8,6 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/RndmGenerators.h"
 
-#include "HepMC/GenEvent.h"
-#include "HepMC/IO_GenEvent.h"
 
 class HepMCSimpleMerge : public GaudiTool, virtual public IHepMCMergeTool {
 public:
@@ -26,7 +24,7 @@ public:
    *  @param[in/out] signalEvent is the signal event that will be enriched with puEvents from eventVector
    *  @param[in] eventVector is the vector of pile-up GenEvents
    */
-  virtual StatusCode merge(HepMC::GenEvent& signalEvent, const std::vector<HepMC::GenEvent>& eventVector) final;
+  virtual StatusCode merge(HepMC3::GenEvent& signalEvent, const std::vector<HepMC3::GenEvent>& eventVector) final;
 };
 
 #endif  // GENERATION_HEPMCPILEMERGETOOL_H
