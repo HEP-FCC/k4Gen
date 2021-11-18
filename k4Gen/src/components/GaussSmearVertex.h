@@ -25,7 +25,7 @@ public:
 
   /** Implements IVertexSmearingTool::smearVertex.
    */
-  virtual StatusCode smearVertex(HepMC::GenEvent& theEvent);
+  virtual StatusCode smearVertex(HepMC3::GenEvent& theEvent);
 
 private:
   Gaudi::Property<double> m_xsig{this, "xVertexSigma", 0.0 * Gaudi::Units::mm, "Spread of x coordinate"};

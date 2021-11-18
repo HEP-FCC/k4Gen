@@ -12,7 +12,7 @@
 // non-integrated treatment for unitarised merging.
 #include "Pythia8Plugins/aMCatNLOHooks.h"
 #include "Pythia8Plugins/EvtGen.h"
-#include "HepMC/GenEvent.h"
+#include "HepMC3/GenEvent.h"
 
 DECLARE_COMPONENT(PythiaInterface)
 
@@ -211,7 +211,7 @@ StatusCode PythiaInterface::initialize() {
   return sc;
 }
 
-StatusCode PythiaInterface::getNextEvent(HepMC::GenEvent& theEvent) {
+StatusCode PythiaInterface::getNextEvent(HepMC3::GenEvent& theEvent) {
 
   Pythia8::Event sumEvent;
   // Generate events. Quit if many failures in a row  
@@ -330,39 +330,40 @@ StatusCode PythiaInterface::getNextEvent(HepMC::GenEvent& theEvent) {
   // Print debug: HepMC event info
   if (msgLevel() <= MSG::DEBUG) {
 
-    for (auto ipart = theEvent.particles_begin(); ipart != theEvent.particles_end(); ++ipart) {
+    //for (auto ipart = theEvent.particles_begin(); ipart != theEvent.particles_end(); ++ipart) {
+    for (auto ipart: theEvent.particles()) {
 
       int motherID = -1;
       int motherIDRange = 0;
-      if ((*ipart)->production_vertex() != nullptr) {
+      if (ipart->production_vertex() != nullptr) {
 
-        motherID = (*((*ipart)->production_vertex()->particles_in_const_begin()))->barcode();
-        motherIDRange = (*ipart)->production_vertex()->particles_in_size() - 1;
+        motherID = ipart->production_vertex()->particles_in()[0]->id();
+        motherIDRange = ipart->production_vertex()->particles_in().size() - 1;
       }
 
       int daughterID = -1;
       int daughterIDRange = 0;
-      if ((*ipart)->end_vertex() != nullptr) {
+      if (ipart->end_vertex() != nullptr) {
 
-        daughterID = (*((*ipart)->end_vertex()->particles_out_const_begin()))->barcode();
-        daughterIDRange = (*ipart)->end_vertex()->particles_out_size() - 1;
+        daughterID = ipart->end_vertex()->particles_out()[0]->id();
+        daughterIDRange = ipart->end_vertex()->particles_out().size() - 1;
       }
 
       debug() << "HepMC: "
-              << " Id: " << std::setw(3) << (*ipart)->barcode() << " Pdg: " << std::setw(5) << (*ipart)->pdg_id()
+              << " Id: " << std::setw(3) << ipart->id() << " Pdg: " << std::setw(5) << ipart->pdg_id()
               << " Mothers: " << std::setw(3) << motherID << " -> " << std::setw(3) << motherID + motherIDRange
               << " Daughters: " << std::setw(3) << daughterID << " -> " << std::setw(3) << daughterID + daughterIDRange
-              << " Stat: " << std::setw(2) << (*ipart)->status() << std::scientific << " Px: " << std::setprecision(2)
-              << std::setw(9) << (*ipart)->momentum().px() << " Py: " << std::setprecision(2) << std::setw(9)
-              << (*ipart)->momentum().py() << " Pz: " << std::setprecision(2) << std::setw(9)
-              << (*ipart)->momentum().pz() << " E: " << std::setprecision(2) << std::setw(9) << (*ipart)->momentum().e()
-              << " M: " << std::setprecision(2) << std::setw(9) << (*ipart)->momentum().m() << std::fixed;
-      if ((*ipart)->production_vertex() != nullptr) {
+              << " Stat: " << std::setw(2) << ipart->status() << std::scientific << " Px: " << std::setprecision(2)
+              << std::setw(9) << ipart->momentum().px() << " Py: " << std::setprecision(2) << std::setw(9)
+              << ipart->momentum().py() << " Pz: " << std::setprecision(2) << std::setw(9)
+              << ipart->momentum().pz() << " E: " << std::setprecision(2) << std::setw(9) << ipart->momentum().e()
+              << " M: " << std::setprecision(2) << std::setw(9) << ipart->momentum().m() << std::fixed;
+      if (ipart->production_vertex() != nullptr) {
         debug() << std::scientific << " Vx: " << std::setprecision(2) << std::setw(9)
-                << (*ipart)->production_vertex()->position().x() << " Vy: " << std::setprecision(2) << std::setw(9)
-                << (*ipart)->production_vertex()->position().y() << " Vz: " << std::setprecision(2) << std::setw(9)
-                << (*ipart)->production_vertex()->position().z() << " T: " << std::setprecision(2) << std::setw(9)
-                << (*ipart)->production_vertex()->position().t() << std::fixed;
+                << ipart->production_vertex()->position().x() << " Vy: " << std::setprecision(2) << std::setw(9)
+                << ipart->production_vertex()->position().y() << " Vz: " << std::setprecision(2) << std::setw(9)
+                << ipart->production_vertex()->position().z() << " T: " << std::setprecision(2) << std::setw(9)
+                << ipart->production_vertex()->position().t() << std::fixed;
       }
       debug() << endmsg;
     }

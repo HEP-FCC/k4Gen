@@ -3,7 +3,9 @@
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/SystemOfUnits.h"
-#include "HepMC/GenEvent.h"
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/GenVertex.h"
+#include "HepMC3/GenParticle.h"
 #include "HepPDT/ParticleID.hh"
 #include "Pythia8/ParticleData.h"
 
@@ -98,7 +100,7 @@ void ConstPtParticleGun::generateParticle(Gaudi::LorentzVector& momentum, Gaudi:
   }
 }
 
-StatusCode ConstPtParticleGun::getNextEvent(HepMC::GenEvent& theEvent) {
+StatusCode ConstPtParticleGun::getNextEvent(HepMC3::GenEvent& theEvent) {
   Gaudi::LorentzVector theFourMomentum;
   Gaudi::LorentzVector origin;
   // note: pgdid is set in function generateParticle
@@ -110,7 +112,7 @@ StatusCode ConstPtParticleGun::getNextEvent(HepMC::GenEvent& theEvent) {
   // create HepMC Vertex --
   // by calling add_vertex(), the hepmc event is given ownership of the vertex
 
-  HepMC::GenVertex* v = new HepMC::GenVertex(HepMC::FourVector(
+  auto v = std::make_shared<HepMC3::GenVertex>(HepMC3::FourVector(
                               origin.X(),
                               origin.Y(),
                               origin.Z(),
@@ -121,8 +123,8 @@ StatusCode ConstPtParticleGun::getNextEvent(HepMC::GenEvent& theEvent) {
   // by calling add_particle_out(), the hepmc vertex is given ownership of the particle
   // need to convert from Gaudi Units  (MeV) to (GeV)
   const double hepmcMomentumConversionFactor = 0.001;
-  HepMC::GenParticle* p = new HepMC::GenParticle(
-      HepMC::FourVector(
+  auto p = std::make_shared<HepMC3::GenParticle>(
+      HepMC3::FourVector(
         theFourMomentum.Px() * hepmcMomentumConversionFactor,
         theFourMomentum.Py() * hepmcMomentumConversionFactor,
         theFourMomentum.Pz() * hepmcMomentumConversionFactor,
@@ -132,6 +134,7 @@ StatusCode ConstPtParticleGun::getNextEvent(HepMC::GenEvent& theEvent) {
       1);  // hepmc status code for final state particle
   v->add_particle_out(p);
   theEvent.add_vertex(v);
-  theEvent.set_signal_process_vertex(v);
+  // no longer needed in hepmc3?
+  //theEvent.set_signal_process_vertex(v);
   return StatusCode::SUCCESS;
 }

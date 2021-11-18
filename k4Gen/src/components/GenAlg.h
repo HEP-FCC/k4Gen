@@ -13,7 +13,7 @@
 
 
 #include "k4FWCore/DataHandle.h"
-namespace HepMC {
+namespace HepMC3 {
 class GenEvent;
 }
 
@@ -40,7 +40,7 @@ private:
   // Tool to smear vertices
   ToolHandle<IVertexSmearingTool> m_vertexSmearingTool{"FlatSmearVertex/VertexSmearingTool", this};
   // output handle for finished event
-  DataHandle<HepMC::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Writer, this};
+  DataHandle<HepMC3::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Writer, this};
 };
 
 #endif  // GENERATION_GENALG_H

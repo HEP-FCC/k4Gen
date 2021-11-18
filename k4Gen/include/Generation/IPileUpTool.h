@@ -12,10 +12,6 @@
  *  @date   2005-08-17
  */
 
-namespace HepMC {
-class GenEvent;
-}
-
 static const InterfaceID IID_IPileUpTool("IPileUpTool", 3, 0);
 
 class IPileUpTool : virtual public IAlgTool {

@@ -20,23 +20,17 @@ StatusCode HepMCFileReader::initialize() {
     return StatusCode::FAILURE;
   }
   // open file using HepMC routines
-  m_file = std::make_unique<HepMC::IO_GenEvent>(m_filename.value().c_str(), std::ios::in);
-  // check that readable
-  if ((nullptr == m_file) || (m_file->rdstate() == std::ios::failbit)) {
-    error() << "Failure to read the file '" + m_filename + "'" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  return StatusCode::SUCCESS;
+  m_file = std::make_unique<HepMC3::ReaderAscii>(m_filename.value());
   StatusCode sc = GaudiTool::initialize();
   return sc;
 }
 
-StatusCode HepMCFileReader::getNextEvent(HepMC::GenEvent& event) {
-  if (!m_file->fill_next_event(&event)) {
-    if (m_file->rdstate() == std::ios::eofbit) {
-      error() << "Error reading HepMC file" << endmsg;
-      return StatusCode::FAILURE;
-    }
+StatusCode HepMCFileReader::getNextEvent(HepMC3::GenEvent& event) {
+  if (!m_file->read_event(event)) {
+   // if (m_file->rdstate() == std::ios::eofbit) {
+   //   error() << "Error reading HepMC file" << endmsg;
+   //   return StatusCode::FAILURE;
+   // }
     error() << "Premature end of file: Please set the number of events according to hepMC file." << endmsg;
     return Error("Reached end of file before finished processing");
   }

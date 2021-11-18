@@ -4,6 +4,11 @@
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/Vector4DTypes.h"
 
+
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/GenVertex.h"
+#include "HepMC3/GenParticle.h"
+
 /// Declaration of the Tool Factory
 DECLARE_COMPONENT(FlatSmearVertex)
 
@@ -55,7 +60,7 @@ StatusCode FlatSmearVertex::initialize() {
 }
 
 /// Smearing function
-StatusCode FlatSmearVertex::smearVertex(HepMC::GenEvent& theEvent) {
+StatusCode FlatSmearVertex::smearVertex(HepMC3::GenEvent& theEvent) {
   double dx, dy, dz, dt;
 
   dx = m_xmin + m_flatDist() * (m_xmax - m_xmin);
@@ -67,10 +72,10 @@ StatusCode FlatSmearVertex::smearVertex(HepMC::GenEvent& theEvent) {
 
   debug() << "Smearing vertices by " << dpos << endmsg;
 
-  for (auto vit = theEvent.vertices_begin(); vit != theEvent.vertices_end(); ++vit) {
-    Gaudi::LorentzVector pos((*vit)->position());
+  for (auto vit: theEvent.vertices()) {
+    Gaudi::LorentzVector pos(vit->position());
     pos += dpos;
-    (*vit)->set_position(HepMC::FourVector(pos.x(), pos.y(), pos.z(), pos.t()));
+    vit->set_position(HepMC3::FourVector(pos.x(), pos.y(), pos.z(), pos.t()));
   }
 
   return StatusCode::SUCCESS;

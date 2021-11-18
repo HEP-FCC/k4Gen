@@ -8,11 +8,11 @@
 #include "Generation/IVertexSmearingTool.h"
 #include "ResonanceDecayFilterHook.h"
 #include "Pythia8Plugins/PowhegHooks.h"
-#include "Pythia8Plugins/HepMC2.h"
+#include "Pythia8Plugins/HepMC3.h"
 
 
 // Forward HepMC
-namespace HepMC {
+namespace HepMC3 {
 class GenEvent;
 }
 // Forward Pythia
@@ -43,13 +43,13 @@ public:
   PythiaInterface(const std::string& type, const std::string& name, const IInterface* parent);
   virtual StatusCode initialize();
   virtual StatusCode finalize();
-  virtual StatusCode getNextEvent(HepMC::GenEvent& theEvent);
+  virtual StatusCode getNextEvent(HepMC3::GenEvent& theEvent);
 
 private:
   /// Pythia8 engine
   std::unique_ptr<Pythia8::Pythia> m_pythiaSignal;
   /// Interface for conversion from Pythia8::Event to HepMC event.
-  HepMC::Pythia8ToHepMC m_pythiaToHepMC;
+  HepMC3::Pythia8ToHepMC3 m_pythiaToHepMC;
   /// Name of Pythia configuration file with Pythia simulation settings & input LHE file (if required)
   Gaudi::Property<std::string> m_pythiacard{this, "pythiacard", "Pythia_minbias_pp_100TeV.cmd"
                                                            "Name of the Pythia cmd file"};
