@@ -5,7 +5,7 @@
 
 #include "k4FWCore/DataHandle.h"
 
-#include "HepMC/GenEvent.h"
+#include "HepMC3/GenEvent.h"
 
 class HepMCDumper : public GaudiAlgorithm {
 
@@ -21,7 +21,7 @@ public:
 
 private:
   /// Handle for the HepMC to be read
-  DataHandle<HepMC::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
+  DataHandle<HepMC3::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Reader, this};
 };
 
 #endif  // GENERATION_HEPMCDUMPER_H
