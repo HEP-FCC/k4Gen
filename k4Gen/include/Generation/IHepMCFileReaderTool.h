@@ -9,7 +9,7 @@ class GenEvent;
 
 /** @class IHepMCFileReaderTool IHepMCFileReaderTool.h "Generation/IHepMCFileReaderTool.h"
  *
- *  Abstract interface to readi hepmc files.
+ *  Abstract interface to read hepmc files.
  *
  */
 
