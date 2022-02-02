@@ -11,6 +11,7 @@
 namespace edm4hep {
 class MCParticleCollection;
 class MCParticle;
+class MutableMCParticle;
 }
 
 class HepMCToEDMConverter : public GaudiAlgorithm {
@@ -34,6 +35,6 @@ private:
   /// Handle for the genparticles to be written
   DataHandle<edm4hep::MCParticleCollection> m_genphandle{"GenParticles", Gaudi::DataHandle::Writer, this};
 
-  edm4hep::MCParticle convert(std::shared_ptr<const HepMC3::GenParticle> hepmcParticle);
+  edm4hep::MutableMCParticle convert(std::shared_ptr<const HepMC3::GenParticle> hepmcParticle);
 };
 #endif
