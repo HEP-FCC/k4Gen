@@ -87,7 +87,7 @@ StatusCode HepEVTReader::execute()
 	  return StatusCode::FAILURE;
 	}
 
-      edm4hep::MCParticle particle = particles->create();
+      auto particle = particles->create();
 
       particle.setPDG(IDHEP);
       particle.setGeneratorStatus(ISTHEP); 

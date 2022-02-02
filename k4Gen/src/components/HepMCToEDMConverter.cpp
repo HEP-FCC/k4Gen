@@ -6,8 +6,8 @@
 DECLARE_COMPONENT(HepMCToEDMConverter)
 
 
-edm4hep::MCParticle HepMCToEDMConverter::convert(std::shared_ptr<const HepMC3::GenParticle> hepmcParticle) {
-  edm4hep::MCParticle edm_particle;
+edm4hep::MutableMCParticle HepMCToEDMConverter::convert(std::shared_ptr<const HepMC3::GenParticle> hepmcParticle) {
+  edm4hep::MutableMCParticle edm_particle;
   edm_particle.setPDG(hepmcParticle->pdg_id());
   edm_particle.setGeneratorStatus(hepmcParticle->status());
   // look up charge from pdg_id
@@ -42,11 +42,11 @@ StatusCode HepMCToEDMConverter::execute() {
   edm4hep::MCParticleCollection* particles = new edm4hep::MCParticleCollection();
 
   
-  std::unordered_map<unsigned int, edm4hep::MCParticle> _map;
+  std::unordered_map<unsigned int, edm4hep::MutableMCParticle> _map;
   for (auto _p:evt->particles()) {
     debug() << "Converting hepmc particle with Pdg_ID \t" << _p->pdg_id() << "and id \t" <<  _p->id() << endmsg;
     if (_map.find(_p->id()) == _map.end()) {
-      edm4hep::MCParticle edm_particle = convert(_p);
+      edm4hep::MutableMCParticle edm_particle = convert(_p);
       _map.insert({_p->id(), edm_particle});
     }
     // mother/daughter links
@@ -54,7 +54,7 @@ StatusCode HepMCToEDMConverter::execute() {
     if (nullptr != prodvertex) {
       for (auto particle_mother: prodvertex->particles_in()) {
         if (_map.find(particle_mother->id()) == _map.end()) {
-          edm4hep::MCParticle edm_particle = convert(particle_mother);
+          edm4hep::MutableMCParticle edm_particle = convert(particle_mother);
           _map.insert({particle_mother->id(), edm_particle});
         }
         _map[_p->id()].addToParents(_map[particle_mother->id()]);
