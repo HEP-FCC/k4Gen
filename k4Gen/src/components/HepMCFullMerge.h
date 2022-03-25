@@ -15,7 +15,7 @@
  * Implementation partly due to pilemc https://pilemc.hepforge.org/
  */
 
-class HepMCFullMerge : public GaudiTool, virtual public IHepMCMergeTool {
+class HepMCFullMerge final: public GaudiTool, virtual public IHepMCMergeTool {
 public:
   HepMCFullMerge(const std::string& type, const std::string& name, const IInterface* parent);
 
