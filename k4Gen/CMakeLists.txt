@@ -12,7 +12,10 @@ gaudi_add_module(k4Gen
                  SOURCES ${k4gen_plugin_sources}
                  LINK Gaudi::GaudiKernel ${HEPMC3_LIBRARIES} Gaudi::GaudiAlgLib k4FWCore::k4FWCore ${HEPPDT_LIBRARIES} ${EVTGEN_LIBRARIES} EDM4HEP::edm4hep EDM4HEP::edm4hepDict)
 
-target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS} ${HEPMC3_INCLUDE_DIR} ${HEPPDT_ICNCLUDE_DIR}
+target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS} 
+                                        ${HEPMC3_INCLUDE_DIR}
+                                        ${HEPPDT_ICNCLUDE_DIR}
+                                        ${EVTGEN_INCLUDE_DIR}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
