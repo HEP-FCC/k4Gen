@@ -9,7 +9,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 
 
-class HepMCSimpleMerge : public GaudiTool, virtual public IHepMCMergeTool {
+class HepMCSimpleMerge final: public GaudiTool, virtual public IHepMCMergeTool {
 public:
   HepMCSimpleMerge(const std::string& type, const std::string& name, const IInterface* parent);
 
