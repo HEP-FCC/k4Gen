@@ -125,7 +125,7 @@ StatusCode MDIReader::execute()
       VHEP1=0;
       VHEP2=0;
       VHEP3=0;
-      edm4hep::MCParticle particle = particles->create();
+      edm4hep::MutableMCParticle particle = particles->create();
 
       particle.setPDG(IDHEP);
       particle.setCharge(CHARGE);
