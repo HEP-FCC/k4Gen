@@ -147,8 +147,6 @@ StatusCode MDIReader::execute()
 		>> PHEP1 >> PHEP2
 		>> temp_z >> PHEP4 ;
 
-	std::cout<<PHEP4<<" "<<sqrt(PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)<<" "<<sqrt((PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)*PHEP4*PHEP4 + PHEP5*PHEP5)<<std::endl;
-
 	if(m_input.eof())break;
 	else if(!m_input.good())
 	  {
@@ -177,6 +175,8 @@ StatusCode MDIReader::execute()
 	//---momentum rotation in CLD frame
 	temp_pz =  PHEP3*cos(-xing) + PHEP1*sin(-xing);
 	temp_px = -PHEP3*sin(-xing) + PHEP1*cos(-xing);
+	PHEP3 = temp_pz;
+	PHEP1 = temp_px;
 
 	IDHEP = 11;
 	CHARGE = -1;
