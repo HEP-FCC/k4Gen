@@ -81,7 +81,7 @@ StatusCode MDIReader::execute()
 	      >> VHEP1 >> VHEP2 >> VHEP3
 	      >> process >> trash >> id_ee;
 
-      std::cout<<PHEP4<<" "<<sqrt(PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)<<" "<<sqrt((PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)*PHEP4*PHEP4 + PHEP5*PHEP5)<<std::endl;
+      //std::cout<<PHEP4<<" "<<sqrt(PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)<<" "<<sqrt((PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)*PHEP4*PHEP4 + PHEP5*PHEP5)<<std::endl;
       
       if(m_input.eof())break;
       else if(!m_input.good())
