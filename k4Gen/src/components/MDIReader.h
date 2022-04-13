@@ -52,7 +52,7 @@ private:
   int NHEP;
   int m_format;
   std::string input_type;
-  double xing, cut_z;
+  double xing, cut_z, beam_energy;
   /// Handle for the genparticles to be written
   DataHandle<edm4hep::MCParticleCollection> m_genphandle {"GenParticles", Gaudi::DataHandle::Writer, this};
 

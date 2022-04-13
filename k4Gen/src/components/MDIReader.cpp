@@ -21,6 +21,8 @@ GaudiAlgorithm(name, svcLoc),
   declareProperty("GenParticles", m_genphandle, "Generated particles collection (output)");
   declareProperty("CrossingAngle",xing,"Half the crossing angle beam in [rad]");
   declareProperty("LongitudinalCut",cut_z,"the value for cut_z used in GP++ in [um]");
+  declareProperty("InputType",input_type,"string: guineapig, xtrack");
+  declareProperty("BeamEnergy",beam_energy,"beam energy [GeV], necessary for xtrack type");
 }
 
 StatusCode MDIReader::initialize()
@@ -45,6 +47,16 @@ StatusCode MDIReader::execute()
       return StatusCode::FAILURE;
     }
   
+  // Check the input type flag
+  if(input_type!="guineapig" && input_type!="xtrack")
+    {
+      error() << "Input type flag - wrong definition: "<< input_type << endmsg;
+      return StatusCode::FAILURE;
+    }
+  else{
+    std::cout<<"Selected input type : "<<input_type<<std::endl;
+  }
+  
   //  Loop over particles
   int ISTHEP = 1;   // status code
   int IDHEP;    // PDG code
@@ -63,7 +75,7 @@ StatusCode MDIReader::execute()
   double VHEP3; // z vertex position in mm
   double VHEP4 = 0; // production time in mm/c
 
-  //these variables do not end up in the EDM format
+  //guineapig IPP variables which do not end up in the EDM format
   double process; // 1=Breit-Wheeler 2=Bethe-Heitler 3=Landau-Lifshitz
   double trash;   // trash variable
   double id_ee;   // same id means they are a pair
@@ -76,55 +88,89 @@ StatusCode MDIReader::execute()
   PHEP5 = 5.11e-4;
   while(m_input.good())
     {
-      m_input >> PHEP4
-	      >> PHEP1 >> PHEP2 >> PHEP3
-	      >> VHEP1 >> VHEP2 >> VHEP3
-	      >> process >> trash >> id_ee;
-
-      //std::cout<<PHEP4<<" "<<sqrt(PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)<<" "<<sqrt((PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)*PHEP4*PHEP4 + PHEP5*PHEP5)<<std::endl;
+      if(input_type=="guineapig"){
+	m_input >> PHEP4
+		>> PHEP1 >> PHEP2 >> PHEP3
+		>> VHEP1 >> VHEP2 >> VHEP3
+		>> process >> trash >> id_ee;
       
-      if(m_input.eof())break;
-      else if(!m_input.good())
-	{
-	  std::cout<<"oopsie doopsie"<<std::endl;
-	  error() << "End of file reached before reading all the hits" << endmsg;
-	  return StatusCode::FAILURE;
+      
+	//std::cout<<PHEP4<<" "<<sqrt(PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)<<" "<<sqrt((PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)*PHEP4*PHEP4 + PHEP5*PHEP5)<<std::endl;
+      
+	if(m_input.eof())break;
+	else if(!m_input.good())
+	  {
+	    std::cout<<"oopsie doopsie"<<std::endl;
+	    error() << "End of file reached before reading all the hits" << endmsg;
+	    return StatusCode::FAILURE;
+	  }
+	
+	IDHEP = 11;
+	CHARGE = -1;
+	if(PHEP4<0){
+	  IDHEP=-11;
+	  CHARGE=1;
 	}
+	
+	VHEP1 *=1e-9; //convert from nm to m
+	VHEP2 *=1e-9; //convert from nm to m
+	VHEP3 *=1e-9; //convert from nm to m
+	
+	//---boost section
+	PHEP4 = abs(PHEP4);
+	temp_x  = cut_z*1e-6*tan(xing) + VHEP1*sqrt(1+pow(tan(xing),2));
+	temp_px = PHEP4*tan(xing) + PHEP1*PHEP4*sqrt(1+pow(tan(xing),2));
+	temp_e  = abs( PHEP4*sqrt(1+pow(tan(xing),2)) + PHEP1*PHEP4*tan(xing) );
+	
+	VHEP1 = temp_x;
+	PHEP1 = temp_px;
+	PHEP2 = PHEP2*PHEP4;
+	PHEP3 = PHEP3*PHEP4;
+	PHEP4 = temp_e;
+	
+	//---end boost section
+	
+	VHEP1 *=1e3; //convert from m to mm
+	VHEP2 *=1e3; //convert from m to mm 
+	VHEP3 *=1e3; //convert from m to mm
+	
+	//boost to lab frame
+	
+	VHEP1=0;
+	VHEP2=0;
+	VHEP3=0;
+      }//end if guineapig
+      else if(input_type=="xtrack"){
+	m_input >> VHEP3
+		>> VHEP1 >> VHEP2
+		>> PHEP1 >> PHEP2
+		>> temp_z >> PHEP4 ;
 
-      IDHEP = 11;
-      CHARGE = -1;
-      if(PHEP4<0){
-	IDHEP=-11;
-	CHARGE=1;
-      }
+	if(m_input.eof())break;
+	else if(!m_input.good())
+	  {
+	    std::cout<<"oopsie doopsie"<<std::endl;
+	    error() << "End of file reached before reading all the hits" << endmsg;
+	    return StatusCode::FAILURE;
+	  }
+	
+	//VHEP3 = VHEP3 + temp_z; //is ct necessary? prob not
 
-      VHEP1 *=1e-9; //convert from nm to m
-      VHEP2 *=1e-9; //convert from nm to m
-      VHEP3 *=1e-9; //convert from nm to m
-      
-      //---boost section
-      PHEP4 = abs(PHEP4);
-      temp_x  = cut_z*1e-6*tan(xing) + VHEP1*sqrt(1+pow(tan(xing),2));
-      temp_px = PHEP4*tan(xing) + PHEP1*PHEP4*sqrt(1+pow(tan(xing),2));
-      temp_e  = abs( PHEP4*sqrt(1+pow(tan(xing),2)) + PHEP1*PHEP4*tan(xing) );
+	VHEP1 *=1e3; //convert from m to mm
+	VHEP2 *=1e3; //convert from m to mm 
+	VHEP3 *=1e3; //convert from m to mm
 
-      VHEP1 = temp_x;
-      PHEP1 = temp_px;
-      PHEP2 = PHEP2*PHEP4;
-      PHEP3 = PHEP3*PHEP4;
-      PHEP4 = temp_e;
-      
-      //---end boost section
-      
-      VHEP1 *=1e3; //convert from m to mm
-      VHEP2 *=1e3; //convert from m to mm 
-      VHEP3 *=1e3; //convert from m to mm
+	PHEP4 = (1.+PHEP4)*beam_energy;
+	PHEP1 = PHEP1*beam_energy;
+	PHEP2 = PHEP2*beam_energy;
+	PHEP3 = sqrt(pow(PHEP4,2) - pow(PHEP1,2) - pow(PHEP2,2) );
 
-      //boost to lab frame
+	IDHEP = 11;
+	CHARGE = -1;
+		
+      }	//end if xtrack
+
       
-      VHEP1=0;
-      VHEP2=0;
-      VHEP3=0;
       edm4hep::MutableMCParticle particle = particles->create();
 
       particle.setPDG(IDHEP);
