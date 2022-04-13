@@ -156,6 +156,12 @@ StatusCode MDIReader::execute()
 	
 	//VHEP3 = VHEP3 + temp_z; //is ct necessary? prob not
 
+	//---position rotation in CLD frame
+	temp_z =  VHEP3*cos(-xing) + VHEP1*sin(-xing);
+	temp_x = -VHEP3*sin(-xing) + VHEP1*cos(-xing);
+	VHEP1 = temp_x;
+	VHEP3 = temp_z;
+
 	VHEP1 *=1e3; //convert from m to mm
 	VHEP2 *=1e3; //convert from m to mm 
 	VHEP3 *=1e3; //convert from m to mm
@@ -164,6 +170,10 @@ StatusCode MDIReader::execute()
 	PHEP1 = PHEP1*beam_energy;
 	PHEP2 = PHEP2*beam_energy;
 	PHEP3 = sqrt(pow(PHEP4,2) - pow(PHEP1,2) - pow(PHEP2,2) );
+
+	//---momentum rotation in CLD frame
+	temp_pz =  PHEP3*cos(-xing) + PHEP1*sin(-xing);
+	temp_px = -PHEP3*sin(-xing) + PHEP1*cos(-xing);
 
 	IDHEP = 11;
 	CHARGE = -1;
