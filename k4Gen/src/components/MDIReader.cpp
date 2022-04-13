@@ -140,11 +140,14 @@ StatusCode MDIReader::execute()
 	VHEP2=0;
 	VHEP3=0;
       }//end if guineapig
+      
       else if(input_type=="xtrack"){
 	m_input >> VHEP3
 		>> VHEP1 >> VHEP2
 		>> PHEP1 >> PHEP2
 		>> temp_z >> PHEP4 ;
+
+	std::cout<<PHEP4<<" "<<sqrt(PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)<<" "<<sqrt((PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)*PHEP4*PHEP4 + PHEP5*PHEP5)<<std::endl;
 
 	if(m_input.eof())break;
 	else if(!m_input.good())
