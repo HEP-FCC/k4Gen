@@ -15,7 +15,7 @@ gaudi_add_module(k4Gen
 
 target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS} 
                                         ${HEPMC3_INCLUDE_DIR}
-                                        ${HEPPDT_ICNCLUDE_DIR}
+                                        ${HEPPDT_INCLUDE_DIR}
                                         ${EVTGEN_INCLUDE_DIR}
 					${HEPMC_INCLUDE_DIR}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
