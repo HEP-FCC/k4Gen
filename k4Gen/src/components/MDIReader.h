@@ -13,13 +13,6 @@
 
 #include "GaudiKernel/SystemOfUnits.h"
 
-#include "HepMC/IO_GenEvent.h"
-
-
-namespace HepMC {
-  class GenEvent;
-}
-
 namespace edm4hep {
 class MCParticleCollection;
 }
