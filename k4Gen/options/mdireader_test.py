@@ -6,7 +6,8 @@ from Configurables import FCCDataSvc
 podioevent = FCCDataSvc("EventDataSvc")
 
 from Configurables import MDIReader
-mdi_converter = MDIReader("Reader",MDIFilename="mdireader_testparticles.dat")
+#mdi_converter = MDIReader("Reader",MDIFilename="k4Gen/options/mdireader_testparticles.dat")
+mdi_converter = MDIReader("Reader",MDIFilename=(os.path.join(os.environ["K4GEN"],'../options/mdireader_testparticles.dat')))
 mdi_converter.GenParticles.Path = "allGenParticles"
 mdi_converter.CrossingAngle = 0.0
 mdi_converter.LongitudinalCut = 0
