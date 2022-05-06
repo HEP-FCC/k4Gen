@@ -54,7 +54,7 @@ StatusCode MDIReader::execute()
       return StatusCode::FAILURE;
     }
   else{
-    std::cout<<"Selected input type : "<<input_type<<std::endl;
+    debug() <<"Selected input type : "<<input_type<< endmsg;
   }
   
   //  Loop over particles
@@ -81,7 +81,7 @@ StatusCode MDIReader::execute()
   double id_ee;   // same id means they are a pair
   double temp_x,temp_y,temp_z,temp_px, temp_py,temp_pz,temp_e;
 
-  std::cout<<"The crossing angle is "<<xing<<" [rad]"<<std::endl;
+  debug() <<"The crossing angle is "<<xing<<" [rad]"<< endmsg;
   edm4hep::MCParticleCollection* particles = new edm4hep::MCParticleCollection();
 
 
@@ -100,7 +100,7 @@ StatusCode MDIReader::execute()
 	if(m_input.eof())break;
 	else if(!m_input.good())
 	  {
-	    std::cout<<"oopsie doopsie"<<std::endl;
+	    debug() << "End of file reached before reading all the hits" << endmsg;
 	    error() << "End of file reached before reading all the hits" << endmsg;
 	    return StatusCode::FAILURE;
 	  }
@@ -150,7 +150,7 @@ StatusCode MDIReader::execute()
 	if(m_input.eof())break;
 	else if(!m_input.good())
 	  {
-	    std::cout<<"oopsie doopsie"<<std::endl;
+	    debug() << "End of file reached before reading all the hits" << endmsg;
 	    error() << "End of file reached before reading all the hits" << endmsg;
 	    return StatusCode::FAILURE;
 	  }
@@ -210,6 +210,6 @@ StatusCode MDIReader::execute()
 StatusCode MDIReader::finalize() 
 {
   m_input.close();
-  std::cout<<"Fine di MDIreader"<<std::endl;
+  debug() << "MDIReader finalization" << endmsg;
   return GaudiAlgorithm::finalize();
 }
