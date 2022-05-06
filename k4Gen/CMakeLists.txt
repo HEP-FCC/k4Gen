@@ -70,6 +70,12 @@ set_tests_properties(Pythia8ExtraSettings PROPERTIES
   )
 set_test_env(Pythia8ExtraSettings)
 
+add_test(NAME MDIreader
+	      WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+	      COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/mdireader_test.py
+	      )
+set_test_env(MDIreader)
+
 #--- Install the example options to the directory where the spack installation
 #--- points the $K4GEN environment variable
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/options
