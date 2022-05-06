@@ -13,6 +13,9 @@
 
 #include "GaudiKernel/SystemOfUnits.h"
 
+#include "HepMC3/GenEvent.h"
+#include "HepMC3/ReaderAscii.h"
+
 namespace edm4hep {
 class MCParticleCollection;
 }
