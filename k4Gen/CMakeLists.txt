@@ -11,6 +11,7 @@ find_package(HepMC)
 file(GLOB k4gen_plugin_sources src/components/*.cpp)
 gaudi_add_module(k4Gen
                  SOURCES ${k4gen_plugin_sources}
+<<<<<<< HEAD
                  LINK Gaudi::GaudiKernel ${HEPMC3_LIBRARIES} Gaudi::GaudiAlgLib k4FWCore::k4FWCore ${HEPPDT_LIBRARIES} ${EVTGEN_LIBRARIES} EDM4HEP::edm4hep EDM4HEP::edm4hepDict ${HEPMC_LIBRARIES})
 
 target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS} 
