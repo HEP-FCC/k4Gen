@@ -82,6 +82,7 @@ StatusCode MDIReader::execute()
   double temp_x,temp_y,temp_z,temp_px, temp_py,temp_pz,temp_e;
 
   debug() <<"The crossing angle is "<<xing<<" [rad]"<< endmsg;
+  //std::cout <<"The crossing angle is "<<xing<<" [rad]"<< endmsg;
   edm4hep::MCParticleCollection* particles = new edm4hep::MCParticleCollection();
 
 
