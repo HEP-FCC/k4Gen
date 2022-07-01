@@ -10,25 +10,15 @@ find_package(EvtGen)
 file(GLOB k4gen_plugin_sources src/components/*.cpp)
 gaudi_add_module(k4Gen
                  SOURCES ${k4gen_plugin_sources}
-                 LINK Gaudi::GaudiKernel
-                      ${HEPMC3_LIBRARIES} 
-                      Gaudi::GaudiAlgLib
-                      k4FWCore::k4FWCore
-                      ${EVTGEN_LIBRARIES}
-                      EDM4HEP::edm4hep
-                      EDM4HEP::edm4hepDict
-                      HepPDT::heppdt
-                  )
+                 LINK Gaudi::GaudiKernel ${HEPMC3_LIBRARIES} Gaudi::GaudiAlgLib k4FWCore::k4FWCore ${HEPPDT_LIBRARIES} ${EVTGEN_LIBRARIES} EDM4HEP::edm4hep EDM4HEP::edm4hepDict ${HEPMC_LIBRARIES})
 
-target_include_directories(k4Gen PUBLIC 
-                           ${PYTHIA8_INCLUDE_DIRS} 
-                           ${HEPMC3_INCLUDE_DIR}
-                           ${EVTGEN_INCLUDE_DIR}
-                           $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-                           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-                          )
-
-target_link_options(k4Gen PRIVATE "-Wl,--enable-new-dtags")
+target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS} 
+                                        ${HEPMC3_INCLUDE_DIR}
+                                        ${HEPPDT_INCLUDE_DIR}
+                                        ${EVTGEN_INCLUDE_DIR}
+					${HEPMC_INCLUDE_DIR}
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 
 install(TARGETS k4Gen
@@ -78,6 +68,12 @@ set_tests_properties(Pythia8ExtraSettings PROPERTIES
   PASS_REGULAR_EXPRESSION "We collide mu- with mu"
   )
 set_test_env(Pythia8ExtraSettings)
+
+add_test(NAME MDIreader
+	      WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+	      COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/mdireader_test.py
+	      )
+set_test_env(MDIreader)
 
 #--- Install the example options to the directory where the spack installation
 #--- points the $K4GEN environment variable
