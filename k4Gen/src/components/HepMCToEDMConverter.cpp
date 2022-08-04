@@ -2,6 +2,7 @@
 #include "GaudiKernel/PhysicalConstants.h"
 #include "edm4hep/MCParticleCollection.h"
 #include "HepPDT/ParticleID.hh"
+#include "HepMC3/Attribute.h"
 
 DECLARE_COMPONENT(HepMCToEDMConverter)
 
@@ -16,6 +17,13 @@ edm4hep::MutableMCParticle HepMCToEDMConverter::convert(std::shared_ptr<const He
   // convert momentum
   auto p = hepmcParticle->momentum();
   edm_particle.setMomentum( {float(p.px()), float(p.py()), float(p.pz())} );
+
+  // add spin (particle helicity) information if available
+  std::shared_ptr<HepMC3::VectorFloatAttribute> spin = hepmcParticle->attribute<HepMC3::VectorFloatAttribute>("spin");
+  if (spin) {
+     edm4hep::Vector3f hel(spin->value()[0], spin->value()[1], spin->value()[2]);
+     edm_particle.setSpin(hel);
+  }
 
   // convert vertex info
   auto prodVtx = hepmcParticle->production_vertex();
