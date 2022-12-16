@@ -29,6 +29,8 @@ StatusCode MDIReader::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize();
 
+  debug() << "Reading file: " << m_filename << endmsg;
+
   m_input.open(m_filename.c_str(), std::ifstream::in);
 
   if ( !m_input.good() )   {
@@ -85,8 +87,9 @@ StatusCode MDIReader::execute()
   //std::cout <<"The crossing angle is "<<xing<<" [rad]"<< endmsg;
   edm4hep::MCParticleCollection* particles = new edm4hep::MCParticleCollection();
 
+  size_t pcount = 0;
+  PHEP5 = 5.11e-4;
 
-  
   while(m_input.good())
     {
       if(input_type=="guineapig"){
@@ -279,6 +282,16 @@ StatusCode MDIReader::execute()
                           VHEP3,
                         });
       particle.setTime(VHEP4);
+      pcount++;
+
+      debug() << "Read in particle (" << pcount << "):" << endmsg;
+      debug() << "  - PDG ID: " << particle.getPDG() << endmsg;
+      debug() << "  - Generator status: " << particle.getGeneratorStatus() << endmsg;
+      debug() << "  - Charge: " << particle.getCharge() << endmsg;
+      debug() << "  - Energy: " << particle.getEnergy() << " GeV" << endmsg;
+      debug() << "  - Mass: " << particle.getMass() << " GeV/c**2" << endmsg;
+      debug() << "  - Momentum: x = " << particle.getMomentum().x << ", y = " << particle.getMomentum().y << ", z = " << particle.getMomentum().z << " GeV/c" << endmsg;
+      debug() << "  - Vertex: x = " << particle.getVertex().x << ", y = " << particle.getVertex().y << ", z = " << particle.getVertex().z << " mm" << endmsg;
     }
 
     m_genphandle.put(particles);
