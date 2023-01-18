@@ -114,13 +114,18 @@ StatusCode MDIReader::execute()
 	  IDHEP=-11;
 	  CHARGE=1;
 	}
-	
+
 	VHEP1 *=1e-9; //convert from nm to m
 	VHEP2 *=1e-9; //convert from nm to m
 	VHEP3 *=1e-9; //convert from nm to m
 	
 	//---boost section
 	PHEP4 = abs(PHEP4);
+	// convert from velocity/c (in GP output) to momenta
+	PHEP1 *= PHEP4;
+	PHEP2 *= PHEP4;
+	PHEP3 *= PHEP4;
+	
 	temp_x  = cut_z*1e-6*tan(xing) + VHEP1*sqrt(1+pow(tan(xing),2));
 	temp_px = PHEP4*tan(xing) + PHEP1*PHEP4*sqrt(1+pow(tan(xing),2));
 	temp_e  = abs( PHEP4*sqrt(1+pow(tan(xing),2)) + PHEP1*PHEP4*tan(xing) );
