@@ -55,6 +55,8 @@ private:
   SmartIF<IIncidentSvc> m_incidentSvc;
   /// Pointer to the event processor.
   SmartIF<IEventProcessor> m_eventProcessor;
+  /// Filter rule pointer.
+  bool (*m_filterRulePtr)(const edm4hep::MCParticleCollection*);
 };
 
 #endif  // GENERATION_GENEVENTFILTER_H
