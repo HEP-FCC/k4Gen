@@ -17,7 +17,8 @@ namespace edm4hep {
 
 /** @class GenEventFilter Generation/src/components/GenEventFilter.h GenEventFilter.h
  *
- *  Skips events if MCParticle collection does not contain desired particles.
+ *  Filters events based on the user defined filter rule applied on MCParticle
+ *  collection.
  *
  *  @author J. Smiesko
 */
@@ -39,9 +40,13 @@ private:
   DataHandle<edm4hep::MCParticleCollection> m_inColl{
       "particles", Gaudi::DataHandle::Reader, this};
 
-  /// Rules to accept an event.
-  Gaudi::Property<std::vector<std::string>> m_rules{
-      this, "rules", {"e-"}, "Rules to accept an event"};
+  /// Rule to filter the events with
+  Gaudi::Property<std::string> m_filterRuleStr{
+      this, "filterRule", "", "Filter rule to apply on the events"};
+
+  /// Path of the filter rule file
+  Gaudi::Property<std::string> m_filterRulePath{
+      this, "filterRulePath", "", "Path to the filter rule file"};
 
   /// Targeted number of events.
   size_t m_nEventsTarget;

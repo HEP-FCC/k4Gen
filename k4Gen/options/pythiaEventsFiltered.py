@@ -69,6 +69,10 @@ ApplicationMgr().TopAlg += [genfilter]
 # Filters events
 eventfilter = GenEventFilter("EventFilter")
 eventfilter.particles.Path = "GenParticlesStable"
+# eventfilter.filterRule = \
+#     "bool filterRule(const edm4hep::MCParticleCollection* inColl){" \
+#     "  return inColl->size() > 1000;}"
+eventfilter.filterRulePath = "k4Gen/options/filterRule.hxx"
 eventfilter.OutputLevel = DEBUG
 ApplicationMgr().TopAlg += [eventfilter]
 
