@@ -23,20 +23,20 @@ StatusCode EDMToHepMCConverter::execute() {
 
   auto particles = m_genphandle.get();
   // ownership of event given to data service at the end of execute
-  HepMC3::GenEvent* event = new HepMC3::GenEvent;
+  auto* event = new HepMC3::GenEvent;
   event->set_units(HepMC3::Units::GEV, HepMC3::Units::MM);
 
 
   for (auto p : *(particles)) {
     if (p.getGeneratorStatus() == 1) {  // only final state particles
-      edm4hep::Vector3f mom = p.getMomentum();
-      GenParticle* pHepMC =
+      const auto& mom = p.getMomentum();
+      auto* pHepMC =
           new GenParticle(HepMC3::FourVector(mom.x, mom.y, mom.z, p.getMass()),
                           p.getPDG(),
                           p.getGeneratorStatus());  // hepmc status code for final state particle
 
-        edm4hep::Vector3d pos = p.getVertex();
-        HepMC3::GenVertex* v =
+        const auto& pos = p.getVertex();
+        auto* v =
             new HepMC3::GenVertex(HepMC3::FourVector(pos.x,
                                                    pos.y,
                                                    pos.z,
