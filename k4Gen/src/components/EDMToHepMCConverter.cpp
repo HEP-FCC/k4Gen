@@ -29,7 +29,7 @@ StatusCode EDMToHepMCConverter::execute() {
 
   for (auto p : *(particles)) {
     if (p.getGeneratorStatus() == 1) {  // only final state particles
-      edm4hep::Vector3f mom = p.getMomentum();
+      const edm4hep::Vector3d mom = p.getMomentum();
       GenParticle* pHepMC =
           new GenParticle(HepMC3::FourVector(mom.x, mom.y, mom.z, p.getMass()),
                           p.getPDG(),
