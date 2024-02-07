@@ -17,6 +17,7 @@ edm4hep::MutableMCParticle HepMCToEDMConverter::convert(std::shared_ptr<const He
   // convert momentum
   auto p = hepmcParticle->momentum();
   edm_particle.setMomentum( {float(p.px()), float(p.py()), float(p.pz())} );
+  edm_particle.setMass( float ( hepmcParticle->generated_mass() ) );
 
   // add spin (particle helicity) information if available
   std::shared_ptr<HepMC3::VectorFloatAttribute> spin = hepmcParticle->attribute<HepMC3::VectorFloatAttribute>("spin");
