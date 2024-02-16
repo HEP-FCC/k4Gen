@@ -58,17 +58,9 @@ hepmc_converter.hepmcStatusList = []  # convert particles with all statuses
 hepmc_converter.GenParticles.Path = "GenParticles"
 ApplicationMgr().TopAlg += [hepmc_converter]
 
-# Filters generated particles
-# accept is a list of particle statuses that should be accepted
-genfilter = GenParticleFilter("StableParticles")
-genfilter.accept = [1]
-genfilter.GenParticles.Path = "GenParticles"
-genfilter.GenParticlesFiltered.Path = "GenParticlesStable"
-ApplicationMgr().TopAlg += [genfilter]
-
 # Filters events
 eventfilter = GenEventFilter("EventFilter")
-eventfilter.particles.Path = "GenParticlesStable"
+eventfilter.particles.Path = "GenParticles"
 # eventfilter.filterRule = \
 #     "bool filterRule(const edm4hep::MCParticleCollection* inColl){" \
 #     "  return inColl->size() > 1000;}"
