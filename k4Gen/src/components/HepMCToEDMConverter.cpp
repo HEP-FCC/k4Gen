@@ -33,6 +33,12 @@ edm4hep::MutableMCParticle HepMCToEDMConverter::convert(std::shared_ptr<const He
     edm_particle.setVertex( {float(pos.x()), float(pos.y()), float(pos.z())} );
   }
 
+  auto endVtx = hepmcParticle->end_vertex();
+  if ( endVtx != nullptr ) {
+    auto& pos = endVtx->position();
+    edm_particle.setEndpoint( {pos.x(), pos.y(), pos.z()} );
+  }
+
   return edm_particle;
 }
 
