@@ -2,7 +2,7 @@
 #define GENERATION_GENEVENTFILTER_H
 
 // Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/Algorithm.h"
 class IProperty;
 class IIncidentSvc;
 class IEventProcessor;
@@ -23,7 +23,7 @@ namespace edm4hep {
  *  @author J. Smiesko
 */
 
-class GenEventFilter : public GaudiAlgorithm {
+class GenEventFilter : public Gaudi::Algorithm {
 
 public:
   /// Constructor
@@ -31,13 +31,13 @@ public:
   /// Initialize
   virtual StatusCode initialize();
   /// Execute: Applies the filter
-  virtual StatusCode execute();
+  virtual StatusCode execute(const EventContext& evtCtx) const;
   /// Finalize
   virtual StatusCode finalize();
 
 private:
   /// Handle for the MCParticle collection to be read
-  DataHandle<edm4hep::MCParticleCollection> m_inColl{
+  mutable DataHandle<edm4hep::MCParticleCollection> m_inColl{
       "particles", Gaudi::DataHandle::Reader, this};
 
   /// Rule to filter the events with
@@ -49,11 +49,11 @@ private:
       this, "filterRulePath", "", "Path to the filter rule file"};
 
   /// Targeted number of events.
-  size_t m_nEventsTarget;
+  mutable std::atomic<unsigned int> m_nEventsTarget;
   /// Keep track of how many events were already accepted.
-  size_t m_nEventsAccepted;
+  mutable std::atomic<unsigned int> m_nEventsAccepted;
   /// Keep track of how many events we went through.
-  size_t m_nEventsSeen;
+  mutable std::atomic<unsigned int> m_nEventsSeen;
   /// Pointer to the property.
   SmartIF<IProperty> m_property;
   /// Pointer to the incident service.

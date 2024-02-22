@@ -16,18 +16,17 @@
 #include "TInterpreter.h"
 #include "TGlobal.h"
 
-DECLARE_COMPONENT(GenEventFilter)
 
 GenEventFilter::GenEventFilter(
     const std::string& name,
-    ISvcLocator* svcLoc) : GaudiAlgorithm(name, svcLoc) {
+    ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
   declareProperty("particles", m_inColl,
                   "Generated particles to decide on (input)");
 }
 
 StatusCode GenEventFilter::initialize() {
   {
-    StatusCode sc = GaudiAlgorithm::initialize();
+    StatusCode sc = Gaudi::Algorithm::initialize();
     if (sc.isFailure()) {
       return sc;
     }
@@ -141,7 +140,7 @@ StatusCode GenEventFilter::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode GenEventFilter::execute() {
+StatusCode GenEventFilter::execute(const EventContext& evtCtx) const {
   const edm4hep::MCParticleCollection* inParticles = m_inColl.get();
   m_nEventsSeen++;
 
@@ -180,5 +179,7 @@ StatusCode GenEventFilter::execute() {
 StatusCode GenEventFilter::finalize() {
   debug() << "Number of events seen: " << m_nEventsSeen << endmsg;
 
-  return GaudiAlgorithm::finalize();
+  return Gaudi::Algorithm::finalize();
 }
+
+DECLARE_COMPONENT(GenEventFilter)
