@@ -13,11 +13,11 @@ edm4hep::MutableMCParticle HepMCToEDMConverter::convert(std::shared_ptr<const He
   edm_particle.setGeneratorStatus(hepmcParticle->status());
   // look up charge from pdg_id
   HepPDT::ParticleID particleID(hepmcParticle->pdg_id());
-  edm_particle.setCharge(particleID.charge());
+  edm_particle.setCharge(static_cast<float>(particleID.charge()));
   // convert momentum
   auto p = hepmcParticle->momentum();
-  edm_particle.setMomentum( {float(p.px()), float(p.py()), float(p.pz())} );
-  edm_particle.setMass( double ( hepmcParticle->generated_mass() ) );
+  edm_particle.setMomentum( {p.px(), p.py(), p.pz()} );
+  edm_particle.setMass(hepmcParticle->generated_mass());
 
   // add spin (particle helicity) information if available
   std::shared_ptr<HepMC3::VectorFloatAttribute> spin = hepmcParticle->attribute<HepMC3::VectorFloatAttribute>("spin");
@@ -31,7 +31,7 @@ edm4hep::MutableMCParticle HepMCToEDMConverter::convert(std::shared_ptr<const He
 
   if ( prodVtx!=nullptr ) {
     auto& pos = prodVtx->position();
-    edm_particle.setVertex( {float(pos.x()), float(pos.y()), float(pos.z())} );
+    edm_particle.setVertex( {pos.x(), pos.y(), pos.z()} );
   }
 
   auto endVtx = hepmcParticle->end_vertex();
