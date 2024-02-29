@@ -179,6 +179,8 @@ StatusCode GenEventFilter::execute(const EventContext& evtCtx) const {
 StatusCode GenEventFilter::finalize() {
   debug() << "Number of events seen: " << m_nEventsSeen << endmsg;
 
+  m_evtFilterStats.put({m_nEventsSeen, m_nEventsAccepted, m_nEventsTarget});
+
   return Gaudi::Algorithm::finalize();
 }
 
