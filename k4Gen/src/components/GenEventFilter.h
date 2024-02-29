@@ -1,9 +1,6 @@
 #ifndef GENERATION_GENEVENTFILTER_H
 #define GENERATION_GENEVENTFILTER_H
 
-// std
-#include <cstdint>
-
 // Gaudi
 #include "GaudiKernel/Algorithm.h"
 class IProperty;
