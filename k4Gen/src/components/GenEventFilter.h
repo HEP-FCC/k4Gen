@@ -12,9 +12,9 @@ class IEventProcessor;
 #include "k4FWCore/MetaDataHandle.h"
 
 // Datamodel
-namespace edm4hep {
-  class MCParticleCollection;
-}
+#include "edm4hep/MCParticleCollection.h"
+#include "edm4hep/Constants.h"
+
 
 /** @class GenEventFilter Generation/src/components/GenEventFilter.h GenEventFilter.h
  *
@@ -42,7 +42,7 @@ private:
       "particles", Gaudi::DataHandle::Reader, this};
   /// Writes out filter statistics.
   MetaDataHandle<std::vector<int>> m_evtFilterStats{
-      "EventFilterStats", Gaudi::DataHandle::Writer};
+    edm4hep::EventFilterStats, Gaudi::DataHandle::Writer};
 
   /// Rule to filter the events with.
   Gaudi::Property<std::string> m_filterRuleStr{
