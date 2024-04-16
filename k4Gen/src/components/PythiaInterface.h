@@ -5,7 +5,6 @@
 #include "k4FWCore/DataHandle.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "Generation/IHepMCProviderTool.h"
-#include "Generation/IVertexSmearingTool.h"
 #include "ResonanceDecayFilterHook.h"
 #include "Pythia8Plugins/PowhegHooks.h"
 #include "Pythia8Plugins/HepMC3.h"
@@ -50,22 +49,24 @@ private:
   std::unique_ptr<Pythia8::Pythia> m_pythiaSignal;
   /// Interface for conversion from Pythia8::Event to HepMC event.
   HepMC3::Pythia8ToHepMC3 m_pythiaToHepMC;
-  /// Name of Pythia configuration file with Pythia simulation settings & input LHE file (if required)
-  Gaudi::Property<std::string> m_pythiacard{this, "pythiacard", "Pythia_minbias_pp_100TeV.cmd"
-                                                           "Name of the Pythia cmd file"};
+  /// Name of Pythia configuration file with Pythia simulation
+  /// settings & input LHE file (if required)
+  Gaudi::Property<std::string> m_pythiacard{
+      this, "pythiacard", "Pythia_minbias_pp_100TeV.cmd",
+      "Name of the Pythia cmd file"};
 
-  Gaudi::Property<std::vector<std::string>> m_pythia_extrasettings{this, "pythiaExtraSettings", {""},
-                                                           "Additional strings with Pythia settings, applied after the card."};
+  /// Extra settings for Pythia
+  Gaudi::Property<std::vector<std::string>> m_pythia_extrasettings{
+      this, "pythiaExtraSettings", {""},
+      "Additional strings with Pythia settings, applied after the card."};
+
   /// Pythia8 engine for jet clustering
   std::unique_ptr<Pythia8::SlowJet> m_slowJet{nullptr};
-  // Tool to smear vertices
-  ToolHandle<IVertexSmearingTool> m_vertexSmearingTool;
   // Output handle for ME/PS matching variables
   DataHandle<std::vector<float>> m_handleMePsMatchingVars{"mePsMatchingVars", Gaudi::DataHandle::Writer, this};
 
-  int m_nAbort{0};
-  int m_iAbort{0};
-  int m_iEvent{0};
+  // Maximum number of aborts before giving up
+  int m_maxAborts{0};
 
   // -- aMCatNLO
   bool m_doMePsMatching{false};
@@ -78,7 +79,7 @@ private:
   // Powheg
   bool m_doPowheg{false};
   unsigned long int m_nISRveto{0};
-  unsigned long int m_nFSRveto{0};    
+  unsigned long int m_nFSRveto{0};
   /// Pythia8 engine for Powheg ME/PS merging
   Pythia8::PowhegHooks* m_powhegHooks{nullptr};
 
@@ -99,11 +100,7 @@ private:
 
   Gaudi::Property<std::vector<int>> m_evtGenExcludes{this, "EvtGenExcludes", {},
                                                            "Pdg IDs of particles not to decay with EvtGen"};
-  #if PYTHIA_VERSION_INTEGER < 8300
-  EvtGenDecays* m_evtgen = nullptr;
-  #else
   Pythia8::EvtGenDecays* m_evtgen = nullptr;
-  #endif
 };
 
 #endif  // GENERATION_PYTHIAINTERFACE_H
