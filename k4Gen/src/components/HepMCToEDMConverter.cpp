@@ -56,8 +56,9 @@ StatusCode HepMCToEDMConverter::execute(const EventContext&) const {
   edm4hep::MCParticleCollection* particles = new edm4hep::MCParticleCollection();
 
   std::unordered_map<unsigned int, edm4hep::MutableMCParticle> _map;
-  for (auto _p : evt->particles()) {
-    debug() << "Converting hepmc particle with Pdg_ID \t" << _p->pdg_id() << "and id \t" << _p->id() << endmsg;
+  for (auto _p: evt->particles()) {
+    debug() << "Converting HepMC particle with PDG ID \"" << _p->pdg_id()
+            << "\" and ID \"" << _p->id() << "\"" << endmsg;
     if (_map.find(_p->id()) == _map.end()) {
       edm4hep::MutableMCParticle edm_particle = convert(_p);
       _map.insert({_p->id(), edm_particle});
