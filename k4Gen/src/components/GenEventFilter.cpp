@@ -39,6 +39,7 @@ StatusCode GenEventFilter::initialize() {
   debug() << "Targeted number of events: " << m_nEventsTarget << endmsg;
   m_nEventsAccepted = 0;
   m_nEventsSeen = 0;
+  m_nEventsSkipped = 0;
 
   m_incidentSvc = service("IncidentSvc");
 
@@ -145,7 +146,8 @@ StatusCode GenEventFilter::execute(const EventContext& evtCtx) const {
   m_nEventsSeen++;
 
   if (!(*m_filterRulePtr)(inParticles)) {
-    debug() << "Skipping event..." << endmsg;
+    m_nEventsSkipped++;
+    debug() << "Skipping event (" << m_nEventsSkipped << ") ..." << endmsg;
 
     {
       StatusCode sc = m_eventProcessor->nextEvent(1);
@@ -161,6 +163,7 @@ StatusCode GenEventFilter::execute(const EventContext& evtCtx) const {
     return StatusCode::SUCCESS;
   }
 
+  m_nEventsSkipped = 0;
   m_nEventsAccepted++;
 
   debug() << "Event contains " << inParticles->size() << " particles."

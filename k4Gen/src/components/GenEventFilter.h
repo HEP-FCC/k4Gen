@@ -54,6 +54,8 @@ private:
   mutable std::atomic<unsigned int> m_nEventsAccepted;
   /// Keep track of how many events we went through.
   mutable std::atomic<unsigned int> m_nEventsSeen;
+  /// How many events were skipped in a row.
+  mutable std::atomic<unsigned int> m_nEventsSkipped;
   /// Pointer to the property.
   SmartIF<IProperty> m_property;
   /// Pointer to the incident service.
