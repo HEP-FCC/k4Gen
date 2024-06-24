@@ -1,3 +1,4 @@
+// Gaudi
 #include <Gaudi/Property.h>
 #include <Gaudi/Functional/FilterPredicate.h>
 
@@ -15,10 +16,14 @@
 
 struct GenEventFilter final : Gaudi::Functional::FilterPredicate<bool(const edm4hep::MCParticleCollection&), BaseClass_t> {
   GenEventFilter(const std::string& name, ISvcLocator* pSvc) : FilterPredicate( name, pSvc, {
-      KeyValue("particles", "particles")}),
+      KeyValue("particles", "input particle collection")}),
                                                                m_nEventsAccepted(0),
                                                                m_nEventsSeen(0),
-                                                               m_nEventsSkipped(0) {
+                                                               m_nEventsSkipped(0),
+                                                               m_filterRulePtr(nullptr) {}
+
+
+  StatusCode initialize() {
     SmartIF<IProperty> appMgr;
     appMgr = service("ApplicationMgr", appMgr);
     Gaudi::Property<int> evtMax;
@@ -28,17 +33,18 @@ struct GenEventFilter final : Gaudi::Functional::FilterPredicate<bool(const edm4
 
     if (!m_filterRuleStr.value().empty() && !m_filterRulePath.value().empty()) {
       throw std::runtime_error(
-          "Multiple filter rules found!\n"
-          "Provide either a string or a cxx/hxx file, not both.");
+        "Multiple filter rules found!\n"
+        "Provide either a string or a cxx/hxx file, not both.");
     }
 
+    // Filter rule provided in a C++ file
     if (!m_filterRulePath.value().empty()) {
       debug() << "Looking for the filter rule in " << m_filterRulePath.value()
               << endmsg;
       if (gSystem->AccessPathName(m_filterRulePath.value().c_str())) {
-          throw std::runtime_error(
-            "Unable to access filter rule file!\n"
-            "Provided filter rule file path: " + m_filterRulePath.value());
+        throw std::runtime_error(
+          "Unable to access filter rule file!\n"
+          "Provided filter rule file path: " + m_filterRulePath.value());
       }
       // Include and compile the file
       {
@@ -46,21 +52,18 @@ struct GenEventFilter final : Gaudi::Functional::FilterPredicate<bool(const edm4
             ("#include \"" + m_filterRulePath + "\"").c_str());
         if (!success) {
           throw std::runtime_error(
-              "Unable to compile filter rule provided in a file!");
+            "Unable to compile filter rule provided in a file!");
         }
-        debug() << "Compiled a filter rule provided in a file." << endmsg;
+        debug() << "Filter rule provided in a file compiled successfully."
+                << endmsg;
       }
-    } else {
-      // Filter rule provided directly in a string
-      if (m_filterRuleStr.value().empty()) {
-        m_filterRuleStr =
-          "bool filterRule(const edm4hep::MCParticleCollection&){return true;}";
-        warning() << "No filter rule provided, all events will be accepted!"
-                  << endmsg;
-      }
+    }
 
-      // Include(s) needed
+    // Filter rule provided directly in a string
+    if (!m_filterRuleStr.value().empty()) {
+      debug() << "Compiling filter rule from a string..." << endmsg;
       {
+        // Necessary include
         bool success = gInterpreter->Declare(
             "#include \"edm4hep/MCParticleCollection.h\"");
         if (!success) {
@@ -79,6 +82,14 @@ struct GenEventFilter final : Gaudi::Functional::FilterPredicate<bool(const edm4
         debug() << "Filter rule provided in a string compiled successfully."
                 << endmsg;
       }
+    }
+
+    if (m_filterRuleStr.value().empty() && m_filterRulePath.value().empty()) {
+      warning() << "No filter rule provided, all events will be accepted!"
+                << endmsg;
+      gInterpreter->Declare(
+        "#include \"edm4hep/MCParticleCollection.h\"\n"
+        "bool filterRule(const edm4hep::MCParticleCollection&){return true;}");
     }
 
     // Get the address of the compiled filter rule from the interpreter
@@ -109,12 +120,13 @@ struct GenEventFilter final : Gaudi::Functional::FilterPredicate<bool(const edm4
       if (filterRuleType != "bool(*)(const edm4hep::MCParticleCollection&)") {
         throw std::runtime_error(
           "Found filter rule pointer has wrong signature!\n"
-          "Required: bool(*)(const edm4hep::MCParticleCollection*)\n"
+          "Required: bool(*)(const edm4hep::MCParticleCollection&)\n"
           "Found: " + filterRuleType);
       }
       debug() << "Found filter rule pointer has correct signature." << endmsg;
     }
 
+    return Gaudi::Algorithm::initialize();
   }
 
   bool operator()(const edm4hep::MCParticleCollection& inParticles) const override {
