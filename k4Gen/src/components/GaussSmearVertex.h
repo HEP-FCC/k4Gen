@@ -1,7 +1,7 @@
 #ifndef GENERATION_GAUSSSMEARVERTEX_H
 #define GENERATION_GAUSSSMEARVERTEX_H
 
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/RndmGenerators.h"
 
@@ -13,7 +13,7 @@
  *  Concrete implementation of a IVertexSmearingTool.
  *
  */
-class GaussSmearVertex : public GaudiTool, virtual public IVertexSmearingTool {
+class GaussSmearVertex : public AlgTool, virtual public IVertexSmearingTool {
 public:
   /// Standard constructor
   GaussSmearVertex(const std::string& type, const std::string& name, const IInterface* parent);

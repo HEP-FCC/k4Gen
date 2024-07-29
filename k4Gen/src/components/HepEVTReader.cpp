@@ -12,7 +12,7 @@
 DECLARE_COMPONENT(HepEVTReader)
 
 HepEVTReader::HepEVTReader(const std::string& name, ISvcLocator* svcLoc):
-  GaudiAlgorithm(name, svcLoc),
+  Gaudi::Algorithm(name, svcLoc),
   m_filename() {
 
   declareProperty("HepEVTFilename", m_filename="", "Name of the HepEVT file to read");
@@ -21,7 +21,7 @@ HepEVTReader::HepEVTReader(const std::string& name, ISvcLocator* svcLoc):
 
 StatusCode HepEVTReader::initialize()
 {
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = Gaudi::Algorithm::initialize();
 
   m_input.open(m_filename.c_str(), std::ifstream::in);
 
@@ -34,7 +34,7 @@ StatusCode HepEVTReader::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode HepEVTReader::execute()
+StatusCode HepEVTReader::execute(const EventContext&) const
 {
   // First check the input file status
   if(m_input.eof())
@@ -118,5 +118,5 @@ StatusCode HepEVTReader::execute()
 StatusCode HepEVTReader::finalize() 
 {
   m_input.close();
-  return GaudiAlgorithm::finalize();
+  return Gaudi::Algorithm::finalize();
 }

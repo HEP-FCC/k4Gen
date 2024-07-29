@@ -1,7 +1,7 @@
 #ifndef GENERATION_HEPMCFILEWRITER_H
 #define GENERATION_HEPMCFILEWRITER_H
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 
 #include "k4FWCore/DataHandle.h"
 
@@ -20,7 +20,7 @@ class WriterAscii;
  * done in the fccsw event data format.
  */
 
-class HepMCFileWriter : public GaudiAlgorithm {
+class HepMCFileWriter : public Gaudi::Algorithm {
 
 public:
   /// Constructor.
@@ -28,13 +28,13 @@ public:
   /// Initialize.
   virtual StatusCode initialize();
   /// Execute.
-  virtual StatusCode execute();
+  virtual StatusCode execute(const EventContext&) const;
   /// Finalize.
   virtual StatusCode finalize();
 
 private:
   /// Handle for the HepMC to be read
-  DataHandle<HepMC3::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<HepMC3::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
   Gaudi::Property<std::string> m_filename{this, "Filename", "Output_HepMC.dat", "Name of the HepMC file to write"};
   std::unique_ptr<HepMC3::WriterAscii> m_file;
 };

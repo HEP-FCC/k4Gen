@@ -11,14 +11,14 @@
 DECLARE_COMPONENT(HepMCSimpleMerge)
 
 HepMCSimpleMerge::HepMCSimpleMerge(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<IHepMCMergeTool>(this);
 }
 
 HepMCSimpleMerge::~HepMCSimpleMerge() {}
 
 StatusCode HepMCSimpleMerge::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   if (!sc.isSuccess()) return sc;
   return sc;
 }
@@ -49,4 +49,4 @@ StatusCode HepMCSimpleMerge::merge(HepMC3::GenEvent& signalEvent, const std::vec
   return StatusCode::SUCCESS;
 }
 
-StatusCode HepMCSimpleMerge::finalize() { return GaudiTool::finalize(); }
+StatusCode HepMCSimpleMerge::finalize() { return AlgTool::finalize(); }

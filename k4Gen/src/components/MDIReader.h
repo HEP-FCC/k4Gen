@@ -8,7 +8,7 @@
 
 #include "k4FWCore/DataHandle.h"
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ToolHandle.h"
 
 #include "GaudiKernel/SystemOfUnits.h"
@@ -29,7 +29,7 @@ class MCParticleCollection;
  *  @version 1.0
  */
 
-class MDIReader: public GaudiAlgorithm {
+class MDIReader: public Gaudi::Algorithm {
 
 public:
   /// Constructor.
@@ -37,7 +37,7 @@ public:
   /// Initialize.
   virtual StatusCode initialize();
   /// Execute.
-  virtual StatusCode execute();
+  virtual StatusCode execute(const EventContext&) const;
   /// Finalize.
   virtual StatusCode finalize();
 
@@ -50,7 +50,7 @@ private:
   std::string input_type;
   double xing, cut_z, beam_energy;
   /// Handle for the genparticles to be written
-  DataHandle<edm4hep::MCParticleCollection> m_genphandle {"GenParticles", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_genphandle {"GenParticles", Gaudi::DataHandle::Writer, this};
 
 
   /// Tools to handle input from HepMC-file

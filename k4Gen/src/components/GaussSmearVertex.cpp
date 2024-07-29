@@ -14,7 +14,7 @@ DECLARE_COMPONENT(GaussSmearVertex)
 
 /// Standard constructor, initializes variables
 GaussSmearVertex::GaussSmearVertex(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<IVertexSmearingTool>(this);
 
 }
@@ -26,7 +26,7 @@ GaussSmearVertex::~GaussSmearVertex() { ; }
 // Initialize
 //=============================================================================
 StatusCode GaussSmearVertex::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
 
   IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);

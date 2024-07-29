@@ -14,7 +14,7 @@ DECLARE_COMPONENT(FlatSmearVertex)
 
 /// Standard constructor, initializes variables
 FlatSmearVertex::FlatSmearVertex(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<IVertexSmearingTool>(this);
 }
 
@@ -25,7 +25,7 @@ FlatSmearVertex::~FlatSmearVertex() { ; }
 // Initialize
 //=============================================================================
 StatusCode FlatSmearVertex::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
 
   IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);

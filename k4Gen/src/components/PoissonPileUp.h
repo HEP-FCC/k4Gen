@@ -2,7 +2,7 @@
 #define GENERATION_POISSONPILEUP_H
 
 #include "Generation/IPileUpTool.h"
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/RndmGenerators.h"
 
 /** @class PoissonPileUp 
@@ -15,7 +15,7 @@
  *  @author Valentin Volkl
  *  @date   2016-01-18
  */
-class PoissonPileUp : public GaudiTool, virtual public IPileUpTool {
+class PoissonPileUp : public AlgTool, virtual public IPileUpTool {
 public:
   PoissonPileUp(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~PoissonPileUp();

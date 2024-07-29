@@ -17,7 +17,7 @@
 DECLARE_COMPONENT(PythiaInterface)
 
 PythiaInterface::PythiaInterface(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent),
+    : AlgTool(type, name, parent),
       m_pythiaSignal(nullptr),
       m_nAbort(0),
       m_iAbort(0),
@@ -33,7 +33,7 @@ PythiaInterface::PythiaInterface(const std::string& type, const std::string& nam
 
 StatusCode PythiaInterface::initialize() {
 
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   if (!sc.isSuccess()) return sc;
   if (m_pythiacard.empty() && m_pythia_extrasettings.size() < 2) {
     return Error("Define Pythia8 configuration file (*.cmd)!");
@@ -395,5 +395,5 @@ StatusCode PythiaInterface::finalize() {
   if (nullptr != m_evtgen) {
      delete m_evtgen;
   }
-  return GaudiTool::finalize();
+  return AlgTool::finalize();
 }

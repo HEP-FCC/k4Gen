@@ -12,7 +12,6 @@ gaudi_add_module(k4Gen
                  SOURCES ${k4gen_plugin_sources}
                  LINK Gaudi::GaudiKernel 
                       ${HEPMC3_LIBRARIES}
-                      Gaudi::GaudiAlgLib
                       k4FWCore::k4FWCore
                       HepPDT::heppdt
                       EvtGen::EvtGen

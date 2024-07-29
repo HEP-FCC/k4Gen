@@ -10,7 +10,7 @@
 
 #include "k4FWCore/DataHandle.h"
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ToolHandle.h"
 
 #include "GaudiKernel/SystemOfUnits.h"
@@ -28,7 +28,7 @@ class MCParticleCollection;
  *
  */
 
-class HepEVTReader: public GaudiAlgorithm {
+class HepEVTReader: public Gaudi::Algorithm {
 
 public:
   /// Constructor.
@@ -36,7 +36,7 @@ public:
   /// Initialize.
   virtual StatusCode initialize();
   /// Execute.
-  virtual StatusCode execute();
+  virtual StatusCode execute(const EventContext&) const;
   /// Finalize.
   virtual StatusCode finalize();
 
@@ -48,7 +48,7 @@ private:
   int m_format;
 
   /// Handle for the genparticles to be written
-  DataHandle<edm4hep::MCParticleCollection> m_genphandle {"GenParticles", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_genphandle {"GenParticles", Gaudi::DataHandle::Writer, this};
 
 };
 

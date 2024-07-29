@@ -14,7 +14,7 @@
 DECLARE_COMPONENT(MDIReader)
 
 MDIReader::MDIReader(const std::string& name, ISvcLocator* svcLoc):
-GaudiAlgorithm(name, svcLoc),
+Gaudi::Algorithm(name, svcLoc),
   m_filename() {
 
   declareProperty("MDIFilename", m_filename="", "Name of the MDI file to read");
@@ -27,7 +27,7 @@ GaudiAlgorithm(name, svcLoc),
 
 StatusCode MDIReader::initialize()
 {
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = Gaudi::Algorithm::initialize();
 
   debug() << "Reading file: " << m_filename << endmsg;
 
@@ -40,7 +40,7 @@ StatusCode MDIReader::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode MDIReader::execute()
+StatusCode MDIReader::execute(const EventContext&) const
 {
   // First check the input file status
   if(m_input.eof())
@@ -224,5 +224,5 @@ StatusCode MDIReader::finalize()
 {
   m_input.close();
   debug() << "MDIReader finalization" << endmsg;
-  return GaudiAlgorithm::finalize();
+  return Gaudi::Algorithm::finalize();
 }

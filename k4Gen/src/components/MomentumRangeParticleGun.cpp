@@ -18,7 +18,7 @@ DECLARE_COMPONENT(MomentumRangeParticleGun)
 MomentumRangeParticleGun::MomentumRangeParticleGun(const std::string& type,
                                                    const std::string& name,
                                                    const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<IParticleGunTool>(this);
 }
 
@@ -27,7 +27,7 @@ MomentumRangeParticleGun::~MomentumRangeParticleGun() {}
 
 /// Initialize Particle Gun parameters
 StatusCode MomentumRangeParticleGun::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   if (!sc.isSuccess()) return sc;
 
   IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);

@@ -1,7 +1,7 @@
 #ifndef GENERATION_FLATSMEARVERTEX_H
 #define GENERATION_FLATSMEARVERTEX_H
 
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
@@ -18,7 +18,7 @@
  *  @author Daniel Funke
  *  @date   2008-05-18
  */
-class FlatSmearVertex : public GaudiTool, virtual public IVertexSmearingTool {
+class FlatSmearVertex : public AlgTool, virtual public IVertexSmearingTool {
 public:
   /// Standard constructor
   FlatSmearVertex(const std::string& type, const std::string& name, const IInterface* parent);

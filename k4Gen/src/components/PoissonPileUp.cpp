@@ -4,14 +4,14 @@
 DECLARE_COMPONENT(PoissonPileUp)
 
 PoissonPileUp::PoissonPileUp(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<IPileUpTool>(this);
 }
 
 PoissonPileUp::~PoissonPileUp() { ; }
 
 StatusCode PoissonPileUp::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
   IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
   if (m_meanPileUpEvents < 0) return Error("Number of Pileup events cannot be negative!");

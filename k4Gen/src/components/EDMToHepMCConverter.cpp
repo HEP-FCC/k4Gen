@@ -12,14 +12,14 @@ using HepMC3::GenParticle;
 
 DECLARE_COMPONENT(EDMToHepMCConverter)
 
-EDMToHepMCConverter::EDMToHepMCConverter(const std::string& name, ISvcLocator* svcLoc) : GaudiAlgorithm(name, svcLoc) {
+EDMToHepMCConverter::EDMToHepMCConverter(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
   declareProperty("hepmc", m_hepmchandle, "HepMC event handle (output)");
   declareProperty("GenParticles", m_genphandle, "Generated particles collection (input)");
 }
 
-StatusCode EDMToHepMCConverter::initialize() { return GaudiAlgorithm::initialize(); }
+StatusCode EDMToHepMCConverter::initialize() { return Gaudi::Algorithm::initialize(); }
 
-StatusCode EDMToHepMCConverter::execute() {
+StatusCode EDMToHepMCConverter::execute(const EventContext&) const {
 
   auto particles = m_genphandle.get();
   // ownership of event given to data service at the end of execute
@@ -51,4 +51,4 @@ StatusCode EDMToHepMCConverter::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode EDMToHepMCConverter::finalize() { return GaudiAlgorithm::finalize(); }
+StatusCode EDMToHepMCConverter::finalize() { return Gaudi::Algorithm::finalize(); }

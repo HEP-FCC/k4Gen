@@ -3,14 +3,14 @@
 DECLARE_COMPONENT(RangePileUp)
 
 RangePileUp::RangePileUp(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<IPileUpTool>(this);
 }
 
 RangePileUp::~RangePileUp() { ; }
 
 StatusCode RangePileUp::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
   return sc;
 }

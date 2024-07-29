@@ -2,7 +2,7 @@
 #define GENERATION_CONSTPTPARTICLEGUN_H
 
 #include "k4FWCore/DataHandle.h"
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -14,7 +14,7 @@
  *  To be more flexible, the gun uses only pt and eta values from a list, if given,
  *  and only if the lists are empty draws the values from a distribution between min and max.
  */
-class ConstPtParticleGun : public GaudiTool, virtual public IParticleGunTool {
+class ConstPtParticleGun : public AlgTool, virtual public IParticleGunTool {
 public:
   ConstPtParticleGun(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~ConstPtParticleGun();

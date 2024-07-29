@@ -5,7 +5,7 @@
 #include "k4FWCore/DataHandle.h"
 #include "Generation/IHepMCMergeTool.h"
 
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/RndmGenerators.h"
 
 
@@ -15,7 +15,7 @@
  * Implementation partly due to pilemc https://pilemc.hepforge.org/
  */
 
-class HepMCFullMerge final: public GaudiTool, virtual public IHepMCMergeTool {
+class HepMCFullMerge final: public AlgTool, virtual public IHepMCMergeTool {
 public:
   HepMCFullMerge(const std::string& type, const std::string& name, const IInterface* parent);
 

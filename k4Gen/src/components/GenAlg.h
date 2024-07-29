@@ -8,7 +8,7 @@
 #include "Generation/IVertexSmearingTool.h"
 
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ToolHandle.h"
 
 
@@ -17,7 +17,7 @@ namespace HepMC3 {
 class GenEvent;
 }
 
-class GenAlg : public GaudiAlgorithm {
+class GenAlg : public Gaudi::Algorithm {
 
 public:
   /// Constructor.
@@ -25,7 +25,7 @@ public:
   /// Initialize.
   virtual StatusCode initialize();
   /// Execute.
-  virtual StatusCode execute();
+  virtual StatusCode execute(const EventContext&) const;
   /// Finalize.
   virtual StatusCode finalize();
 
@@ -40,7 +40,7 @@ private:
   // Tool to smear vertices
   ToolHandle<IVertexSmearingTool> m_vertexSmearingTool{"FlatSmearVertex/VertexSmearingTool", this};
   // output handle for finished event
-  DataHandle<HepMC3::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<HepMC3::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Writer, this};
 };
 
 #endif  // GENERATION_GENALG_H

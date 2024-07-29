@@ -2,13 +2,13 @@
 #define GENERATION_HEPMCHISTOGRAMS_H
 
 #include "k4FWCore/DataHandle.h"
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ITHistSvc.h"
 #include "HepMC3/GenEvent.h"
 
 #include "TH1F.h"
 
-class HepMCHistograms : public GaudiAlgorithm {
+class HepMCHistograms : public Gaudi::Algorithm {
 
 public:
   /// Constructor.
@@ -16,13 +16,13 @@ public:
   /// Initialize.
   virtual StatusCode initialize();
   /// Execute.
-  virtual StatusCode execute();
+  virtual StatusCode execute(const EventContext&) const;
   /// Finalize.
   virtual StatusCode finalize();
 
 private:
   /// Handle for the HepMC to be read
-  DataHandle<HepMC3::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<HepMC3::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
 
   ITHistSvc* m_ths{nullptr};  ///< THistogram service
 

@@ -3,14 +3,14 @@
 DECLARE_COMPONENT(ConstPileUp)
 
 ConstPileUp::ConstPileUp(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<IPileUpTool>(this);
 }
 
 ConstPileUp::~ConstPileUp() { ; }
 
 StatusCode ConstPileUp::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   printPileUpCounters();
   return sc;
 }
