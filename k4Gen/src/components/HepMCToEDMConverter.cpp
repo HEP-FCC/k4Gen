@@ -7,7 +7,7 @@
 DECLARE_COMPONENT(HepMCToEDMConverter)
 
 
-edm4hep::MutableMCParticle HepMCToEDMConverter::convert(std::shared_ptr<const HepMC3::GenParticle> hepmcParticle) {
+edm4hep::MutableMCParticle HepMCToEDMConverter::convert(std::shared_ptr<const HepMC3::GenParticle> hepmcParticle) const {
   edm4hep::MutableMCParticle edm_particle;
   edm_particle.setPDG(hepmcParticle->pdg_id());
   edm_particle.setGeneratorStatus(hepmcParticle->status());

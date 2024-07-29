@@ -43,7 +43,7 @@ public:
 private:
 
   std::string m_filename;
-  std::ifstream m_input;
+  mutable std::ifstream m_input;
   int NHEP;
   int m_format;
 
