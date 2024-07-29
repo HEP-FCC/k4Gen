@@ -44,7 +44,7 @@ private:
 
   std::string m_filename;
   mutable std::ifstream m_input;
-  int NHEP;
+  mutable int NHEP;
   int m_format;
 
   /// Handle for the genparticles to be written

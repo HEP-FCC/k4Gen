@@ -33,7 +33,7 @@ private:
   /// Tools to handle input from HepMC-file
   mutable ToolHandle<IHepMCProviderTool> m_signalProvider{"MomentumRangeParticleGun/HepMCProviderTool", this};
   mutable ToolHandle<IHepMCProviderTool> m_pileUpProvider{"MomentumRangeParticleGun/HepMCProviderTool", this};
-  ToolHandle<IPileUpTool> m_pileUpTool{"ConstPileUp/PileUpTool", this};
+  mutable ToolHandle<IPileUpTool> m_pileUpTool{"ConstPileUp/PileUpTool", this};
 
   /// Tool to merge HepMC events
   mutable ToolHandle<IHepMCMergeTool> m_HepMCMergeTool{"HepMCSimpleMerge/HepMCMergeTool", this};
