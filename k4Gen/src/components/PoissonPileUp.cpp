@@ -14,9 +14,15 @@ StatusCode PoissonPileUp::initialize() {
   StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
   IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
-  if (m_meanPileUpEvents < 0) return Error("Number of Pileup events cannot be negative!");
+  if (m_meanPileUpEvents < 0) {
+    error() << "Number of Pileup events cannot be negative!";
+    return StatusCode::FAILURE;
+  }
   sc = m_PoissonDist.initialize(randSvc, Rndm::Poisson(m_meanPileUpEvents));
-  if (!sc.isSuccess()) return Error("Could not initialize Poisson random number generator");
+  if (!sc.isSuccess()) {
+    error() << "Could not initialize Poisson random number generator";
+    return StatusCode::FAILURE;
+  }
   release(randSvc).ignore();
   m_currentNumPileUpEvents = m_PoissonDist();
   printPileUpCounters();

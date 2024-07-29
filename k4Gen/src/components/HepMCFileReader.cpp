@@ -28,7 +28,7 @@ StatusCode HepMCFileReader::initialize() {
 StatusCode HepMCFileReader::getNextEvent(HepMC3::GenEvent& event) {
   if (!m_file->read_event(event)) {
     error() << "Premature end of file: Please set the number of events according to hepMC file." << endmsg;
-    return Error("Reached end of file before finished processing");
+    return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
 }

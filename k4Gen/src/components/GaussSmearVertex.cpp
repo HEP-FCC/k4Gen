@@ -42,7 +42,10 @@ StatusCode GaussSmearVertex::initialize() {
   info() << " with " << m_xsig / Gaudi::Units::mm << " mm  standard deviation in x " << m_ysig / Gaudi::Units::mm
          << " mm in y and " << m_zsig / Gaudi::Units::mm << " mm in z." << endmsg;
 
-  if (!sc.isSuccess()) return Error("Could not initialize normal random number generator");
+  if (!sc.isSuccess()) {
+    error() << "Could not initialize normal random number generator";
+    return StatusCode::FAILURE;
+  }
 
   release(randSvc).ignore();
   return sc;

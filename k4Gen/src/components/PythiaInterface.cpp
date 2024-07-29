@@ -36,7 +36,8 @@ StatusCode PythiaInterface::initialize() {
   StatusCode sc = AlgTool::initialize();
   if (!sc.isSuccess()) return sc;
   if (m_pythiacard.empty() && m_pythia_extrasettings.size() < 2) {
-    return Error("Define Pythia8 configuration file (*.cmd)!");
+    error() << "No Pythia8 configuration file (*.cmd) defined!" << endmsg;
+    return StatusCode::FAILURE;
   }
 
   // Set Pythia configuration directory from system variable (if set)
@@ -82,7 +83,8 @@ StatusCode PythiaInterface::initialize() {
 
   // Currently, only one scheme at a time is allowed.
   if (m_doMePsMerging && m_doMePsMatching) {
-    return Error("Jet matching and merging cannot be used simultaneously!");
+    error() << "Jet matching and merging cannot be used simultaneously!" << endmsg;
+    return StatusCode::FAILURE;
   }
 
   // Allow to set the number of additional partons dynamically.
@@ -112,7 +114,8 @@ StatusCode PythiaInterface::initialize() {
   if (m_doMePsMatching) {
     m_matching = std::unique_ptr<Pythia8::JetMatchingMadgraph>(new Pythia8::JetMatchingMadgraph());
     if (!m_matching) {
-      return Error(" Failed to initialise jet matching structures.");
+      error() << "Failed to initialise jet matching structures." << endmsg;
+      return StatusCode::FAILURE;
     }
     #if PYTHIA_VERSION_INTEGER < 8300
     m_pythiaSignal->setUserHooksPtr(m_matching.get());
@@ -220,7 +223,8 @@ StatusCode PythiaInterface::getNextEvent(HepMC3::GenEvent& theEvent) {
       IIncidentSvc* incidentSvc;
       StatusCode sc = service("IncidentSvc", incidentSvc);
       incidentSvc->fireIncident(Incident(name(), IncidentType::AbortEvent));
-      return Error("Event generation aborted prematurely, owing to error!");
+      error() << "Event generation aborted prematurely, owing to error!" << endmsg;
+      return StatusCode::FAILURE;
     } else {
       warning() << "PythiaInterface Pythia8 abort : " << m_iAbort << "/" << m_nAbort << std::endl;
     }

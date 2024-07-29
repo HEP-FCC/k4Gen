@@ -24,9 +24,15 @@ StatusCode ConstPtParticleGun::initialize() {
   // initialize random number generator
   IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
   sc = m_flatGenerator.initialize(randSvc, Rndm::Flat(0., 1.));
-  if (!sc.isSuccess()) return Error("Cannot initialize flat generator");
+  if (!sc.isSuccess()) {
+    error() << "Cannot initialize flat generator";
+    return StatusCode::FAILURE;
+  }
   // check momentum and angles
-  if ((m_minEta > m_maxEta) || (m_minPhi > m_maxPhi)) return Error("Incorrect values for eta or phi!");
+  if ((m_minEta > m_maxEta) || (m_minPhi > m_maxPhi)) {
+    error() << "Incorrect values for eta or phi!";
+    return StatusCode::FAILURE;
+  }
   m_deltaPhi = m_maxPhi - m_minPhi;
   m_deltaEta = m_maxEta - m_minEta;
   // setup particle information
