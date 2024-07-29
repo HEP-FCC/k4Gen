@@ -13,7 +13,7 @@ PoissonPileUp::~PoissonPileUp() { ; }
 StatusCode PoissonPileUp::initialize() {
   StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
-  IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
+  IRndmGenSvc* randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
   if (m_meanPileUpEvents < 0) {
     error() << "Number of Pileup events cannot be negative!";
     return StatusCode::FAILURE;

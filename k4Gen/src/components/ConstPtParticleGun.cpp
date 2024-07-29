@@ -22,7 +22,7 @@ StatusCode ConstPtParticleGun::initialize() {
   StatusCode sc = AlgTool::initialize();
   if (!sc.isSuccess()) return sc;
   // initialize random number generator
-  IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
+  IRndmGenSvc* randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
   sc = m_flatGenerator.initialize(randSvc, Rndm::Flat(0., 1.));
   if (!sc.isSuccess()) {
     error() << "Cannot initialize flat generator";

@@ -29,7 +29,7 @@ StatusCode GaussSmearVertex::initialize() {
   StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
 
-  IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
+  IRndmGenSvc* randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
 
 
 
