@@ -23,7 +23,6 @@ StatusCode PoissonPileUp::initialize() {
     error() << "Could not initialize Poisson random number generator";
     return StatusCode::FAILURE;
   }
-  release(randSvc).ignore();
   m_currentNumPileUpEvents = m_PoissonDist();
   printPileUpCounters();
   return sc;

@@ -47,7 +47,6 @@ StatusCode GaussSmearVertex::initialize() {
     return StatusCode::FAILURE;
   }
 
-  release(randSvc).ignore();
   return sc;
 }
 
