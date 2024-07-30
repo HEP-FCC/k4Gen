@@ -4,14 +4,14 @@
 
 DECLARE_COMPONENT(GenParticleFilter)
 
-GenParticleFilter::GenParticleFilter(const std::string& name, ISvcLocator* svcLoc) : GaudiAlgorithm(name, svcLoc) {
+GenParticleFilter::GenParticleFilter(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
   declareProperty("GenParticles", m_iGenpHandle, "Generator Particles to filter (input)");
   declareProperty("GenParticlesFiltered", m_oGenpHandle, "Filtered Generator particles (output)");
 }
 
-StatusCode GenParticleFilter::initialize() { return GaudiAlgorithm::initialize(); }
+StatusCode GenParticleFilter::initialize() { return Gaudi::Algorithm::initialize(); }
 
-StatusCode GenParticleFilter::execute() {
+StatusCode GenParticleFilter::execute(const EventContext&) const {
   const auto inparticles = m_iGenpHandle.get();
   auto particles = m_oGenpHandle.createAndPut();
   bool accept = false;
@@ -32,4 +32,4 @@ StatusCode GenParticleFilter::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode GenParticleFilter::finalize() { return GaudiAlgorithm::finalize(); }
+StatusCode GenParticleFilter::finalize() { return Gaudi::Algorithm::finalize(); }

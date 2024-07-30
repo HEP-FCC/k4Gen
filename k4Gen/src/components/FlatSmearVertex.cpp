@@ -14,7 +14,7 @@ DECLARE_COMPONENT(FlatSmearVertex)
 
 /// Standard constructor, initializes variables
 FlatSmearVertex::FlatSmearVertex(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<IVertexSmearingTool>(this);
 }
 
@@ -25,13 +25,22 @@ FlatSmearVertex::~FlatSmearVertex() { ; }
 // Initialize
 //=============================================================================
 StatusCode FlatSmearVertex::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
 
-  IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
-  if (m_xmin > m_xmax) return Error("xMin > xMax !");
-  if (m_ymin > m_ymax) return Error("yMin > yMax !");
-  if (m_zmin > m_zmax) return Error("zMin > zMax !");
+  IRndmGenSvc* randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
+  if (m_xmin > m_xmax) {
+    error() << "xMin > xMax !";
+    return StatusCode::FAILURE;
+  }
+  if (m_ymin > m_ymax) {
+    error() << "yMin > yMax !";
+    return StatusCode::FAILURE;
+  }
+  if (m_zmin > m_zmax) {
+    error() << "zMin > zMax !";
+    return StatusCode::FAILURE;
+  }
 
   sc = m_flatDist.initialize(randSvc, Rndm::Flat(0., 1.));
 
@@ -43,7 +52,8 @@ StatusCode FlatSmearVertex::initialize() {
   } else if (m_zDir == 0) {
     infoMsg = " with TOF of interaction equal to zero ";
   } else {
-    return Error("BeamDirection can only be set to -1 or 1, or 0 to switch off TOF");
+    error() << "BeamDirection can only be set to -1 or 1, or 0 to switch off TOF";
+    return StatusCode::FAILURE;
   }
 
   info() << "Smearing of interaction point with flat distribution "
@@ -53,9 +63,11 @@ StatusCode FlatSmearVertex::initialize() {
          << m_ymin / Gaudi::Units::mm << " mm <= y <= " << m_ymax / Gaudi::Units::mm << " mm and "
          << m_zmin / Gaudi::Units::mm << " mm <= z <= " << m_zmax / Gaudi::Units::mm << " mm." << endmsg;
 
-  if (!sc.isSuccess()) return Error("Could not initialize flat random number generator");
+  if (!sc.isSuccess()) {
+    error() << "Could not initialize flat random number generator";
+    return StatusCode::FAILURE;
+  }
 
-  release(randSvc).ignore();
   return sc;
 }
 

@@ -2,7 +2,7 @@
 #define GENERATION_RANGEPILEUP_H
 
 #include "Generation/IPileUpTool.h"
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 /** @class RangePileUp 
  *
@@ -14,7 +14,7 @@
  *  @author Valentin Volkl
  *  @date   2016-01-18
  */
-class RangePileUp : public GaudiTool, virtual public IPileUpTool {
+class RangePileUp : public AlgTool, virtual public IPileUpTool {
 public:
   RangePileUp(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~RangePileUp();

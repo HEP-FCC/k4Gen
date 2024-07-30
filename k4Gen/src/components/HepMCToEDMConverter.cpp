@@ -7,7 +7,7 @@
 DECLARE_COMPONENT(HepMCToEDMConverter)
 
 
-edm4hep::MutableMCParticle HepMCToEDMConverter::convert(std::shared_ptr<const HepMC3::GenParticle> hepmcParticle) {
+edm4hep::MutableMCParticle HepMCToEDMConverter::convert(std::shared_ptr<const HepMC3::GenParticle> hepmcParticle) const {
   edm4hep::MutableMCParticle edm_particle;
   edm_particle.setPDG(hepmcParticle->pdg_id());
   edm_particle.setGeneratorStatus(hepmcParticle->status());
@@ -43,16 +43,16 @@ edm4hep::MutableMCParticle HepMCToEDMConverter::convert(std::shared_ptr<const He
   return edm_particle;
 }
 
-HepMCToEDMConverter::HepMCToEDMConverter(const std::string& name, ISvcLocator* svcLoc) : GaudiAlgorithm(name, svcLoc) {
+HepMCToEDMConverter::HepMCToEDMConverter(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
   declareProperty("hepmc", m_hepmchandle, "HepMC event handle (input)");
   declareProperty("GenParticles", m_genphandle, "Generated particles collection (output)");
 }
 
 StatusCode HepMCToEDMConverter::initialize() { 
-  return GaudiAlgorithm::initialize();
+  return Gaudi::Algorithm::initialize();
 }
 
-StatusCode HepMCToEDMConverter::execute() {
+StatusCode HepMCToEDMConverter::execute(const EventContext&) const {
   const HepMC3::GenEvent* evt = m_hepmchandle.get();
   edm4hep::MCParticleCollection* particles = new edm4hep::MCParticleCollection();
 
@@ -94,5 +94,5 @@ StatusCode HepMCToEDMConverter::execute() {
 }
 
 StatusCode HepMCToEDMConverter::finalize() {
-   return GaudiAlgorithm::finalize();
+   return Gaudi::Algorithm::finalize();
 }

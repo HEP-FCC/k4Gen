@@ -8,7 +8,7 @@
 #include "Generation/IVertexSmearingTool.h"
 
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ToolHandle.h"
 
 
@@ -17,7 +17,7 @@ namespace HepMC3 {
 class GenEvent;
 }
 
-class GenAlg : public GaudiAlgorithm {
+class GenAlg : public Gaudi::Algorithm {
 
 public:
   /// Constructor.
@@ -25,22 +25,22 @@ public:
   /// Initialize.
   virtual StatusCode initialize();
   /// Execute.
-  virtual StatusCode execute();
+  virtual StatusCode execute(const EventContext&) const;
   /// Finalize.
   virtual StatusCode finalize();
 
 private:
   /// Tools to handle input from HepMC-file
-  ToolHandle<IHepMCProviderTool> m_signalProvider{"MomentumRangeParticleGun/HepMCProviderTool", this};
-  ToolHandle<IHepMCProviderTool> m_pileUpProvider{"MomentumRangeParticleGun/HepMCProviderTool", this};
-  ToolHandle<IPileUpTool> m_pileUpTool{"ConstPileUp/PileUpTool", this};
+  mutable ToolHandle<IHepMCProviderTool> m_signalProvider{"MomentumRangeParticleGun/HepMCProviderTool", this};
+  mutable ToolHandle<IHepMCProviderTool> m_pileUpProvider{"MomentumRangeParticleGun/HepMCProviderTool", this};
+  mutable ToolHandle<IPileUpTool> m_pileUpTool{"ConstPileUp/PileUpTool", this};
 
   /// Tool to merge HepMC events
-  ToolHandle<IHepMCMergeTool> m_HepMCMergeTool{"HepMCSimpleMerge/HepMCMergeTool", this};
+  mutable ToolHandle<IHepMCMergeTool> m_HepMCMergeTool{"HepMCSimpleMerge/HepMCMergeTool", this};
   // Tool to smear vertices
-  ToolHandle<IVertexSmearingTool> m_vertexSmearingTool{"FlatSmearVertex/VertexSmearingTool", this};
+  mutable ToolHandle<IVertexSmearingTool> m_vertexSmearingTool{"FlatSmearVertex/VertexSmearingTool", this};
   // output handle for finished event
-  DataHandle<HepMC3::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<HepMC3::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Writer, this};
 };
 
 #endif  // GENERATION_GENALG_H

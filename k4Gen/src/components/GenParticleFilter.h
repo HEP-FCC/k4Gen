@@ -2,7 +2,7 @@
 #define GENERATION_GENPARTICLEFILTER_H
 
 #include "k4FWCore/DataHandle.h"
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Gaudi/Algorithm.h"
 
 // forward declarations:
 namespace edm4hep {
@@ -18,7 +18,7 @@ class MCParticleCollection;
  *  @author J. Lingemann
 */
 
-class GenParticleFilter : public GaudiAlgorithm {
+class GenParticleFilter : public Gaudi::Algorithm {
 
 public:
   /// Constructor.
@@ -26,7 +26,7 @@ public:
   /// Initialize.
   virtual StatusCode initialize();
   /// Execute: Applies the filter
-  virtual StatusCode execute();
+  virtual StatusCode execute(const EventContext&) const;
   /// Finalize.
   virtual StatusCode finalize();
 
@@ -34,9 +34,9 @@ private:
   /// Particle statuses to accept
   Gaudi::Property<std::vector<unsigned>> m_accept{this, "accept", {1}, "Particle statuses to accept"};
   /// Handle for the ParticleCollection to be read
-  DataHandle<edm4hep::MCParticleCollection> m_iGenpHandle{"GenParticles", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_iGenpHandle{"GenParticles", Gaudi::DataHandle::Reader, this};
   /// Handle for the genparticles to be written
-  DataHandle<edm4hep::MCParticleCollection> m_oGenpHandle{"GenParticlesFiltered", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_oGenpHandle{"GenParticlesFiltered", Gaudi::DataHandle::Writer, this};
 };
 
 #endif  // GENERATION_GENPARTICLEFILTER_H

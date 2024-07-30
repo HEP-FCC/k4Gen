@@ -2,7 +2,7 @@
 #define GENERATION_CONSTPILEUP_H
 
 #include "Generation/IPileUpTool.h"
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 
 /** @class ConstPileUp 
  *
@@ -14,7 +14,7 @@
  *  @author Valentin Volkl
  *  @date   2015-12-16
  */
-class ConstPileUp : public GaudiTool, virtual public IPileUpTool {
+class ConstPileUp : public AlgTool, virtual public IPileUpTool {
 public:
   ConstPileUp(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~ConstPileUp();

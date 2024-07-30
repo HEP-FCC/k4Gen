@@ -6,12 +6,12 @@
 
 DECLARE_COMPONENT(HepMCHistograms)
 
-HepMCHistograms::HepMCHistograms(const std::string& name, ISvcLocator* svcLoc) : GaudiAlgorithm(name, svcLoc) {
+HepMCHistograms::HepMCHistograms(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
   declareProperty("hepmc", m_hepmchandle);
 }
 
 StatusCode HepMCHistograms::initialize() {
-  if (GaudiAlgorithm::initialize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
 
   if (service("THistSvc", m_ths).isFailure()) {
     error() << "Couldn't get THistSvc" << endmsg;
@@ -41,7 +41,7 @@ StatusCode HepMCHistograms::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode HepMCHistograms::execute() {
+StatusCode HepMCHistograms::execute(const EventContext&) const {
   auto evt = m_hepmchandle.get();
 
   info() << "Processing event with " << evt->particles().size() << " particles" << endmsg;
@@ -60,7 +60,7 @@ StatusCode HepMCHistograms::execute() {
 }
 
 StatusCode HepMCHistograms::finalize() {
-  if (GaudiAlgorithm::finalize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::finalize().isFailure()) return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
 }

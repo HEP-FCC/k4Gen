@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "k4FWCore/DataHandle.h"
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "Generation/IHepMCProviderTool.h"
 #include "Generation/IVertexSmearingTool.h"
 #include "ResonanceDecayFilterHook.h"
@@ -36,7 +36,7 @@ class amcnlo_unitarised_interface;
 #endif
 
 
-class PythiaInterface : public GaudiTool, virtual public IHepMCProviderTool {
+class PythiaInterface : public AlgTool, virtual public IHepMCProviderTool {
 
 public:
   /// Constructor.
@@ -61,7 +61,7 @@ private:
   // Tool to smear vertices
   ToolHandle<IVertexSmearingTool> m_vertexSmearingTool;
   // Output handle for ME/PS matching variables
-  DataHandle<std::vector<float>> m_handleMePsMatchingVars{"mePsMatchingVars", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<std::vector<float>> m_handleMePsMatchingVars{"mePsMatchingVars", Gaudi::DataHandle::Writer, this};
 
   int m_nAbort{0};
   int m_iAbort{0};

@@ -1,7 +1,7 @@
 #ifndef GENERATION_MOMENTUMRANGEPARTICLEGUN_H
 #define GENERATION_MOMENTUMRANGEPARTICLEGUN_H
 
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -17,7 +17,7 @@
  *  @author Valentin Volkl (rewrite as tool)
  *  @date   2008-05-18
  */
-class MomentumRangeParticleGun : public GaudiTool, virtual public IParticleGunTool {
+class MomentumRangeParticleGun : public AlgTool, virtual public IParticleGunTool {
 
 public:
   /// Constructor

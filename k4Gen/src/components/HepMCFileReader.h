@@ -2,13 +2,13 @@
 #ifndef GENERATION_HEPMCFILEREADER_H
 #define GENERATION_HEPMCFILEREADER_H
 
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
 #include "Generation/IHepMCProviderTool.h"
 
 #include "HepMC3/GenEvent.h"
 #include "HepMC3/ReaderAscii.h"
 
-class HepMCFileReader : public GaudiTool, virtual public IHepMCProviderTool {
+class HepMCFileReader : public AlgTool, virtual public IHepMCProviderTool {
 public:
   HepMCFileReader(const std::string& type, const std::string& name, const IInterface* parent);
   virtual ~HepMCFileReader();  ///< Destructor

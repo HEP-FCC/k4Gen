@@ -4,20 +4,25 @@
 DECLARE_COMPONENT(PoissonPileUp)
 
 PoissonPileUp::PoissonPileUp(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<IPileUpTool>(this);
 }
 
 PoissonPileUp::~PoissonPileUp() { ; }
 
 StatusCode PoissonPileUp::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
-  IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
-  if (m_meanPileUpEvents < 0) return Error("Number of Pileup events cannot be negative!");
+  IRndmGenSvc* randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
+  if (m_meanPileUpEvents < 0) {
+    error() << "Number of Pileup events cannot be negative!";
+    return StatusCode::FAILURE;
+  }
   sc = m_PoissonDist.initialize(randSvc, Rndm::Poisson(m_meanPileUpEvents));
-  if (!sc.isSuccess()) return Error("Could not initialize Poisson random number generator");
-  release(randSvc).ignore();
+  if (!sc.isSuccess()) {
+    error() << "Could not initialize Poisson random number generator";
+    return StatusCode::FAILURE;
+  }
   m_currentNumPileUpEvents = m_PoissonDist();
   printPileUpCounters();
   return sc;

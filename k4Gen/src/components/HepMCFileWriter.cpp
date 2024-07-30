@@ -4,16 +4,16 @@
 
 DECLARE_COMPONENT(HepMCFileWriter)
 
-HepMCFileWriter::HepMCFileWriter(const std::string& name, ISvcLocator* svcLoc) : GaudiAlgorithm(name, svcLoc) {
+HepMCFileWriter::HepMCFileWriter(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
   declareProperty("hepmc", m_hepmchandle, "The HepMC event to write to text file (input)");
 }
 
 StatusCode HepMCFileWriter::initialize() {
   m_file = std::make_unique<HepMC3::WriterAscii>(m_filename.value());
-  return GaudiAlgorithm::initialize();
+  return Gaudi::Algorithm::initialize();
 }
 
-StatusCode HepMCFileWriter::execute() {
+StatusCode HepMCFileWriter::execute(const EventContext&) const {
   const HepMC3::GenEvent* theEvent = m_hepmchandle.get();
   m_file->write_event(*theEvent);
   return StatusCode::SUCCESS;
@@ -21,5 +21,5 @@ StatusCode HepMCFileWriter::execute() {
 
 StatusCode HepMCFileWriter::finalize() {
   m_file.reset();
-  return GaudiAlgorithm::finalize();
+  return Gaudi::Algorithm::finalize();
 }

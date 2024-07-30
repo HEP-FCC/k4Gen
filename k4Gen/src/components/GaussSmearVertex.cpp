@@ -14,7 +14,7 @@ DECLARE_COMPONENT(GaussSmearVertex)
 
 /// Standard constructor, initializes variables
 GaussSmearVertex::GaussSmearVertex(const std::string& type, const std::string& name, const IInterface* parent)
-    : GaudiTool(type, name, parent) {
+    : AlgTool(type, name, parent) {
   declareInterface<IVertexSmearingTool>(this);
 
 }
@@ -26,10 +26,10 @@ GaussSmearVertex::~GaussSmearVertex() { ; }
 // Initialize
 //=============================================================================
 StatusCode GaussSmearVertex::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
 
-  IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
+  IRndmGenSvc* randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
 
 
 
@@ -42,9 +42,11 @@ StatusCode GaussSmearVertex::initialize() {
   info() << " with " << m_xsig / Gaudi::Units::mm << " mm  standard deviation in x " << m_ysig / Gaudi::Units::mm
          << " mm in y and " << m_zsig / Gaudi::Units::mm << " mm in z." << endmsg;
 
-  if (!sc.isSuccess()) return Error("Could not initialize normal random number generator");
+  if (!sc.isSuccess()) {
+    error() << "Could not initialize normal random number generator";
+    return StatusCode::FAILURE;
+  }
 
-  release(randSvc).ignore();
   return sc;
 }
 
