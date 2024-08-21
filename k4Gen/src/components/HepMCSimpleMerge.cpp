@@ -26,21 +26,21 @@ StatusCode HepMCSimpleMerge::initialize() {
 StatusCode HepMCSimpleMerge::merge(HepMC3::GenEvent& signalEvent, const std::vector<HepMC3::GenEvent>& eventVector) {
   // iterate over vertices and add them to signalEvent
   for (auto it = eventVector.cbegin(), end = eventVector.cend(); it != end; ++it) {
-    std::unordered_map<const HepMC3::GenVertex*, HepMC3::GenVertex*> inputToMergedVertexMap;
-    for (auto v: (*it).vertices()) {
-      HepMC3::GenVertex* newVertex = new HepMC3::GenVertex(v->position());
-      inputToMergedVertexMap[v.get()] = newVertex;
+    std::unordered_map<std::shared_ptr<const HepMC3::GenVertex>, std::shared_ptr<HepMC3::GenVertex>> inputToMergedVertexMap;
+    for (auto& v: it->vertices()) {
+      auto newVertex = std::make_shared<HepMC3::GenVertex>(v->position());
+      inputToMergedVertexMap[v] = newVertex;
     }
-    for (auto p: (*it).particles()) {
+    for (auto& p: it->particles()) {
       // simple check if final-state particle:
       // has no end vertex and correct status code meaning no further decays
       if (!p->end_vertex() && p->status() == 1) {
         // ownership of the particle  (newParticle) is then given to the vertex (newVertex)
-        HepMC3::GenParticle* newParticle = new HepMC3::GenParticle(*p);
+        auto newParticle = std::make_shared<HepMC3::GenParticle>(*p);
         // each pile up particle is associated to a new production vertex
         // the position information is preserved
         // ownership of the vertex (newVertex) is given to the event (newEvent)
-        HepMC3::GenVertex* newVertex = inputToMergedVertexMap[p->production_vertex().get()];
+        auto newVertex = inputToMergedVertexMap[p->production_vertex()];
         newVertex->add_particle_out(newParticle);
         signalEvent.add_vertex(newVertex);
       }
