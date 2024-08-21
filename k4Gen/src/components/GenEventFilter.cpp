@@ -1,185 +1,187 @@
-#include "GenEventFilter.h"
-
 // Gaudi
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/StatusCode.h"
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IEventProcessor.h"
-#include "GaudiKernel/Incident.h"
+#include <Gaudi/Property.h>
+#include <Gaudi/Functional/FilterPredicate.h>
 
-// Datamodel
-#include "edm4hep/MCParticleCollection.h"
+// k4FWCore
+#include "k4FWCore/BaseClass.h"
 
 // ROOT
-#include "TROOT.h"
-#include "TSystem.h"
 #include "TInterpreter.h"
+#include "TSystem.h"
+#include "TROOT.h"
 #include "TGlobal.h"
 
+// EDM4hep
+#include "edm4hep/MCParticleCollection.h"
 
-GenEventFilter::GenEventFilter(
-    const std::string& name,
-    ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
-  declareProperty("particles", m_inColl,
-                  "Generated particles to decide on (input)");
-}
+struct GenEventFilter final : Gaudi::Functional::FilterPredicate<bool(const edm4hep::MCParticleCollection&), BaseClass_t> {
+  GenEventFilter(const std::string& name, ISvcLocator* pSvc) : FilterPredicate( name, pSvc, {
+      KeyValue("particles", "input particle collection")}),
+                                                               m_nEventsAccepted(0),
+                                                               m_nEventsSeen(0),
+                                                               m_nEventsSkipped(0),
+                                                               m_filterRulePtr(nullptr) {}
 
-StatusCode GenEventFilter::initialize() {
-  {
-    StatusCode sc = Gaudi::Algorithm::initialize();
-    if (sc.isFailure()) {
-      return sc;
-    }
-  }
 
-  m_property = service("ApplicationMgr", m_property);
-  Gaudi::Property<int> evtMax;
-  evtMax.assign(m_property->getProperty("EvtMax"));
-  m_nEventsTarget = evtMax;
-  debug() << "Targeted number of events: " << m_nEventsTarget << endmsg;
-  m_nEventsAccepted = 0;
-  m_nEventsSeen = 0;
+  StatusCode initialize() {
+    SmartIF<IProperty> appMgr;
+    appMgr = service("ApplicationMgr", appMgr);
+    Gaudi::Property<int> evtMax;
+    evtMax.assign(appMgr->getProperty("EvtMax"));
+    m_nEventsTarget = evtMax;
+    debug() << "Targeted number of events: " << m_nEventsTarget << endmsg;
 
-  m_incidentSvc = service("IncidentSvc");
-
-  m_eventProcessor = service("ApplicationMgr");
-
-  if (m_filterRuleStr.value().empty() && m_filterRulePath.value().empty()) {
-    error() << "Filter rule not found!" << endmsg;
-    error() << "Provide it as a string or in the cxx file." << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  if (!m_filterRuleStr.value().empty() && !m_filterRulePath.value().empty()) {
-    error() << "Multiple ilter rules found!" << endmsg;
-    error() << "Provide either a string or the cxx file." << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  if (!m_filterRuleStr.value().empty()) {
-    // Include(s) needed
-    {
-      bool success = gInterpreter->Declare(
-          "#include \"edm4hep/MCParticleCollection.h\"");
-      if (!success) {
-        error() << "Unable to find edm4hep::MCParticleCollection header file!"
-                << endmsg;
-        return StatusCode::FAILURE;
-      }
-      debug() << "Found edm4hep::MCParticleCollection header file." << endmsg;
+    if (!m_filterRuleStr.value().empty() && !m_filterRulePath.value().empty()) {
+      throw std::runtime_error(
+        "Multiple filter rules found!\n"
+        "Provide either a string or a cxx/hxx file, not both.");
     }
 
-    // Filter rule provided directly as a string
-    {
-      bool success = gInterpreter->Declare(m_filterRuleStr.value().c_str());
-      if (!success) {
-        error() << "Unable to compile filter rule!" << endmsg;
-        return StatusCode::FAILURE;
-      }
-      debug() << "Filter rule compiled successfully." << endmsg;
-    }
-  }
-
-  if (!m_filterRulePath.value().empty()) {
-    if (gSystem->AccessPathName(m_filterRulePath.value().c_str())) {
-      error() << "Unable to access filter rule file!" << endmsg;
-      error() << "Provided filter rule file path: " << m_filterRulePath.value() << endmsg;
-      return StatusCode::FAILURE;
-    }
-    // Include and compile the file
-    {
-      bool success = gInterpreter->Declare(
-          ("#include \"" + m_filterRulePath + "\"").c_str());
-      if (!success) {
-        error() << "Unable to include filter rule file!"
-                << endmsg;
-        return StatusCode::FAILURE;
-      }
-      debug() << "Included filter rule file." << endmsg;
-    }
-  }
-
-  // Get the address of the compiled filter rule from the interpreter
-  {
-    enum TInterpreter::EErrorCode err = TInterpreter::kProcessing;
-    m_filterRulePtr =
-        reinterpret_cast<bool (*)(const edm4hep::MCParticleCollection*)>(
-            gInterpreter->ProcessLineSynch("&filterRule", &err));
-    if (err != TInterpreter::kNoError) {
-      error() << "Unable to obtain filter rule pointer!" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    debug() << "Filter rule pointer obtained successfully." << endmsg;
-  }
-
-  // Check if the filter rule pointer has correct signature
-  {
-    auto success = gInterpreter->Declare("auto filterRulePtr = &filterRule;");
-    if (!success) {
-      error() << "Unable to declare filter rule pointer in the interpreter!"
+    // Filter rule provided in a C++ file
+    if (!m_filterRulePath.value().empty()) {
+      debug() << "Looking for the filter rule in " << m_filterRulePath.value()
               << endmsg;
-      return StatusCode::FAILURE;
-    }
-    auto global = gROOT->GetGlobal("filterRulePtr");
-    if (!global) {
-      error() << "Unable to obtain filter rule pointer from the interpreter!"
-              << endmsg;
-      return StatusCode::FAILURE;
-    }
-    std::string filterRuleType = global->GetTypeName();
-    if (filterRuleType != "bool(*)(const edm4hep::MCParticleCollection*)") {
-      error() << "Found filter rule pointer has wrong signature!" << endmsg;
-      error() << "Required: bool(*)(const edm4hep::MCParticleCollection*)"
-              << endmsg;
-      error() << "Found:    " << filterRuleType << endmsg;
-      return StatusCode::FAILURE;
-    }
-    debug() << "Found filter rule pointer has correct signature." << endmsg;
-  }
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode GenEventFilter::execute(const EventContext& evtCtx) const {
-  const edm4hep::MCParticleCollection* inParticles = m_inColl.get();
-  m_nEventsSeen++;
-
-  if (!(*m_filterRulePtr)(inParticles)) {
-    debug() << "Skipping event..." << endmsg;
-
-    {
-      StatusCode sc = m_eventProcessor->nextEvent(1);
-      if (sc.isFailure()) {
-        error() << "Error when attempting to skip the event! Aborting..."
+      if (gSystem->AccessPathName(m_filterRulePath.value().c_str())) {
+        throw std::runtime_error(
+          "Unable to access filter rule file!\n"
+          "Provided filter rule file path: " + m_filterRulePath.value());
+      }
+      // Include and compile the file
+      {
+        bool success = gInterpreter->Declare(
+            ("#include \"" + m_filterRulePath + "\"").c_str());
+        if (!success) {
+          throw std::runtime_error(
+            "Unable to compile filter rule provided in a file!");
+        }
+        debug() << "Filter rule provided in a file compiled successfully."
                 << endmsg;
-        return sc;
       }
     }
 
-    m_incidentSvc->fireIncident(Incident(name(), IncidentType::AbortEvent));
+    // Filter rule provided directly in a string
+    if (!m_filterRuleStr.value().empty()) {
+      debug() << "Compiling filter rule from a string..." << endmsg;
+      {
+        // Necessary include
+        bool success = gInterpreter->Declare(
+            "#include \"edm4hep/MCParticleCollection.h\"");
+        if (!success) {
+          throw std::runtime_error(
+              "Unable to find edm4hep::MCParticleCollection header file!");
+        }
+        debug() << "Found edm4hep::MCParticleCollection header file." << endmsg;
+      }
 
-    return StatusCode::SUCCESS;
+      {
+        bool success = gInterpreter->Declare(m_filterRuleStr.value().c_str());
+        if (!success) {
+          throw std::runtime_error(
+              "Unable to compile filter rule provided in a string!");
+        }
+        debug() << "Filter rule provided in a string compiled successfully."
+                << endmsg;
+      }
+    }
+
+    if (m_filterRuleStr.value().empty() && m_filterRulePath.value().empty()) {
+      warning() << "No filter rule provided, all events will be accepted!"
+                << endmsg;
+      gInterpreter->Declare(
+        "#include \"edm4hep/MCParticleCollection.h\"\n"
+        "bool filterRule(const edm4hep::MCParticleCollection&){return true;}");
+    }
+
+    // Get the address of the compiled filter rule from the interpreter
+    {
+      enum TInterpreter::EErrorCode err = TInterpreter::kProcessing;
+      m_filterRulePtr =
+        reinterpret_cast<bool (*)(const edm4hep::MCParticleCollection&)>(
+          gInterpreter->ProcessLineSynch("&filterRule", &err));
+      if (err != TInterpreter::kNoError) {
+        throw std::runtime_error("Unable to obtain filter rule pointer!");
+      }
+      debug() << "Filter rule pointer obtained successfully." << endmsg;
+    }
+
+    // Check if the filter rule pointer has correct signature
+    {
+      auto success = gInterpreter->Declare("auto filterRulePtr = &filterRule;");
+      if (!success) {
+        throw std::runtime_error(
+          "Unable to declare filter rule pointer in the interpreter!");
+      }
+      auto global = gROOT->GetGlobal("filterRulePtr");
+      if (!global) {
+        throw std::runtime_error(
+          "Unable to obtain filter rule pointer from the interpreter!");
+      }
+      std::string filterRuleType = global->GetTypeName();
+      if (filterRuleType != "bool(*)(const edm4hep::MCParticleCollection&)") {
+        throw std::runtime_error(
+          "Found filter rule pointer has wrong signature!\n"
+          "Required: bool(*)(const edm4hep::MCParticleCollection&)\n"
+          "Found: " + filterRuleType);
+      }
+      debug() << "Found filter rule pointer has correct signature." << endmsg;
+    }
+
+    return Gaudi::Algorithm::initialize();
   }
 
-  m_nEventsAccepted++;
+  bool operator()(const edm4hep::MCParticleCollection& inParticles) const override {
+    m_nEventsSeen++;
 
-  debug() << "Event contains " << inParticles->size() << " particles."
-          << endmsg;
-  debug() << "Targeted number of events to generate: " << m_nEventsTarget
-          << endmsg;
-  debug() << "Number of events already generated: " << m_nEventsAccepted
-          << endmsg;
-  debug() << "Remaining number of event to generate: "
-          << m_nEventsTarget - m_nEventsAccepted << endmsg;
-  debug() << "Number of events seen so far: " << m_nEventsSeen << endmsg;
+    if (!(*m_filterRulePtr)(inParticles)) {
+      m_nEventsSkipped++;
+      debug() << "Skipping event (" << m_nEventsSkipped << ") ..." << endmsg;
+      return false;
+    }
 
-  return StatusCode::SUCCESS;
-}
+    m_nEventsSkipped = 0;
+    m_nEventsAccepted++;
 
-StatusCode GenEventFilter::finalize() {
-  debug() << "Number of events seen: " << m_nEventsSeen << endmsg;
+    debug() << "Event contains " << inParticles.size() << " particles."
+            << endmsg;
+    debug() << "Number of events seen so far: " << m_nEventsSeen << endmsg;
+    debug() << "Targeted number of events: " << m_nEventsTarget
+            << endmsg;
+    debug() << "Number of events already accepted: " << m_nEventsAccepted
+            << endmsg;
+    debug() << "Remaining number of events to get to the target: "
+            << m_nEventsTarget.load() - m_nEventsAccepted.load() << endmsg;
 
-  return Gaudi::Algorithm::finalize();
-}
+    return true;
+  }
 
-DECLARE_COMPONENT(GenEventFilter)
+  StatusCode finalize() {
+    debug() << "Number of events seen: " << m_nEventsSeen << endmsg;
+    debug() << "Number of events accepted: " << m_nEventsAccepted << endmsg;
+    debug() << "Number of events targeted: " << m_nEventsTarget << endmsg;
+
+    return Gaudi::Algorithm::finalize();
+  }
+
+  /// Targeted number of events.
+  mutable std::atomic<unsigned int> m_nEventsTarget;
+  /// Keep track of how many events were already accepted.
+  mutable std::atomic<unsigned int> m_nEventsAccepted;
+  /// Keep track of how many events we went through.
+  mutable std::atomic<unsigned int> m_nEventsSeen;
+  /// How many events were skipped in a row.
+  mutable std::atomic<unsigned int> m_nEventsSkipped;
+
+  private:
+    /// Rule to filter the events with
+    Gaudi::Property<std::string> m_filterRuleStr{
+        this, "filterRule", "", "Filter rule to apply on the events"};
+
+    /// Path of the filter rule file
+    Gaudi::Property<std::string> m_filterRulePath{
+        this, "filterRulePath", "", "Path to the filter rule file"};
+
+    /// Filter rule pointer.
+    bool (*m_filterRulePtr)(const edm4hep::MCParticleCollection&);
+};
+
+DECLARE_COMPONENT( GenEventFilter );

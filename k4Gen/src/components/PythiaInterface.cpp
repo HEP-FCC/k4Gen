@@ -137,10 +137,10 @@ StatusCode PythiaInterface::initialize() {
 
   // Add in user hooks for shower vetoing
   if (m_doPowheg) {
-  
+
     // Counters for number of ISR/FSR emissions vetoed
-    m_nISRveto = 0, m_nFSRveto = 0;  
-    
+    m_nISRveto = 0, m_nFSRveto = 0;
+
     // Set ISR and FSR to start at the kinematical limit
     if (vetoMode > 0) {
       m_pythiaSignal->readString("SpaceShower:pTmaxMatch = 2");
@@ -152,7 +152,7 @@ StatusCode PythiaInterface::initialize() {
       m_pythiaSignal->readString("MultipartonInteractions:pTmaxMatch = 2");
     }
 
-    
+
     m_powhegHooks = new Pythia8::PowhegHooks();
     #if PYTHIA_VERSION_INTEGER < 8300
     m_pythiaSignal->addUserHooksPtr(m_powhegHooks);
@@ -205,10 +205,14 @@ StatusCode PythiaInterface::initialize() {
       m_evtgen->exclude(_pdgid); 
     }
   }
-  
 
-
-  m_pythiaSignal->init();
+  {
+    bool success = m_pythiaSignal->init();
+    if (!success) {
+      error() << "Unable to initialize Pythia8!" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
 
   // Return the status code
   return sc;

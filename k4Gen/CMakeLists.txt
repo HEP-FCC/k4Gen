@@ -21,7 +21,7 @@ gaudi_add_module(k4Gen
 
 target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS} 
                                         ${HEPMC3_INCLUDE_DIR}
-					${HEPMC_INCLUDE_DIR}
+                                        ${HEPMC_INCLUDE_DIR}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
@@ -74,10 +74,17 @@ set_tests_properties(Pythia8ExtraSettings PROPERTIES
   )
 set_test_env(Pythia8ExtraSettings)
 
+add_test(
+  NAME Pythia8EventsFiltered
+  WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+  COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/pythiaEventsFiltered.py
+)
+set_test_env(Pythia8EventsFiltered)
+
 add_test(NAME MDIreader
-	      WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-	      COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/mdireader_test.py
-	      )
+         WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+         COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/mdireader_test.py
+         )
 set_test_env(MDIreader)
 
 #--- Install the example options to the directory where the spack installation
