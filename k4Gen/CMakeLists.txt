@@ -2,10 +2,10 @@
 # Package: k4Gen
 ################################################################################
 
-find_package(HepMC3)
+find_package(HepMC3 REQUIRED)
 find_package(Pythia8 COMPONENTS pythia8 pythia8tohepmc)
-find_package(HepPDT)
-find_package(EvtGen)
+find_package(HepPDT REQUIRED)
+find_package(EvtGen REQUIRED)
 
 file(GLOB k4gen_plugin_sources src/components/*.cpp)
 gaudi_add_module(k4Gen
