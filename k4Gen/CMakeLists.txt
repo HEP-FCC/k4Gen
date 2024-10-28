@@ -67,7 +67,7 @@ set_test_env(Pythia8Default)
 
 add_test(NAME Pythia8ExtraSettings
                WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-               COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/pythia.py  --pythiaExtraSettings "Beams:idA = 13" "Beams:idB = -13"
+               COMMAND  k4run ${CMAKE_CURRENT_LIST_DIR}/options/pythia.py --pythiaExtraSettings.Pythia8.PythiaInterface "Beams:idA = 13" "Beams:idB = -13"
               )
 set_tests_properties(Pythia8ExtraSettings PROPERTIES
   PASS_REGULAR_EXPRESSION "We collide mu- with mu"
