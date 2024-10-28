@@ -42,7 +42,7 @@ private:
       "particles", Gaudi::DataHandle::Reader, this};
   /// Writes out filter statistics.
   MetaDataHandle<std::vector<int>> m_evtFilterStats{
-    edm4hep::EventFilterStats, Gaudi::DataHandle::Writer};
+    edm4hep::labels::EventFilterStats, Gaudi::DataHandle::Writer};
 
   /// Rule to filter the events with.
   Gaudi::Property<std::string> m_filterRuleStr{
