@@ -12,9 +12,9 @@ endif()
 
 #- Dependencies ------------------------------------------------
 find_package(ROOT COMPONENTS RIO Tree)
-find_package(Gaudi)
-find_package(k4FWCore)
-find_package(EDM4HEP)
+find_package(Gaudi REQUIRED)
+find_package(k4FWCore REQUIRED)
+find_package(EDM4HEP REQUIRED)
 
 # use FindHEPPDT from Gaudi (used when finding heppdt later)
 set(CMAKE_MODULE_PATH ${Gaudi_LIBRARY_DIR}/cmake/Gaudi/modules ${CMAKE_MODULE_PATH})
