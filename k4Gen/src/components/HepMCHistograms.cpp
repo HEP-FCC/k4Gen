@@ -13,7 +13,7 @@ HepMCHistograms::HepMCHistograms(const std::string& name, ISvcLocator* svcLoc) :
 StatusCode HepMCHistograms::initialize() {
   if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
 
-  m_ths = service("THistSvc", false);
+  m_ths = service("THistSvc", true);
   if (!m_ths) {
     error() << "Couldn't get THistSvc" << endmsg;
     return StatusCode::FAILURE;
