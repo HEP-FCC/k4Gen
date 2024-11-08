@@ -28,7 +28,7 @@ StatusCode FlatSmearVertex::initialize() {
   StatusCode sc = AlgTool::initialize();
   if (sc.isFailure()) return sc;
 
-  IRndmGenSvc* randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
+  auto randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
   if (m_xmin > m_xmax) {
     error() << "xMin > xMax !";
     return StatusCode::FAILURE;

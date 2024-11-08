@@ -30,7 +30,7 @@ StatusCode MomentumRangeParticleGun::initialize() {
   StatusCode sc = AlgTool::initialize();
   if (!sc.isSuccess()) return sc;
 
-  IRndmGenSvc* randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
+  auto randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
   sc = m_flatGenerator.initialize(randSvc, Rndm::Flat(0., 1.));
   if (!sc.isSuccess()) {
     error() << "Cannot initialize flat generator";
