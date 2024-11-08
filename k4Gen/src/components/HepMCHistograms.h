@@ -24,7 +24,7 @@ private:
   /// Handle for the HepMC to be read
   mutable DataHandle<HepMC3::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
 
-  ITHistSvc* m_ths{nullptr};  ///< THistogram service
+  SmartIF<ITHistSvc> m_ths;  ///< THistogram service
 
   TH1F* m_pt{nullptr};   ///< histogram for pT of particles
   TH1F* m_eta{nullptr};  ///< histogram for pseudorapidity of particles
