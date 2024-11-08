@@ -21,7 +21,7 @@ Gaudi::Algorithm(name, svcLoc),
   declareProperty("GenParticles", m_genphandle, "Generated particles collection (output)");
   declareProperty("CrossingAngle",xing,"Half the crossing angle beam in [rad]");
   declareProperty("LongitudinalCut",cut_z,"the value for cut_z used in GP++ in [um]");
-  declareProperty("InputType",input_type,"string: guineapig, xtrack");
+  declareProperty("InputType",input_type,"string: guineapig, xtrack, photons, general");
   declareProperty("BeamEnergy",beam_energy,"beam energy [GeV], necessary for xtrack type");
 }
 
@@ -50,7 +50,7 @@ StatusCode MDIReader::execute(const EventContext&) const
     }
   
   // Check the input type flag
-  if(input_type!="guineapig" && input_type!="xtrack")
+  if(input_type!="guineapig" && input_type!="xtrack" && input_type!="photons" && input_type!="general")
     {
       error() << "Input type flag - wrong definition: "<< input_type << endmsg;
       return StatusCode::FAILURE;
@@ -89,6 +89,7 @@ StatusCode MDIReader::execute(const EventContext&) const
 
   size_t pcount = 0;
   PHEP5 = 5.11e-4;
+
   while(m_input.good())
     {
       if(input_type=="guineapig"){
@@ -97,7 +98,7 @@ StatusCode MDIReader::execute(const EventContext&) const
 		>> VHEP1 >> VHEP2 >> VHEP3
 		>> process >> trash >> id_ee;
       
-      
+	PHEP5 = 5.11e-4;
 	//std::cout<<PHEP4<<" "<<sqrt(PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)<<" "<<sqrt((PHEP1*PHEP1 + PHEP2*PHEP2 + PHEP3*PHEP3)*PHEP4*PHEP4 + PHEP5*PHEP5)<<std::endl;
       
 	if(m_input.eof())break;
@@ -157,7 +158,7 @@ StatusCode MDIReader::execute(const EventContext&) const
 	    error() << "End of file reached before reading all the hits" << endmsg;
 	    return StatusCode::FAILURE;
 	  }
-	
+	PHEP5 = 5.11e-4;
 	//VHEP3 = VHEP3 + temp_z; //is ct necessary? prob not
 
 	//---position rotation in CLD frame
@@ -185,8 +186,85 @@ StatusCode MDIReader::execute(const EventContext&) const
 	CHARGE = -1;
 		
       }	//end if xtrack
+      else if(input_type=="photons"){
+	m_input >> VHEP1 >> PHEP1
+                >> VHEP2 >> PHEP2
+                >> PHEP4 >> PHEP3
+                >> trash ;
+	PHEP5 = 0;
+	if(m_input.eof())break;
+        else if(!m_input.good())
+          {
+            debug() << "End of file reached before reading all the hits" << endmsg;
+            error() << "End of file reached before reading all the hits" << endmsg;
+            return StatusCode::FAILURE;
+          }
+	
+	//std::cout<<VHEP1<<" "<<PHEP1<<" "<<VHEP2<<" "<<PHEP2<<" "<<PHEP4<<" "<<PHEP3<<" " <<trash<<std::endl;
 
-      
+	VHEP3 = -2.13;//hardcoded [m]
+
+	temp_z =  VHEP3*cos(-xing) + VHEP1*sin(-xing);
+        temp_x = -VHEP3*sin(-xing) + VHEP1*cos(-xing);
+        VHEP1 = temp_x;
+        VHEP3 = temp_z;
+
+        VHEP1 *=1e3; //convert from m to mm
+        VHEP2 *=1e3; //convert from m to mm
+        VHEP3 *=1e3; //convert from m to mm 
+
+        PHEP1 = PHEP1*PHEP4;
+        PHEP2 = PHEP2*PHEP4;
+        PHEP3 = sqrt(pow(PHEP4,2) - pow(PHEP1,2) - pow(PHEP2,2) );
+
+        //---momentum rotation in CLD frame
+        temp_pz =  PHEP3*cos(-xing) + PHEP1*sin(-xing);
+        temp_px = -PHEP3*sin(-xing) + PHEP1*cos(-xing);
+        PHEP3 = temp_pz;
+        PHEP1 = temp_px;
+
+	IDHEP = 22;
+	CHARGE = 0;
+      }//end if photons
+      else if(input_type=="general"){
+	m_input >> VHEP1 >> VHEP2 >> VHEP3
+                >> PHEP1 >> PHEP2 >> PHEP3
+                >> PHEP4 >> IDHEP;
+	if(m_input.eof())break;
+        else if(!m_input.good())
+          {
+            debug() << "End of file reached before reading all the hits" << endmsg;
+            error() << "End of file reached before reading all the hits" << endmsg;
+            return StatusCode::FAILURE;
+          }
+	
+	//std::cout<<VHEP1<<" "<<PHEP1<<" "<<VHEP2<<" "<<PHEP2<<" "<<PHEP4<<" "<<PHEP3<<" " <<trash<<std::endl;
+	// VHEP1, VHEP2, VHEP3 [m]
+	// PHEP1, PHEP2, PHEP3 [GeV/c]
+	// PHEP4 [GeV]
+	// IDHEP [int]
+        
+	
+        //VHEP1 *=1e3; //convert from m to mm 
+        //VHEP2 *=1e3; //convert from m to mm
+        //VHEP3 *=1e3; //convert from m to mm
+
+        //PHEP1 = PHEP1*PHEP4;
+        //PHEP2 = PHEP2*PHEP4;
+        //PHEP3 = PHEP3*PHEP4;
+
+	PHEP5 = 0;
+	CHARGE = 0;  //HARDCODED FOR NOW!!!
+      }//end if general
+      else{
+	debug() << "Unknown input type!" << endmsg;
+	error() << "Unknown input type!" << endmsg;
+	return StatusCode::FAILURE;
+      }//end else
+
+
+
+
       edm4hep::MutableMCParticle particle = particles->create();
 
       particle.setPDG(IDHEP);
