@@ -1,6 +1,6 @@
 # k4Gen
 
-Gaudi Components for Ge nerators in the Key4HEP software framework. See the
+Gaudi Components for Generators in the Key4HEP software framework. See the
 [FCC Tutorials](https://hep-fcc.github.io/fcc-tutorials/) for documentation on
 the usage in FCC / Key4hep.
 
