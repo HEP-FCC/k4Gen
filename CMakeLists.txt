@@ -11,7 +11,7 @@ if(USE_RUNPATH_INSTEAD_OF_RPATH)
 endif()
 
 #- Dependencies ------------------------------------------------
-find_package(ROOT COMPONENTS RIO Tree)
+find_package(ROOT COMPONENTS RIO Tree Hist)
 find_package(Gaudi REQUIRED)
 find_package(k4FWCore REQUIRED)
 find_package(EDM4HEP REQUIRED)
