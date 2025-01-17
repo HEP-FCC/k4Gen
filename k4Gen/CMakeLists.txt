@@ -17,6 +17,7 @@ gaudi_add_module(k4Gen
                       EvtGen::EvtGen
                       EvtGen::EvtGenExternal
                       EDM4HEP::edm4hep
+                      ROOT::Hist
                       )
 
 target_include_directories(k4Gen PUBLIC ${PYTHIA8_INCLUDE_DIRS} 
