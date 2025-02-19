@@ -140,7 +140,7 @@ StatusCode GenEventFilter::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode GenEventFilter::execute(const EventContext& evtCtx) const {
+StatusCode GenEventFilter::execute(const EventContext&) const {
   const edm4hep::MCParticleCollection* inParticles = m_inColl.get();
   m_nEventsSeen++;
 

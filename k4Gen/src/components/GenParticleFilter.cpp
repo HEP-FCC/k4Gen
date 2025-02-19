@@ -15,7 +15,6 @@ StatusCode GenParticleFilter::execute(const EventContext&) const {
   const auto inparticles = m_iGenpHandle.get();
   auto particles = m_oGenpHandle.createAndPut();
   bool accept = false;
-  int cntr = 0;
   for (auto ptc : (*inparticles)) {
     accept = false;
     for (auto status : m_accept) {
@@ -27,7 +26,6 @@ StatusCode GenParticleFilter::execute(const EventContext&) const {
       auto outptc = ptc.clone();
       particles->push_back(outptc);
     }
-    cntr++;
   }
   return StatusCode::SUCCESS;
 }
