@@ -61,27 +61,27 @@ StatusCode MDIReader::execute(const EventContext&) const
   
   //  Loop over particles
   int ISTHEP = 1;   // status code
-  int IDHEP;    // PDG code
-  int CHARGE;   // charge
+  int IDHEP = 0;    // PDG code
+  int CHARGE = 0;   // charge
   //int JMOHEP1;  // first mother
   //int JMOHEP2;  // last mother
   //int JDAHEP1;  // first daughter
   //int JDAHEP2;  // last daughter
-  double PHEP1; // px in GeV/c
-  double PHEP2; // py in GeV/c
-  double PHEP3; // pz in GeV/c
+  double PHEP1 = 0.0; // px in GeV/c
+  double PHEP2 = 0.0; // py in GeV/c
+  double PHEP3 = 0.0; // pz in GeV/c
   double PHEP4; // energy in GeV
   double PHEP5; // mass in GeV/c**2
-  double VHEP1; // x vertex position in mm
-  double VHEP2; // y vertex position in mm
-  double VHEP3; // z vertex position in mm
+  double VHEP1 = 0.0; // x vertex position in mm
+  double VHEP2 = 0.0; // y vertex position in mm
+  double VHEP3 = 0.0; // z vertex position in mm
   double VHEP4 = 0; // production time in mm/c
 
   //guineapig IPP variables which do not end up in the EDM format
   double process; // 1=Breit-Wheeler 2=Bethe-Heitler 3=Landau-Lifshitz
   double trash;   // trash variable
   double id_ee;   // same id means they are a pair
-  double temp_x,temp_y,temp_z,temp_px, temp_py,temp_pz,temp_e;
+  double temp_x,temp_z,temp_px,temp_pz,temp_e;
 
   debug() <<"The crossing angle is "<<xing<<" [rad]"<< endmsg;
   //std::cout <<"The crossing angle is "<<xing<<" [rad]"<< endmsg;

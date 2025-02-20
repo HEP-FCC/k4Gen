@@ -32,7 +32,7 @@ public:
 
 private:
   /// Particle statuses to accept
-  Gaudi::Property<std::vector<unsigned>> m_accept{this, "accept", {1}, "Particle statuses to accept"};
+  Gaudi::Property<std::vector<int>> m_accept{this, "accept", {1}, "Particle statuses to accept"};
   /// Handle for the ParticleCollection to be read
   mutable DataHandle<edm4hep::MCParticleCollection> m_iGenpHandle{"GenParticles", Gaudi::DataHandle::Reader, this};
   /// Handle for the genparticles to be written
