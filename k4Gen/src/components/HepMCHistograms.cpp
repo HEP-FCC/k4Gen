@@ -11,7 +11,8 @@ HepMCHistograms::HepMCHistograms(const std::string& name, ISvcLocator* svcLoc) :
 }
 
 StatusCode HepMCHistograms::initialize() {
-  if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::initialize().isFailure())
+    return StatusCode::FAILURE;
 
   m_ths = service("THistSvc", true);
   if (!m_ths) {
@@ -47,12 +48,12 @@ StatusCode HepMCHistograms::execute(const EventContext&) const {
 
   info() << "Processing event with " << evt->particles().size() << " particles" << endmsg;
 
-  for (auto p: evt->particles()) {
+  for (auto p : evt->particles()) {
     m_eta->Fill(p->momentum().eta());
     m_pt->Fill(p->momentum().perp());
   }
 
-  for (auto v: evt->vertices()) {
+  for (auto v : evt->vertices()) {
     m_d0->Fill(v->position().perp());
     m_z0->Fill(v->position().z());
   }
@@ -61,7 +62,8 @@ StatusCode HepMCHistograms::execute(const EventContext&) const {
 }
 
 StatusCode HepMCHistograms::finalize() {
-  if (Gaudi::Algorithm::finalize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::finalize().isFailure())
+    return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
 }

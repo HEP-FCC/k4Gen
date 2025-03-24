@@ -2,12 +2,11 @@
 #ifndef GENERATION_HEPMCFULLMERGE_H
 #define GENERATION_HEPMCFULLMERGE_H
 
-#include "k4FWCore/DataHandle.h"
 #include "Generation/IHepMCMergeTool.h"
+#include "k4FWCore/DataHandle.h"
 
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/RndmGenerators.h"
-
 
 /**
  * Merge several HepMC events into one. Keeps all particles of all events,
@@ -15,7 +14,7 @@
  * Implementation partly due to pilemc https://pilemc.hepforge.org/
  */
 
-class HepMCFullMerge final: public AlgTool, virtual public IHepMCMergeTool {
+class HepMCFullMerge final : public AlgTool, virtual public IHepMCMergeTool {
 public:
   HepMCFullMerge(const std::string& type, const std::string& name, const IInterface* parent);
 
@@ -33,4 +32,4 @@ public:
   virtual StatusCode merge(HepMC3::GenEvent& signalEvent, const std::vector<HepMC3::GenEvent>& eventVector) final;
 };
 
-#endif  // GENERATION_HEPMCFULLMERGE_H
+#endif // GENERATION_HEPMCFULLMERGE_H

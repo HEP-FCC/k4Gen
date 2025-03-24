@@ -6,8 +6,8 @@
 #include "GaudiKernel/Vector4DTypes.h"
 
 #include "HepMC3/GenEvent.h"
-#include "HepMC3/GenVertex.h"
 #include "HepMC3/GenParticle.h"
+#include "HepMC3/GenVertex.h"
 
 /// Declaration of the Tool Factory
 DECLARE_COMPONENT(GaussSmearVertex)
@@ -16,7 +16,6 @@ DECLARE_COMPONENT(GaussSmearVertex)
 GaussSmearVertex::GaussSmearVertex(const std::string& type, const std::string& name, const IInterface* parent)
     : AlgTool(type, name, parent) {
   declareInterface<IVertexSmearingTool>(this);
-
 }
 
 /// Destructor
@@ -27,13 +26,14 @@ GaussSmearVertex::~GaussSmearVertex() { ; }
 //=============================================================================
 StatusCode GaussSmearVertex::initialize() {
   StatusCode sc = AlgTool::initialize();
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure())
+    return sc;
 
   auto randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
 
   sc = m_gaussDist.initialize(randSvc, Rndm::Gauss(0., 1));
-  if (sc.isFailure()) return sc;
-
+  if (sc.isFailure())
+    return sc;
 
   info() << "Smearing of interaction point with normal distribution "
          << " in x, y and z " << endmsg;
@@ -60,7 +60,7 @@ StatusCode GaussSmearVertex::smearVertex(HepMC3::GenEvent& theEvent) {
 
   debug() << "Smearing vertices by " << dpos << endmsg;
 
-  for (auto vit: theEvent.vertices()) {
+  for (auto vit : theEvent.vertices()) {
     Gaudi::LorentzVector pos(vit->position());
     pos += dpos;
     vit->set_position(HepMC3::FourVector(pos.x(), pos.y(), pos.z(), pos.t()));

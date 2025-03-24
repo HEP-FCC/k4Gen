@@ -1,13 +1,13 @@
 #include "ConstPtParticleGun.h"
-#include <cmath>
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "HepMC3/GenEvent.h"
-#include "HepMC3/GenVertex.h"
 #include "HepMC3/GenParticle.h"
+#include "HepMC3/GenVertex.h"
 #include "HepPDT/ParticleID.hh"
 #include "Pythia8/ParticleData.h"
+#include <cmath>
 
 DECLARE_COMPONENT(ConstPtParticleGun)
 
@@ -20,7 +20,8 @@ ConstPtParticleGun::~ConstPtParticleGun() {}
 
 StatusCode ConstPtParticleGun::initialize() {
   StatusCode sc = AlgTool::initialize();
-  if (!sc.isSuccess()) return sc;
+  if (!sc.isSuccess())
+    return sc;
   // initialize random number generator
   auto randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
   sc = m_flatGenerator.initialize(randSvc, Rndm::Flat(0., 1.));
@@ -50,10 +51,14 @@ StatusCode ConstPtParticleGun::initialize() {
          << endmsg;
   // write additional branches
   if (m_writeParticleGunBranches) {
-   m_datahandle_particlegun_pt = std::make_unique<DataHandle<float>>("ParticleGun_Pt", Gaudi::DataHandle::Writer, this);
-   m_datahandle_particlegun_eta = std::make_unique<DataHandle<float>>("ParticleGun_Eta", Gaudi::DataHandle::Writer, this);
-   m_datahandle_particlegun_costheta = std::make_unique<DataHandle<float>>("ParticleGun_costheta", Gaudi::DataHandle::Writer, this);
-   m_datahandle_particlegun_phi = std::make_unique<DataHandle<float>>("ParticleGun_Phi", Gaudi::DataHandle::Writer, this);
+    m_datahandle_particlegun_pt =
+        std::make_unique<DataHandle<float>>("ParticleGun_Pt", Gaudi::DataHandle::Writer, this);
+    m_datahandle_particlegun_eta =
+        std::make_unique<DataHandle<float>>("ParticleGun_Eta", Gaudi::DataHandle::Writer, this);
+    m_datahandle_particlegun_costheta =
+        std::make_unique<DataHandle<float>>("ParticleGun_costheta", Gaudi::DataHandle::Writer, this);
+    m_datahandle_particlegun_phi =
+        std::make_unique<DataHandle<float>>("ParticleGun_Phi", Gaudi::DataHandle::Writer, this);
   }
   return sc;
 }
@@ -84,7 +89,8 @@ void ConstPtParticleGun::generateParticle(Gaudi::LorentzVector& momentum, Gaudi:
   // randomly choose a particle type
   unsigned int currentType = (unsigned int)(m_pdgCodes.size() * m_flatGenerator());
   // protect against funnies
-  if (currentType >= m_pdgCodes.size()) currentType = 0;
+  if (currentType >= m_pdgCodes.size())
+    currentType = 0;
   // set momenta
   momentum.SetPx(px);
   momentum.SetPy(py);
@@ -93,11 +99,11 @@ void ConstPtParticleGun::generateParticle(Gaudi::LorentzVector& momentum, Gaudi:
   pdgId = m_pdgCodes[currentType];
   debug() << " -> " << pdgId << endmsg << "   P   = " << momentum << endmsg;
   /// additional branches in rootfile
-  if (m_writeParticleGunBranches) { 
+  if (m_writeParticleGunBranches) {
     const double hepmcMomentumConversionFactor = 0.001;
     float* _particlegun_phi = new float(phi);
-    float* _particlegun_eta =  new float(eta);
-    float* _particlegun_costheta = new float (cos(2*atan(exp(eta))));
+    float* _particlegun_eta = new float(eta);
+    float* _particlegun_costheta = new float(cos(2 * atan(exp(eta))));
     float* _particlegun_pt = new float(pt * hepmcMomentumConversionFactor);
     m_datahandle_particlegun_pt->put(_particlegun_pt);
     m_datahandle_particlegun_eta->put(_particlegun_eta);
@@ -113,34 +119,24 @@ StatusCode ConstPtParticleGun::getNextEvent(HepMC3::GenEvent& theEvent) {
   int thePdgId;
   generateParticle(theFourMomentum, origin, thePdgId);
 
-
-
   // create HepMC Vertex --
   // by calling add_vertex(), the hepmc event is given ownership of the vertex
 
-  auto v = std::make_shared<HepMC3::GenVertex>(HepMC3::FourVector(
-                              origin.X(),
-                              origin.Y(),
-                              origin.Z(),
-                              origin.T()
-                              )
-                          );
+  auto v = std::make_shared<HepMC3::GenVertex>(HepMC3::FourVector(origin.X(), origin.Y(), origin.Z(), origin.T()));
   // create HepMC particle --
   // by calling add_particle_out(), the hepmc vertex is given ownership of the particle
   // need to convert from Gaudi Units  (MeV) to (GeV)
   const double hepmcMomentumConversionFactor = 0.001;
-  auto p = std::make_shared<HepMC3::GenParticle>(
-      HepMC3::FourVector(
-        theFourMomentum.Px() * hepmcMomentumConversionFactor,
-        theFourMomentum.Py() * hepmcMomentumConversionFactor,
-        theFourMomentum.Pz() * hepmcMomentumConversionFactor,
-        theFourMomentum.E() * hepmcMomentumConversionFactor
-        ),
-      thePdgId,
-      1);  // hepmc status code for final state particle
+  auto p =
+      std::make_shared<HepMC3::GenParticle>(HepMC3::FourVector(theFourMomentum.Px() * hepmcMomentumConversionFactor,
+                                                               theFourMomentum.Py() * hepmcMomentumConversionFactor,
+                                                               theFourMomentum.Pz() * hepmcMomentumConversionFactor,
+                                                               theFourMomentum.E() * hepmcMomentumConversionFactor),
+                                            thePdgId,
+                                            1); // hepmc status code for final state particle
   v->add_particle_out(p);
   theEvent.add_vertex(v);
   // no longer needed in hepmc3?
-  //theEvent.set_signal_process_vertex(v);
+  // theEvent.set_signal_process_vertex(v);
   return StatusCode::SUCCESS;
 }

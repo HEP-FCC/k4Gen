@@ -7,10 +7,8 @@
 #include "Generation/IPileUpTool.h"
 #include "Generation/IVertexSmearingTool.h"
 
-
 #include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ToolHandle.h"
-
 
 #include "k4FWCore/DataHandle.h"
 namespace HepMC3 {
@@ -43,4 +41,4 @@ private:
   mutable DataHandle<HepMC3::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Writer, this};
 };
 
-#endif  // GENERATION_GENALG_H
+#endif // GENERATION_GENALG_H

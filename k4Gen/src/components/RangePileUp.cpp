@@ -11,13 +11,14 @@ RangePileUp::~RangePileUp() { ; }
 
 StatusCode RangePileUp::initialize() {
   StatusCode sc = AlgTool::initialize();
-  if (sc.isFailure()) return sc;
+  if (sc.isFailure())
+    return sc;
   return sc;
 }
 
 unsigned int RangePileUp::numberOfPileUp() {
   m_currentNumPileUpEvents = m_pileupRange[m_rangeIndex];
-  m_rangeIndex = (m_rangeIndex + 1)  % m_pileupRange.size();
+  m_rangeIndex = (m_rangeIndex + 1) % m_pileupRange.size();
   return m_currentNumPileUpEvents;
 }
 

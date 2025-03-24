@@ -28,7 +28,6 @@ public:
 
   /// Print various counters at the end of the job
   virtual void printPileUpCounters() = 0;
-
 };
 
-#endif  // GENERATION_IPILEUPTOOL_H
+#endif // GENERATION_IPILEUPTOOL_H

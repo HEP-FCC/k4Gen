@@ -18,7 +18,7 @@ public:
   /// Standard constructor
   GaussSmearVertex(const std::string& type, const std::string& name, const IInterface* parent);
 
-  virtual ~GaussSmearVertex();  ///< Destructor
+  virtual ~GaussSmearVertex(); ///< Destructor
 
   /// Initialize method
   virtual StatusCode initialize();
@@ -41,4 +41,4 @@ private:
   Rndm::Numbers m_gaussDist;
 };
 
-#endif  // GENERATION_GAUSSSMEARVERTEX_H
+#endif // GENERATION_GAUSSSMEARVERTEX_H

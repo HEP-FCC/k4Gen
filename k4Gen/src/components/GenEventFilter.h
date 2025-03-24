@@ -12,9 +12,8 @@ class IEventProcessor;
 #include "k4FWCore/MetaDataHandle.h"
 
 // Datamodel
-#include "edm4hep/MCParticleCollection.h"
 #include "edm4hep/Constants.h"
-
+#include "edm4hep/MCParticleCollection.h"
 
 /** @class GenEventFilter Generation/src/components/GenEventFilter.h GenEventFilter.h
  *
@@ -22,7 +21,7 @@ class IEventProcessor;
  *  collection.
  *
  *  @author J. Smiesko
-*/
+ */
 
 class GenEventFilter : public Gaudi::Algorithm {
 
@@ -38,19 +37,15 @@ public:
 
 private:
   /// Handle for the MCParticle collection to be read.
-  mutable DataHandle<edm4hep::MCParticleCollection> m_inColl{
-      "particles", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_inColl{"particles", Gaudi::DataHandle::Reader, this};
   /// Writes out filter statistics.
-  MetaDataHandle<std::vector<int>> m_evtFilterStats{
-    edm4hep::labels::EventFilterStats, Gaudi::DataHandle::Writer};
+  MetaDataHandle<std::vector<int>> m_evtFilterStats{edm4hep::labels::EventFilterStats, Gaudi::DataHandle::Writer};
 
   /// Rule to filter the events with.
-  Gaudi::Property<std::string> m_filterRuleStr{
-      this, "filterRule", "", "Filter rule to apply on the events"};
+  Gaudi::Property<std::string> m_filterRuleStr{this, "filterRule", "", "Filter rule to apply on the events"};
 
   /// Path of the filter rule file.
-  Gaudi::Property<std::string> m_filterRulePath{
-      this, "filterRulePath", "", "Path to the filter rule file"};
+  Gaudi::Property<std::string> m_filterRulePath{this, "filterRulePath", "", "Path to the filter rule file"};
 
   /// Targeted number of events.
   mutable std::atomic<int> m_nEventsTarget;
@@ -68,4 +63,4 @@ private:
   bool (*m_filterRulePtr)(const edm4hep::MCParticleCollection*);
 };
 
-#endif  // GENERATION_GENEVENTFILTER_H
+#endif // GENERATION_GENEVENTFILTER_H

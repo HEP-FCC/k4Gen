@@ -25,7 +25,8 @@ GenAlg::GenAlg(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(
 
 StatusCode GenAlg::initialize() {
   StatusCode sc = Gaudi::Algorithm::initialize();
-  if (!sc.isSuccess()) return sc;
+  if (!sc.isSuccess())
+    return sc;
   return sc;
 }
 

@@ -1,14 +1,14 @@
 #ifndef GENERATION_RANGEPILEUP_H
 #define GENERATION_RANGEPILEUP_H
 
-#include "Generation/IPileUpTool.h"
 #include "GaudiKernel/AlgTool.h"
+#include "Generation/IPileUpTool.h"
 
-/** @class RangePileUp 
+/** @class RangePileUp
  *
  *  Tool to generate number of pile-up events to be mixed with signal event.
  *  Concrete implementation of a IPileUpTool, returning a random variable
- *   drawn from a pre-defined list - useful for detailed detector studies of 
+ *   drawn from a pre-defined list - useful for detailed detector studies of
  *  the effects of increasing pile-up.
  *
  *  @author Valentin Volkl
@@ -30,4 +30,4 @@ private:
   unsigned int m_rangeIndex;
 };
 
-#endif  // GENERATION_RANGEPILEUP_H
+#endif // GENERATION_RANGEPILEUP_H

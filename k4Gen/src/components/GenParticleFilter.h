@@ -1,8 +1,8 @@
 #ifndef GENERATION_GENPARTICLEFILTER_H
 #define GENERATION_GENPARTICLEFILTER_H
 
-#include "k4FWCore/DataHandle.h"
 #include "Gaudi/Algorithm.h"
+#include "k4FWCore/DataHandle.h"
 
 // forward declarations:
 namespace edm4hep {
@@ -16,7 +16,7 @@ class MCParticleCollection;
  *
  *  @author C. Bernet
  *  @author J. Lingemann
-*/
+ */
 
 class GenParticleFilter : public Gaudi::Algorithm {
 
@@ -36,7 +36,8 @@ private:
   /// Handle for the ParticleCollection to be read
   mutable DataHandle<edm4hep::MCParticleCollection> m_iGenpHandle{"GenParticles", Gaudi::DataHandle::Reader, this};
   /// Handle for the genparticles to be written
-  mutable DataHandle<edm4hep::MCParticleCollection> m_oGenpHandle{"GenParticlesFiltered", Gaudi::DataHandle::Writer, this};
+  mutable DataHandle<edm4hep::MCParticleCollection> m_oGenpHandle{"GenParticlesFiltered", Gaudi::DataHandle::Writer,
+                                                                  this};
 };
 
-#endif  // GENERATION_GENPARTICLEFILTER_H
+#endif // GENERATION_GENPARTICLEFILTER_H

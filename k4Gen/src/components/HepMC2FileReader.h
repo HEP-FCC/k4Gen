@@ -11,7 +11,7 @@
 class HepMC2FileReader : public AlgTool, virtual public IHepMCProviderTool {
 public:
   HepMC2FileReader(const std::string& type, const std::string& name, const IInterface* parent);
-  virtual ~HepMC2FileReader();  ///< Destructor
+  virtual ~HepMC2FileReader(); ///< Destructor
   virtual StatusCode initialize();
   virtual StatusCode finalize();
 
@@ -27,4 +27,4 @@ private:
   std::unique_ptr<HepMC3::ReaderAsciiHepMC2> m_file;
 };
 
-#endif  // GENERATION_HEPMC2FILEREADER_H
+#endif // GENERATION_HEPMC2FILEREADER_H

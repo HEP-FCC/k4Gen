@@ -1,10 +1,9 @@
 #ifndef GENERATION_MDIREADER_H
 #define GENERATION_MDIREADER_H
 
-
 #include "Generation/IHepMCFileReaderTool.h"
-#include "Generation/IVertexSmearingTool.h"
 #include "Generation/IHepMCMergeTool.h"
+#include "Generation/IVertexSmearingTool.h"
 
 #include "k4FWCore/DataHandle.h"
 
@@ -29,7 +28,7 @@ class MCParticleCollection;
  *  @version 1.0
  */
 
-class MDIReader: public Gaudi::Algorithm {
+class MDIReader : public Gaudi::Algorithm {
 
 public:
   /// Constructor.
@@ -42,7 +41,6 @@ public:
   virtual StatusCode finalize();
 
 private:
-
   std::string m_filename;
   mutable std::ifstream m_input;
   int NHEP;
@@ -50,17 +48,16 @@ private:
   std::string input_type;
   double xing, cut_z, beam_energy;
   /// Handle for the genparticles to be written
-  mutable DataHandle<edm4hep::MCParticleCollection> m_genphandle {"GenParticles", Gaudi::DataHandle::Writer, this};
-
+  mutable DataHandle<edm4hep::MCParticleCollection> m_genphandle{"GenParticles", Gaudi::DataHandle::Writer, this};
 
   /// Tools to handle input from HepMC-file
   ToolHandle<IHepMCFileReaderTool> m_signalFileReader;
   ToolHandle<IHepMCFileReaderTool> m_pileupFileReader;
-  
+
   /// Tool to merge HepMC events
   ToolHandle<IHepMCMergeTool> m_HepMCMergeTool;
   // Tool to smear vertices
   ToolHandle<IVertexSmearingTool> m_vertexSmearingTool;
 };
 
-#endif //GENERATION_MDIREADER_H
+#endif // GENERATION_MDIREADER_H

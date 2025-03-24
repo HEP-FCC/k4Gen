@@ -20,4 +20,4 @@ public:
   virtual StatusCode getNextEvent(HepMC3::GenEvent&) = 0;
 };
 
-#endif  // GENERATION_IHEPMCPROVIDERTOOL_H
+#endif // GENERATION_IHEPMCPROVIDERTOOL_H

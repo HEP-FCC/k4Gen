@@ -5,8 +5,8 @@
 #include "GaudiKernel/Incident.h"
 
 #include "HepMC3/GenEvent.h"
-#include "HepMC3/GenVertex.h"
 #include "HepMC3/GenParticle.h"
+#include "HepMC3/GenVertex.h"
 
 DECLARE_COMPONENT(HepMCFullMerge)
 
@@ -19,20 +19,22 @@ HepMCFullMerge::~HepMCFullMerge() {}
 
 StatusCode HepMCFullMerge::initialize() {
   StatusCode sc = AlgTool::initialize();
-  if (!sc.isSuccess()) return sc;
+  if (!sc.isSuccess())
+    return sc;
   return sc;
 }
 
 StatusCode HepMCFullMerge::merge(HepMC3::GenEvent& signalEvent, const std::vector<HepMC3::GenEvent>& eventVector) {
   for (auto it = eventVector.cbegin(), end = eventVector.cend(); it != end; ++it) {
     // keep track of which vertex in full event corresponds to which vertex in merged event
-    std::unordered_map<std::shared_ptr<const HepMC3::GenVertex>, std::shared_ptr<HepMC3::GenVertex>> inputToMergedVertexMap;
-    for (auto& v: it->vertices()) {
+    std::unordered_map<std::shared_ptr<const HepMC3::GenVertex>, std::shared_ptr<HepMC3::GenVertex>>
+        inputToMergedVertexMap;
+    for (auto& v : it->vertices()) {
       auto outvertex = std::make_shared<HepMC3::GenVertex>(v->position());
       inputToMergedVertexMap[v] = outvertex;
       signalEvent.add_vertex(outvertex);
     }
-    for (auto& p: it->particles()) {
+    for (auto& p : it->particles()) {
       // ownership of the particle is given to the vertex
       auto newparticle = std::make_shared<HepMC3::GenParticle>(*p);
       // attach particles to correct vertices in merged event

@@ -8,7 +8,7 @@
 namespace HepMC3 {
 class GenEvent;
 class WriterAscii;
-}
+} // namespace HepMC3
 
 /**
  *
@@ -39,4 +39,4 @@ private:
   std::unique_ptr<HepMC3::WriterAscii> m_file;
 };
 
-#endif  // GENERATION_HEPMCFILEWRITER_H
+#endif // GENERATION_HEPMCFILEWRITER_H

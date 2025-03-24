@@ -10,22 +10,15 @@
 #include "Pythia8Plugins/JetMatching.h"
 // Include UserHooks for randomly choosing between integrated and
 // non-integrated treatment for unitarised merging.
-#include "Pythia8Plugins/aMCatNLOHooks.h"
-#include "Pythia8Plugins/EvtGen.h"
 #include "HepMC3/GenEvent.h"
+#include "Pythia8Plugins/EvtGen.h"
+#include "Pythia8Plugins/aMCatNLOHooks.h"
 
 DECLARE_COMPONENT(PythiaInterface)
 
 PythiaInterface::PythiaInterface(const std::string& type, const std::string& name, const IInterface* parent)
-    : AlgTool(type, name, parent),
-      m_pythiaSignal(nullptr),
-      m_nAbort(0),
-      m_iAbort(0),
-      m_iEvent(0),
-      m_doMePsMatching(0),
-      m_doMePsMerging(0),
-      m_matching(nullptr),
-      m_setting(nullptr) {
+    : AlgTool(type, name, parent), m_pythiaSignal(nullptr), m_nAbort(0), m_iAbort(0), m_iEvent(0), m_doMePsMatching(0),
+      m_doMePsMerging(0), m_matching(nullptr), m_setting(nullptr) {
 
   declareProperty("VertexSmearingTool", m_vertexSmearingTool);
   declareTool(m_vertexSmearingTool, "FlatSmearVertex/VertexSmearingTool").ignore();
@@ -34,7 +27,8 @@ PythiaInterface::PythiaInterface(const std::string& type, const std::string& nam
 StatusCode PythiaInterface::initialize() {
 
   StatusCode sc = AlgTool::initialize();
-  if (!sc.isSuccess()) return sc;
+  if (!sc.isSuccess())
+    return sc;
   if (m_pythiacard.empty() && m_pythia_extrasettings.size() < 2) {
     error() << "No Pythia8 configuration file (*.cmd) defined!" << endmsg;
     return StatusCode::FAILURE;
@@ -42,12 +36,13 @@ StatusCode PythiaInterface::initialize() {
 
   // Set Pythia configuration directory from system variable (if set)
   std::string xmlpath = "";
-  if (System::getEnv("PYTHIA8_XML") != "UNKNOWN") xmlpath = System::getEnv("PYTHIA8_XML");
+  if (System::getEnv("PYTHIA8_XML") != "UNKNOWN")
+    xmlpath = System::getEnv("PYTHIA8_XML");
 
   // Initialize pythia
   m_pythiaSignal = std::make_unique<Pythia8::Pythia>(xmlpath);
 
-   //add settings for resonance decay filter
+  // add settings for resonance decay filter
   m_pythiaSignal->settings.addFlag("ResonanceDecayFilter:filter", false);
   m_pythiaSignal->settings.addFlag("ResonanceDecayFilter:exclusive", false);
   m_pythiaSignal->settings.addFlag("ResonanceDecayFilter:eMuAsEquivalent", false);
@@ -59,18 +54,16 @@ StatusCode PythiaInterface::initialize() {
   m_pythiaSignal->settings.addMVec("ResonanceDecayFilter:mothers", std::vector<int>(), false, false, 0, 0);
   m_pythiaSignal->settings.addMVec("ResonanceDecayFilter:daughters", std::vector<int>(), false, false, 0, 0);
 
-
-
   // Read Pythia configuration files
   m_pythiaSignal->readFile(m_pythiacard.value().c_str());
 
   // Apply any extra pythia8 settings
-  for (auto pythiacommand: m_pythia_extrasettings) {
+  for (auto pythiacommand : m_pythia_extrasettings) {
     m_pythiaSignal->settings.readString(pythiacommand);
   }
 
   // Initialize variables from configuration file
-  m_nAbort = m_pythiaSignal->settings.mode("Main:timesAllowErrors");  // how many aborts before run stops
+  m_nAbort = m_pythiaSignal->settings.mode("Main:timesAllowErrors"); // how many aborts before run stops
   m_iAbort = 0;
   m_iEvent = 0;
 
@@ -103,11 +96,11 @@ StatusCode PythiaInterface::initialize() {
     }
 
     m_setting = std::unique_ptr<Pythia8::amcnlo_unitarised_interface>(new Pythia8::amcnlo_unitarised_interface(scheme));
-    #if PYTHIA_VERSION_INTEGER < 8300
+#if PYTHIA_VERSION_INTEGER < 8300
     m_pythiaSignal->setUserHooksPtr(m_setting.get());
-    #else
-    m_pythiaSignal->setUserHooksPtr((Pythia8::UserHooksPtr) m_setting.get());
-    #endif
+#else
+    m_pythiaSignal->setUserHooksPtr((Pythia8::UserHooksPtr)m_setting.get());
+#endif
   }
 
   // For jet matching, initialise the respective user hooks code.
@@ -117,11 +110,11 @@ StatusCode PythiaInterface::initialize() {
       error() << "Failed to initialise jet matching structures." << endmsg;
       return StatusCode::FAILURE;
     }
-    #if PYTHIA_VERSION_INTEGER < 8300
+#if PYTHIA_VERSION_INTEGER < 8300
     m_pythiaSignal->setUserHooksPtr(m_matching.get());
-    #else
-    m_pythiaSignal->setUserHooksPtr((Pythia8::UserHooksPtr) m_matching.get());
-    #endif
+#else
+    m_pythiaSignal->setUserHooksPtr((Pythia8::UserHooksPtr)m_matching.get());
+#endif
   }
 
   // jet clustering needed for matching
@@ -129,18 +122,17 @@ StatusCode PythiaInterface::initialize() {
 
   // End ME/PS Matching specific code
 
-
   // --  POWHEG settings
-  int vetoMode    = m_pythiaSignal->settings.mode("POWHEG:veto");
+  int vetoMode = m_pythiaSignal->settings.mode("POWHEG:veto");
   int MPIvetoMode = m_pythiaSignal->settings.mode("POWHEG:MPIveto");
-  m_doPowheg  = (vetoMode > 0 || MPIvetoMode > 0);
+  m_doPowheg = (vetoMode > 0 || MPIvetoMode > 0);
 
   // Add in user hooks for shower vetoing
   if (m_doPowheg) {
-  
+
     // Counters for number of ISR/FSR emissions vetoed
-    m_nISRveto = 0, m_nFSRveto = 0;  
-    
+    m_nISRveto = 0, m_nFSRveto = 0;
+
     // Set ISR and FSR to start at the kinematical limit
     if (vetoMode > 0) {
       m_pythiaSignal->readString("SpaceShower:pTmaxMatch = 2");
@@ -152,61 +144,60 @@ StatusCode PythiaInterface::initialize() {
       m_pythiaSignal->readString("MultipartonInteractions:pTmaxMatch = 2");
     }
 
-    
     m_powhegHooks = new Pythia8::PowhegHooks();
-    #if PYTHIA_VERSION_INTEGER < 8300
+#if PYTHIA_VERSION_INTEGER < 8300
     m_pythiaSignal->addUserHooksPtr(m_powhegHooks);
-    #else
+#else
     m_pythiaSignal->setUserHooksPtr((Pythia8::UserHooksPtr)m_powhegHooks);
-    #endif
+#endif
   }
   bool resonanceDecayFilter = m_pythiaSignal->settings.flag("ResonanceDecayFilter:filter");
   if (resonanceDecayFilter) {
     m_resonanceDecayFilterHook = new ResonanceDecayFilterHook();
-    #if PYTHIA_VERSION_INTEGER < 8300
+#if PYTHIA_VERSION_INTEGER < 8300
     m_pythiaSignal->addUserHooksPtr(m_resonanceDecayFilterHook);
-    #else
+#else
     m_pythiaSignal->addUserHooksPtr((Pythia8::UserHooksPtr)m_resonanceDecayFilterHook);
-    #endif
+#endif
   }
 
   // Set up evtGen
   if (m_doEvtGenDecays) {
-    #if PYTHIA_VERSION_INTEGER < 8300
+#if PYTHIA_VERSION_INTEGER < 8300
     m_evtgen = new EvtGenDecays(
-                  m_pythiaSignal.get(), // the pythia instance 
-                  m_EvtGenDecayFile.value(),  // the file name of the evtgen decay file
-                  m_EvtGenParticleDataFile.value(), // the file name of the evtgen data file
-								  nullptr, // the optional EvtExternalGenList pointer (must be be provided if the next argument is provided to avoid double initializations)
-								  nullptr, // the EvtAbsRadCorr pointer to pass to EvtGen
-								  1, // the mixing type to pass to EvtGen
-								  false, // a flag to use XML files to pass to EvtGen
-								  true, // a flag to limit decays based on the Pythia criteria (based on the particle decay vertex)
-								  true, // a flag to use external models with EvtGen
-								  false); // a flag if an FSR model should be passed to EvtGen (pay attention to this, default is true)
-    #else
+        m_pythiaSignal.get(),             // the pythia instance
+        m_EvtGenDecayFile.value(),        // the file name of the evtgen decay file
+        m_EvtGenParticleDataFile.value(), // the file name of the evtgen data file
+        nullptr, // the optional EvtExternalGenList pointer (must be be provided if the next argument is provided to
+                 // avoid double initializations)
+        nullptr, // the EvtAbsRadCorr pointer to pass to EvtGen
+        1,       // the mixing type to pass to EvtGen
+        false,   // a flag to use XML files to pass to EvtGen
+        true,    // a flag to limit decays based on the Pythia criteria (based on the particle decay vertex)
+        true,    // a flag to use external models with EvtGen
+        false);  // a flag if an FSR model should be passed to EvtGen (pay attention to this, default is true)
+#else
     m_evtgen = new Pythia8::EvtGenDecays(
-                  m_pythiaSignal.get(), // the pythia instance 
-                  m_EvtGenDecayFile.value(),  // the file name of the evtgen decay file
-                  m_EvtGenParticleDataFile.value(), // the file name of the evtgen data file
-								  nullptr, // the optional EvtExternalGenList pointer (must be be provided if the next argument is provided to avoid double initializations)
-								  nullptr, // the EvtAbsRadCorr pointer to pass to EvtGen
-								  1, // the mixing type to pass to EvtGen
-								  false, // a flag to use XML files to pass to EvtGen
-								  true, // a flag to limit decays based on the Pythia criteria (based on the particle decay vertex)
-								  true, // a flag to use external models with EvtGen
-								  false); // a flag if an FSR model should be passed to EvtGen (pay attention to this, default is true)
-    #endif
+        m_pythiaSignal.get(),             // the pythia instance
+        m_EvtGenDecayFile.value(),        // the file name of the evtgen decay file
+        m_EvtGenParticleDataFile.value(), // the file name of the evtgen data file
+        nullptr, // the optional EvtExternalGenList pointer (must be be provided if the next argument is provided to
+                 // avoid double initializations)
+        nullptr, // the EvtAbsRadCorr pointer to pass to EvtGen
+        1,       // the mixing type to pass to EvtGen
+        false,   // a flag to use XML files to pass to EvtGen
+        true,    // a flag to limit decays based on the Pythia criteria (based on the particle decay vertex)
+        true,    // a flag to use external models with EvtGen
+        false);  // a flag if an FSR model should be passed to EvtGen (pay attention to this, default is true)
+#endif
     if (!m_UserDecayFile.empty()) {
       m_evtgen->readDecayFile(m_UserDecayFile);
     }
     // possibility to force pythia to do decays
-    for (auto _pdgid: m_evtGenExcludes) {
-      m_evtgen->exclude(_pdgid); 
+    for (auto _pdgid : m_evtGenExcludes) {
+      m_evtgen->exclude(_pdgid);
     }
   }
-  
-
 
   m_pythiaSignal->init();
 
@@ -217,7 +208,7 @@ StatusCode PythiaInterface::initialize() {
 StatusCode PythiaInterface::getNextEvent(HepMC3::GenEvent& theEvent) {
 
   Pythia8::Event sumEvent;
-  // Generate events. Quit if many failures in a row  
+  // Generate events. Quit if many failures in a row
   while (!m_pythiaSignal->next()) {
     if (++m_iAbort > m_nAbort) {
       IIncidentSvc* incidentSvc;
@@ -266,9 +257,10 @@ StatusCode PythiaInterface::getNextEvent(HepMC3::GenEvent& theEvent) {
     // partons may be excluded from the matching.
 
     bool doShowerKt = m_pythiaSignal->settings.flag("JetMatching:doShowerKt");
-    if (m_doMePsMatching && !doShowerKt) njetNow = m_matching->nMEpartons().first;
-     else if (m_doMePsMatching && doShowerKt) {
-         njetNow = m_matching->getProcessSubset().size();
+    if (m_doMePsMatching && !doShowerKt)
+      njetNow = m_matching->nMEpartons().first;
+    else if (m_doMePsMatching && doShowerKt) {
+      njetNow = m_matching->getProcessSubset().size();
     } else if (m_doMePsMerging) {
       njetNow = m_pythiaSignal->settings.mode("Merging:nRequested");
       if (m_pythiaSignal->settings.flag("Merging:doUMEPSSubt") ||
@@ -283,7 +275,6 @@ StatusCode PythiaInterface::getNextEvent(HepMC3::GenEvent& theEvent) {
     m_slowJet->analyze(jetInput);
     for (int i = 0; i < m_slowJet->sizeJet(); ++i)
       ptVec.push_back(m_slowJet->pT(i));
-
 
     // 0th entry = number of generated partons
     mePsMatchingVars->push_back(njetNow);
@@ -326,7 +317,7 @@ StatusCode PythiaInterface::getNextEvent(HepMC3::GenEvent& theEvent) {
               << std::setprecision(2) << " E: " << std::setw(9) << m_pythiaSignal->event[i].e() << std::setprecision(2)
               << " M: " << std::setw(9) << m_pythiaSignal->event[i].m() << std::fixed << endmsg;
     }
-  }  // Debug
+  } // Debug
 
   // Define HepMC event and convert Pythia event into this HepMC event type
   m_pythiaToHepMC.fill_next_event(*m_pythiaSignal, &theEvent, m_iEvent);
@@ -334,8 +325,8 @@ StatusCode PythiaInterface::getNextEvent(HepMC3::GenEvent& theEvent) {
   // Print debug: HepMC event info
   if (msgLevel() <= MSG::DEBUG) {
 
-    //for (auto ipart = theEvent.particles_begin(); ipart != theEvent.particles_end(); ++ipart) {
-    for (auto ipart: theEvent.particles()) {
+    // for (auto ipart = theEvent.particles_begin(); ipart != theEvent.particles_end(); ++ipart) {
+    for (auto ipart : theEvent.particles()) {
 
       int motherID = -1;
       int motherIDRange = 0;
@@ -359,8 +350,8 @@ StatusCode PythiaInterface::getNextEvent(HepMC3::GenEvent& theEvent) {
               << " Daughters: " << std::setw(3) << daughterID << " -> " << std::setw(3) << daughterID + daughterIDRange
               << " Stat: " << std::setw(2) << ipart->status() << std::scientific << " Px: " << std::setprecision(2)
               << std::setw(9) << ipart->momentum().px() << " Py: " << std::setprecision(2) << std::setw(9)
-              << ipart->momentum().py() << " Pz: " << std::setprecision(2) << std::setw(9)
-              << ipart->momentum().pz() << " E: " << std::setprecision(2) << std::setw(9) << ipart->momentum().e()
+              << ipart->momentum().py() << " Pz: " << std::setprecision(2) << std::setw(9) << ipart->momentum().pz()
+              << " E: " << std::setprecision(2) << std::setw(9) << ipart->momentum().e()
               << " M: " << std::setprecision(2) << std::setw(9) << ipart->momentum().m() << std::fixed;
       if (ipart->production_vertex() != nullptr) {
         debug() << std::scientific << " Vx: " << std::setprecision(2) << std::setw(9)
@@ -371,7 +362,7 @@ StatusCode PythiaInterface::getNextEvent(HepMC3::GenEvent& theEvent) {
       }
       debug() << endmsg;
     }
-  }  // Debug
+  } // Debug
 
   if (m_doPowheg) {
     m_nISRveto += m_powhegHooks->getNISRveto();
@@ -397,7 +388,7 @@ StatusCode PythiaInterface::finalize() {
 
   m_pythiaSignal.reset();
   if (nullptr != m_evtgen) {
-     delete m_evtgen;
+    delete m_evtgen;
   }
   return AlgTool::finalize();
 }

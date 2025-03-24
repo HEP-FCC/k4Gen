@@ -1,15 +1,15 @@
 #ifndef GENERATION_CONSTPILEUP_H
 #define GENERATION_CONSTPILEUP_H
 
-#include "Generation/IPileUpTool.h"
 #include "GaudiKernel/AlgTool.h"
+#include "Generation/IPileUpTool.h"
 
-/** @class ConstPileUp 
+/** @class ConstPileUp
  *
  *  Tool to generate number of pile-up events to be mixed with signal event.
  *  Concrete implementation of a IPileUpTool -- the most trivial one, actually,
  *  returning just a constant (that can be specified as a property).
- *  The interface is kept close to the originals in LHCb's Gauss(ino). 
+ *  The interface is kept close to the originals in LHCb's Gauss(ino).
  *
  *  @author Valentin Volkl
  *  @date   2015-12-16
@@ -30,4 +30,4 @@ private:
   Gaudi::Property<unsigned int> m_numPileUpEvents{this, "numPileUpEvents", 0, "number of pile-up events"};
 };
 
-#endif  // GENERATION_CONSTPILEUP_H
+#endif // GENERATION_CONSTPILEUP_H

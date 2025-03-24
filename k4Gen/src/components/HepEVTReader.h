@@ -3,10 +3,9 @@
 
 #include <fstream>
 
-
 #include "Generation/IHepMCFileReaderTool.h"
-#include "Generation/IVertexSmearingTool.h"
 #include "Generation/IHepMCMergeTool.h"
+#include "Generation/IVertexSmearingTool.h"
 
 #include "k4FWCore/DataHandle.h"
 
@@ -14,7 +13,6 @@
 #include "GaudiKernel/ToolHandle.h"
 
 #include "GaudiKernel/SystemOfUnits.h"
-
 
 namespace edm4hep {
 class MCParticleCollection;
@@ -28,7 +26,7 @@ class MCParticleCollection;
  *
  */
 
-class HepEVTReader: public Gaudi::Algorithm {
+class HepEVTReader : public Gaudi::Algorithm {
 
 public:
   /// Constructor.
@@ -41,15 +39,13 @@ public:
   virtual StatusCode finalize();
 
 private:
-
   std::string m_filename;
   mutable std::ifstream m_input;
   mutable int NHEP;
   int m_format;
 
   /// Handle for the genparticles to be written
-  mutable DataHandle<edm4hep::MCParticleCollection> m_genphandle {"GenParticles", Gaudi::DataHandle::Writer, this};
-
+  mutable DataHandle<edm4hep::MCParticleCollection> m_genphandle{"GenParticles", Gaudi::DataHandle::Writer, this};
 };
 
-#endif //GENERATION_HEPEVTREADER_H
+#endif // GENERATION_HEPEVTREADER_H

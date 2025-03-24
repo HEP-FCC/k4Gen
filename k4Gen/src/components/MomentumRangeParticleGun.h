@@ -71,4 +71,4 @@ private:
   Rndm::Numbers m_flatGenerator;
 };
 
-#endif  // GENERATION_MOMENTUMRANGEPARTICLEGUN_H
+#endif // GENERATION_MOMENTUMRANGEPARTICLEGUN_H

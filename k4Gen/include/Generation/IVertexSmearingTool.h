@@ -21,4 +21,4 @@ public:
   /// Smear the vertex of the interaction (independantly of the others)
   virtual StatusCode smearVertex(HepMC3::GenEvent& theEvent) = 0;
 };
-#endif  // GENERATION_ISMEARINGTOOL_H
+#endif // GENERATION_ISMEARINGTOOL_H

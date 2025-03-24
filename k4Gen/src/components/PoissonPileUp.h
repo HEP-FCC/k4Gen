@@ -1,11 +1,11 @@
 #ifndef GENERATION_POISSONPILEUP_H
 #define GENERATION_POISSONPILEUP_H
 
-#include "Generation/IPileUpTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "Generation/IPileUpTool.h"
 
-/** @class PoissonPileUp 
+/** @class PoissonPileUp
  *
  *  Tool to generate number of pile-up events to be mixed with signal event.
  *  Concrete implementation of a IPileUpTool, returning a random variable
@@ -24,7 +24,6 @@ public:
   virtual double getMeanPileUp();
   virtual void printPileUpCounters();
 
-
 private:
   /// average number of min bias events to pile on signal event.
   Gaudi::Property<double> m_meanPileUpEvents{this, "numPileUpEvents", 0, "Average number of pile-up events"};
@@ -34,4 +33,4 @@ private:
   Rndm::Numbers m_PoissonDist;
 };
 
-#endif  // GENERATION_POISSONPILEUP_H
+#endif // GENERATION_POISSONPILEUP_H

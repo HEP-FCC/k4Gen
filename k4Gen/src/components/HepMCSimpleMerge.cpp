@@ -5,8 +5,8 @@
 #include "GaudiKernel/Incident.h"
 
 #include "HepMC3/GenEvent.h"
-#include "HepMC3/GenVertex.h"
 #include "HepMC3/GenParticle.h"
+#include "HepMC3/GenVertex.h"
 
 DECLARE_COMPONENT(HepMCSimpleMerge)
 
@@ -19,19 +19,21 @@ HepMCSimpleMerge::~HepMCSimpleMerge() {}
 
 StatusCode HepMCSimpleMerge::initialize() {
   StatusCode sc = AlgTool::initialize();
-  if (!sc.isSuccess()) return sc;
+  if (!sc.isSuccess())
+    return sc;
   return sc;
 }
 
 StatusCode HepMCSimpleMerge::merge(HepMC3::GenEvent& signalEvent, const std::vector<HepMC3::GenEvent>& eventVector) {
   // iterate over vertices and add them to signalEvent
   for (auto it = eventVector.cbegin(), end = eventVector.cend(); it != end; ++it) {
-    std::unordered_map<std::shared_ptr<const HepMC3::GenVertex>, std::shared_ptr<HepMC3::GenVertex>> inputToMergedVertexMap;
-    for (auto& v: it->vertices()) {
+    std::unordered_map<std::shared_ptr<const HepMC3::GenVertex>, std::shared_ptr<HepMC3::GenVertex>>
+        inputToMergedVertexMap;
+    for (auto& v : it->vertices()) {
       auto newVertex = std::make_shared<HepMC3::GenVertex>(v->position());
       inputToMergedVertexMap[v] = newVertex;
     }
-    for (auto& p: it->particles()) {
+    for (auto& p : it->particles()) {
       // simple check if final-state particle:
       // has no end vertex and correct status code meaning no further decays
       if (!p->end_vertex() && p->status() == 1) {

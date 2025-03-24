@@ -19,4 +19,4 @@ public:
   virtual StatusCode merge(HepMC3::GenEvent& signalEvent, const std::vector<HepMC3::GenEvent>& eventVector) = 0;
 };
 
-#endif  // GENERATION_IHEPMCMERGETOOL_H
+#endif // GENERATION_IHEPMCMERGETOOL_H

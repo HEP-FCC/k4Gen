@@ -22,4 +22,4 @@ public:
   virtual StatusCode open(const std::string& filename) = 0;
 };
 
-#endif  // GENERATION_IHEPMCFILEREADERTOOL_H
+#endif // GENERATION_IHEPMCFILEREADERTOOL_H

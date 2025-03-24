@@ -23,7 +23,7 @@ public:
   /// Standard constructor
   FlatSmearVertex(const std::string& type, const std::string& name, const IInterface* parent);
 
-  virtual ~FlatSmearVertex();  ///< Destructor
+  virtual ~FlatSmearVertex(); ///< Destructor
 
   /// Initialize method
   virtual StatusCode initialize();
@@ -60,4 +60,4 @@ private:
   Rndm::Numbers m_flatDist;
 };
 
-#endif  // GENERATION_FLATSMEARVERTEX_H
+#endif // GENERATION_FLATSMEARVERTEX_H

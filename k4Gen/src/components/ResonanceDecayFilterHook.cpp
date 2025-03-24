@@ -50,7 +50,8 @@ bool ResonanceDecayFilterHook::initAfterBeams() {
 
 //--------------------------------------------------------------------------
 bool ResonanceDecayFilterHook::checkVetoResonanceDecays(const Event& process) {
-  if (!filter_) return false;
+  if (!filter_)
+    return false;
 
   observedDaughters_.clear();
 
@@ -83,7 +84,8 @@ bool ResonanceDecayFilterHook::checkVetoResonanceDecays(const Event& process) {
 
     // if no list of mothers is provided, then all particles
     // in hard process and resonance decays are counted together
-    if (mothers_.empty() || mothers_.count(mid) || mothers_.count(-mid)) ++observedDaughters_[did];
+    if (mothers_.empty() || mothers_.count(mid) || mothers_.count(-mid))
+      ++observedDaughters_[did];
   }
 
   // check if criteria is satisfied
@@ -105,10 +107,12 @@ bool ResonanceDecayFilterHook::checkVetoResonanceDecays(const Event& process) {
     }
 
     // inclusive criteria not satisfied, veto event
-    if (obscount < reqcount) return true;
+    if (obscount < reqcount)
+      return true;
 
     // exclusive criteria not satisfied, veto event
-    if (exclusive_ && obscount > reqcount) return true;
+    if (exclusive_ && obscount > reqcount)
+      return true;
   }
 
   // all criteria satisfied, don't veto

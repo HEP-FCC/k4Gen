@@ -24,4 +24,4 @@ private:
   mutable DataHandle<HepMC3::GenEvent> m_hepmchandle{"hepmc", Gaudi::DataHandle::Reader, this};
 };
 
-#endif  // GENERATION_HEPMCDUMPER_H
+#endif // GENERATION_HEPMCDUMPER_H

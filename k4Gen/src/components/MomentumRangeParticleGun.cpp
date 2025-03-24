@@ -15,8 +15,7 @@
 DECLARE_COMPONENT(MomentumRangeParticleGun)
 
 /// Constructor
-MomentumRangeParticleGun::MomentumRangeParticleGun(const std::string& type,
-                                                   const std::string& name,
+MomentumRangeParticleGun::MomentumRangeParticleGun(const std::string& type, const std::string& name,
                                                    const IInterface* parent)
     : AlgTool(type, name, parent) {
   declareInterface<IParticleGunTool>(this);
@@ -28,7 +27,8 @@ MomentumRangeParticleGun::~MomentumRangeParticleGun() {}
 /// Initialize Particle Gun parameters
 StatusCode MomentumRangeParticleGun::initialize() {
   StatusCode sc = AlgTool::initialize();
-  if (!sc.isSuccess()) return sc;
+  if (!sc.isSuccess())
+    return sc;
 
   auto randSvc = service<IRndmGenSvc>("RndmGenSvc", true);
   sc = m_flatGenerator.initialize(randSvc, Rndm::Flat(0., 1.));
@@ -70,13 +70,11 @@ StatusCode MomentumRangeParticleGun::initialize() {
   info() << "Phi range: " << m_minPhi / Gaudi::Units::rad << " rad <-> " << m_maxPhi / Gaudi::Units::rad << " rad"
          << endmsg;
 
-
   return sc;
 }
 
 /// Generate the particles
-void MomentumRangeParticleGun::generateParticle(Gaudi::LorentzVector& momentum,
-                                                Gaudi::LorentzVector& origin,
+void MomentumRangeParticleGun::generateParticle(Gaudi::LorentzVector& momentum, Gaudi::LorentzVector& origin,
                                                 int& pdgId) {
 
   origin.SetCoordinates(0., 0., 0., 0.);
@@ -96,7 +94,8 @@ void MomentumRangeParticleGun::generateParticle(Gaudi::LorentzVector& momentum,
   // randomly choose a particle type
   unsigned int currentType = (unsigned int)(m_pdgCodes.size() * m_flatGenerator());
   // protect against funnies
-  if (currentType >= m_pdgCodes.size()) currentType = 0;
+  if (currentType >= m_pdgCodes.size())
+    currentType = 0;
 
   momentum.SetPx(px);
   momentum.SetPy(py);
@@ -121,20 +120,19 @@ StatusCode MomentumRangeParticleGun::getNextEvent(HepMC3::GenEvent& theEvent) {
   // create HepMC3 particle --
   // by calling add_particle_out(), the hepmc vertex is given ownership of the particle
   const double hepmcMomentumConversionFactor = 0.001;
-  auto p = std::make_shared<HepMC3::GenParticle>(
-      HepMC3::FourVector(theFourMomentum.Px() * hepmcMomentumConversionFactor,
-                        theFourMomentum.Py() * hepmcMomentumConversionFactor,
-                        theFourMomentum.Pz() * hepmcMomentumConversionFactor,
-                        theFourMomentum.E() * hepmcMomentumConversionFactor
-                        ),
-      thePdgId,
-      1);  // hepmc status code for final state particle
+  auto p =
+      std::make_shared<HepMC3::GenParticle>(HepMC3::FourVector(theFourMomentum.Px() * hepmcMomentumConversionFactor,
+                                                               theFourMomentum.Py() * hepmcMomentumConversionFactor,
+                                                               theFourMomentum.Pz() * hepmcMomentumConversionFactor,
+                                                               theFourMomentum.E() * hepmcMomentumConversionFactor),
+                                            thePdgId,
+                                            1); // hepmc status code for final state particle
 
   v->add_particle_out(p);
 
   theEvent.add_vertex(v);
   // no longer needed in hepmc3
-  //theEvent.set_signal_process_vertex(v);
+  // theEvent.set_signal_process_vertex(v);
 
   return StatusCode::SUCCESS;
 }

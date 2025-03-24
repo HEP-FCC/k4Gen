@@ -1,10 +1,10 @@
 #ifndef GENERATION_EDMTOHEPMCCONVERTER_H
 #define GENERATION_EDMTOHEPMCCONVERTER_H
 
-#include "k4FWCore/DataHandle.h"
 #include "Gaudi/Algorithm.h"
 #include "HepMC3/GenEvent.h"
 #include "HepMC3/Units.h"
+#include "k4FWCore/DataHandle.h"
 
 namespace edm4hep {
 class MCParticleCollection;
