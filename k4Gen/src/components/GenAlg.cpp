@@ -1,4 +1,3 @@
-// GenAlg
 #include "GenAlg.h"
 
 // Gaudi
@@ -9,7 +8,9 @@
 // HepMC3
 #include "HepMC3/GenEvent.h"
 
+
 DECLARE_COMPONENT(GenAlg)
+
 
 GenAlg::GenAlg(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
   declareProperty("SignalProvider", m_signalProvider,

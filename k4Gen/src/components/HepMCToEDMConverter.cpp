@@ -1,10 +1,14 @@
 #include "HepMCToEDMConverter.h"
-#include "GaudiKernel/PhysicalConstants.h"
-#include "HepMC3/Attribute.h"
+// HepMC
+#include "HepMC3/GenVertex.h"
+// HepPDT
 #include "HepPDT/ParticleID.hh"
+// EDM4hep
 #include "edm4hep/MCParticleCollection.h"
 
+
 DECLARE_COMPONENT(HepMCToEDMConverter)
+
 
 edm4hep::MutableMCParticle
 HepMCToEDMConverter::convert(std::shared_ptr<const HepMC3::GenParticle> hepmcParticle) const {
