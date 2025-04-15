@@ -1,16 +1,16 @@
 #ifndef GENERATION_HEPMCTOEDMCONVERTER_H
 #define GENERATION_HEPMCTOEDMCONVERTER_H
 
+// Gaudi
 #include "Gaudi/Algorithm.h"
+// k4FWCore
+#include "k4FWCore/DataHandle.h"
+// HepMC
 #include "HepMC3/GenEvent.h"
 #include "HepMC3/GenParticle.h"
-#include "HepMC3/GenVertex.h"
-#include "HepMC3/Units.h"
-#include "k4FWCore/DataHandle.h"
 
 namespace edm4hep {
 class MCParticleCollection;
-class MCParticle;
 class MutableMCParticle;
 } // namespace edm4hep
 
