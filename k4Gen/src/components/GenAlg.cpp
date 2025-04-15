@@ -8,18 +8,13 @@
 // HepMC3
 #include "HepMC3/GenEvent.h"
 
-
 DECLARE_COMPONENT(GenAlg)
 
-
 GenAlg::GenAlg(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
-  declareProperty("SignalProvider", m_signalProvider,
-                  "Signal events provider tool");
+  declareProperty("SignalProvider", m_signalProvider, "Signal events provider tool");
   declareProperty("PileUpTool", m_pileUpTool, "Pileup tool");
-  declareProperty("PileUpProvider", m_pileUpProvider,
-                  "Pileup events provider tool");
-  declareProperty("VertexSmearingTool", m_vertexSmearingTool,
-                  "Vertex smearing tool");
+  declareProperty("PileUpProvider", m_pileUpProvider, "Pileup events provider tool");
+  declareProperty("VertexSmearingTool", m_vertexSmearingTool, "Vertex smearing tool");
   declareProperty("HepMCMergeTool", m_hepmcMergeTool, "Event merge tool");
   declareProperty("hepmc", m_hepmcHandle, "HepMC event handle (output)");
 }
@@ -27,7 +22,8 @@ GenAlg::GenAlg(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(
 StatusCode GenAlg::initialize() {
   {
     StatusCode sc = Gaudi::Algorithm::initialize();
-    if (!sc.isSuccess()) return sc;
+    if (!sc.isSuccess())
+      return sc;
   }
 
   if (!m_signalProvider) {
@@ -66,13 +62,15 @@ StatusCode GenAlg::execute(const EventContext&) const {
   // Get the event from the signal provider
   {
     StatusCode sc = m_signalProvider->getNextEvent(*theEvent);
-    if (!sc.isSuccess()) return sc;
+    if (!sc.isSuccess())
+      return sc;
   }
 
   // Smear vertex
   {
     StatusCode sc = m_vertexSmearingTool->smearVertex(*theEvent);
-    if (!sc.isSuccess()) return sc;
+    if (!sc.isSuccess())
+      return sc;
   }
 
   // Get number of pileup events
@@ -88,7 +86,8 @@ StatusCode GenAlg::execute(const EventContext&) const {
       for (unsigned int i_pileUp = 0; i_pileUp < numPileUp; ++i_pileUp) {
         auto puEvt = HepMC3::GenEvent();
         StatusCode sc = m_pileUpProvider->getNextEvent(puEvt);
-        if (!sc.isSuccess()) return sc;
+        if (!sc.isSuccess())
+          return sc;
 
         m_vertexSmearingTool->smearVertex(puEvt).ignore();
         eventVector.push_back(std::move(puEvt));
@@ -96,14 +95,13 @@ StatusCode GenAlg::execute(const EventContext&) const {
     }
 
     StatusCode sc = m_hepmcMergeTool->merge(*theEvent, eventVector);
-    if (!sc.isSuccess()) return sc;
+    if (!sc.isSuccess())
+      return sc;
   }
 
   debug() << "Event number: " << theEvent->event_number() << endmsg;
-  debug() << "Number of particles in the event: " << theEvent->particles().size()
-          << endmsg;
-  debug() << "Number of vertices in the event: " << theEvent->vertices().size()
-          << endmsg;
+  debug() << "Number of particles in the event: " << theEvent->particles().size() << endmsg;
+  debug() << "Number of vertices in the event: " << theEvent->vertices().size() << endmsg;
 
   return StatusCode::SUCCESS;
 }

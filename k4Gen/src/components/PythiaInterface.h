@@ -50,14 +50,12 @@ private:
   HepMC3::Pythia8ToHepMC3 m_pythiaToHepMC;
   /// Name of Pythia configuration file with Pythia simulation
   /// settings & input LHE file (if required)
-  Gaudi::Property<std::string> m_pythiacard{
-      this, "pythiacard", "Pythia_minbias_pp_100TeV.cmd",
-      "Name of the Pythia cmd file"};
+  Gaudi::Property<std::string> m_pythiacard{this, "pythiacard", "Pythia_minbias_pp_100TeV.cmd",
+                                            "Name of the Pythia cmd file"};
 
   /// Extra settings for Pythia
   Gaudi::Property<std::vector<std::string>> m_pythia_extrasettings{
-      this, "pythiaExtraSettings", {""},
-      "Additional strings with Pythia settings, applied after the card."};
+      this, "pythiaExtraSettings", {""}, "Additional strings with Pythia settings, applied after the card."};
 
   /// Pythia8 engine for jet clustering
   std::unique_ptr<Pythia8::SlowJet> m_slowJet{nullptr};

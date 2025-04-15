@@ -15,7 +15,7 @@
 #include "Generation/IVertexSmearingTool.h"
 
 namespace HepMC3 {
-  class GenEvent;
+class GenEvent;
 }
 
 class GenAlg : public Gaudi::Algorithm {
