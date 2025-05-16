@@ -1,7 +1,9 @@
 #include "HepMCToEDMConverter.h"
-#include "GaudiKernel/PhysicalConstants.h"
-#include "HepMC3/Attribute.h"
+// HepMC
+#include "HepMC3/GenVertex.h"
+// HepPDT
 #include "HepPDT/ParticleID.hh"
+// EDM4hep
 #include "edm4hep/MCParticleCollection.h"
 
 DECLARE_COMPONENT(HepMCToEDMConverter)
@@ -57,7 +59,8 @@ StatusCode HepMCToEDMConverter::execute(const EventContext&) const {
 
   std::unordered_map<unsigned int, edm4hep::MutableMCParticle> _map;
   for (auto _p : evt->particles()) {
-    debug() << "Converting hepmc particle with Pdg_ID \t" << _p->pdg_id() << "and id \t" << _p->id() << endmsg;
+    verbose() << "Converting HepMC particle with PDG ID \"" << _p->pdg_id() << "\" and ID \"" << _p->id() << "\""
+              << endmsg;
     if (_map.find(_p->id()) == _map.end()) {
       edm4hep::MutableMCParticle edm_particle = convert(_p);
       _map.insert({_p->id(), edm_particle});
