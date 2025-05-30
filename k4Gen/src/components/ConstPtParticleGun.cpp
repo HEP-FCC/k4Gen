@@ -52,13 +52,13 @@ StatusCode ConstPtParticleGun::initialize() {
   // write additional branches
   if (m_writeParticleGunBranches) {
     m_datahandle_particlegun_pt =
-        std::make_unique<DataHandle<float>>("ParticleGun_Pt", Gaudi::DataHandle::Writer, this);
+        std::make_unique<k4FWCore::DataHandle<float>>("ParticleGun_Pt", Gaudi::DataHandle::Writer, this);
     m_datahandle_particlegun_eta =
-        std::make_unique<DataHandle<float>>("ParticleGun_Eta", Gaudi::DataHandle::Writer, this);
+        std::make_unique<k4FWCore::DataHandle<float>>("ParticleGun_Eta", Gaudi::DataHandle::Writer, this);
     m_datahandle_particlegun_costheta =
-        std::make_unique<DataHandle<float>>("ParticleGun_costheta", Gaudi::DataHandle::Writer, this);
+        std::make_unique<k4FWCore::DataHandle<float>>("ParticleGun_costheta", Gaudi::DataHandle::Writer, this);
     m_datahandle_particlegun_phi =
-        std::make_unique<DataHandle<float>>("ParticleGun_Phi", Gaudi::DataHandle::Writer, this);
+        std::make_unique<k4FWCore::DataHandle<float>>("ParticleGun_Phi", Gaudi::DataHandle::Writer, this);
   }
   return sc;
 }
