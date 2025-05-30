@@ -22,7 +22,7 @@ public:
 
 private:
   /// Handle for the HepMC to be read
-  mutable DataHandle<HepMC3::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<HepMC3::GenEvent> m_hepmchandle{"HepMC", Gaudi::DataHandle::Reader, this};
 
   SmartIF<ITHistSvc> m_ths; ///< THistogram service
 

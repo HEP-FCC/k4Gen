@@ -42,7 +42,7 @@ private:
   /// Tool to merge HepMC events
   mutable ToolHandle<IHepMCMergeTool> m_hepmcMergeTool{"HepMCSimpleMerge/HepMCMergeTool", this};
   // Output handle for finished event
-  mutable DataHandle<HepMC3::GenEvent> m_hepmcHandle{"hepmc", Gaudi::DataHandle::Writer, this};
+  mutable k4FWCore::DataHandle<HepMC3::GenEvent> m_hepmcHandle{"hepmc", Gaudi::DataHandle::Writer, this};
 };
 
 #endif // GENERATION_GENALG_H
