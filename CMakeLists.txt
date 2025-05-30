@@ -6,7 +6,7 @@ project(k4Gen LANGUAGES CXX)
 #- Dependencies ------------------------------------------------
 find_package(ROOT COMPONENTS RIO Tree Hist)
 find_package(Gaudi REQUIRED)
-find_package(k4FWCore REQUIRED)
+find_package(k4FWCore 1.3 REQUIRED)
 find_package(EDM4HEP REQUIRED)
 
 include(cmake/Key4hepConfig.cmake)

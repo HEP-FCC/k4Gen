@@ -60,7 +60,7 @@ private:
   /// Pythia8 engine for jet clustering
   std::unique_ptr<Pythia8::SlowJet> m_slowJet{nullptr};
   // Output handle for ME/PS matching variables
-  mutable DataHandle<std::vector<float>> m_handleMePsMatchingVars{"mePsMatchingVars", Gaudi::DataHandle::Writer, this};
+  mutable k4FWCore::DataHandle<std::vector<float>> m_handleMePsMatchingVars{"mePsMatchingVars", Gaudi::DataHandle::Writer, this};
 
   // Maximum number of aborts before giving up
   int m_maxAborts{0};

@@ -53,10 +53,10 @@ private:
   Gaudi::Property<bool> m_writeParticleGunBranches{
       this, "writeParticleGunBranches", {true}, "Write additional Branches with Particle Properties (eta, pt)"};
   /// optional additional branches (switched on by  m_writeParticleGunBranches)
-  std::unique_ptr<DataHandle<float>> m_datahandle_particlegun_pt;
-  std::unique_ptr<DataHandle<float>> m_datahandle_particlegun_eta;
-  std::unique_ptr<DataHandle<float>> m_datahandle_particlegun_costheta;
-  std::unique_ptr<DataHandle<float>> m_datahandle_particlegun_phi;
+  std::unique_ptr<k4FWCore::DataHandle<float>> m_datahandle_particlegun_pt;
+  std::unique_ptr<k4FWCore::DataHandle<float>> m_datahandle_particlegun_eta;
+  std::unique_ptr<k4FWCore::DataHandle<float>> m_datahandle_particlegun_costheta;
+  std::unique_ptr<k4FWCore::DataHandle<float>> m_datahandle_particlegun_phi;
 
   /// helper variables
   double m_deltaEta;
